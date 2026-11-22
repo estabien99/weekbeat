@@ -65,7 +65,11 @@ export function replan(raw: PlanInput, req: ReplanRequest): ReplanOffer[] {
   const later = (r: Ranked) => r.c.start >= notBefore;
 
   // New slots: the same session at the same place later this week, best first, at most one per day.
-  const samePlace = candidatesFor(week, [same], input.places, shared).filter((c) => c.place?.id === affected.placeId);
+  // A new slot is a different time than the affected one (its own slot is free once it is taken out).
+  const originalStart = minuteOfWeek(affected.start, input.weekStart);
+  const samePlace = candidatesFor(week, [same], input.places, shared).filter(
+    (c) => c.place?.id === affected.placeId && c.start !== originalStart,
+  );
   const slots: Ranked[] = [];
   for (const r of rank(samePlace, cctx, sctx, weights).filter(later)) {
     if (slots.some((s) => dayIndexOf(s.c.start) === dayIndexOf(r.c.start))) continue;

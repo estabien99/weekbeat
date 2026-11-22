@@ -40,6 +40,17 @@ describe('replan', () => {
     expect(replan(week(), { sessionId: 's-mon', notBefore: '2026-11-24T08:00' })).toEqual(offers);
   });
 
+  it('never offers the session’s own slot as a new time', () => {
+    const accepted = { ...monday, status: 'accepted' as const };
+    const offers = replan(week({ anchors: [saturdayMtb, accepted] }), {
+      sessionId: 's-mon',
+      notBefore: '2026-11-23T08:00',
+    });
+    const slots = offers.flatMap((o) => (o.kind === 'new-slot' ? [o.session.start] : []));
+    expect(slots).not.toContain(monday.start);
+    expect(slots[0]).toBe('2026-11-24T18:15');
+  });
+
   it('respects the earliest start and the number of slots asked for', () => {
     const one = replan(week(), { sessionId: 's-mon', notBefore: '2026-11-24T08:00', maxSlots: 1 });
     expect(one.filter((o) => o.kind === 'new-slot')).toHaveLength(1);
@@ -53,7 +64,8 @@ describe('replan', () => {
     const offers = replan(input(), { sessionId: 's-mtb', notBefore: '2026-11-28T08:00' });
     const fallback = offers.find((o) => o.kind === 'fallback');
     expect(fallback?.kind === 'fallback' && fallback.session.activityTypeId).toBe('bodyweight-vigorous');
-    expect(offers.some((o) => o.kind === 'new-slot')).toBe(true);
+    // Saturday's window is the only one left, and its own slot is not a new time.
+    expect(offers.some((o) => o.kind === 'new-slot')).toBe(false);
   });
 
   it('only offers to let it go while paused or when nothing fits', () => {

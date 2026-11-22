@@ -73,7 +73,12 @@ export function toSession(c: Candidate, weekStart: IsoDate, id: string, why: I18
 
 export function contexts(week: ProfileWeek, input: PlanInput): { cctx: ConstraintContext; sctx: ScoreContext } {
   return {
-    cctx: { week, weekStart: input.weekStart, ...recoveryContext(input.rules) },
+    cctx: {
+      week,
+      weekStart: input.weekStart,
+      notBefore: input.notBefore === undefined ? undefined : minuteOfWeek(input.notBefore, input.weekStart),
+      ...recoveryContext(input.rules),
+    },
     sctx: {
       week,
       rules: input.rules,
