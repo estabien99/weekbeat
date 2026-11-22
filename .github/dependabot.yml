@@ -19,6 +19,9 @@ updates:
         update-types: [version-update:semver-major, version-update:semver-minor]
       # Must match the Chromium pre-installed in cloud sessions; bump deliberately.
       - dependency-name: '@playwright/test'
+      # Must match the Node runtime in .nvmrc and CI (22); raise Node, .nvmrc and these types together.
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
   - package-ecosystem: github-actions
     directory: /
     schedule:
