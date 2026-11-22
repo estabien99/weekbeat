@@ -61,7 +61,8 @@ const obj =
   (v, p) => {
     if (!v || typeof v !== 'object' || Array.isArray(v)) return fail(p, 'expected an object');
     const rec = v as Record<string, unknown>;
-    for (const key of Object.keys(rec)) if (!(key in shape)) return fail(`${p}.${key}`, 'unknown field');
+    // Own keys only: `in` would also accept inherited names such as toString or __proto__.
+    for (const key of Object.keys(rec)) if (!Object.hasOwn(shape, key)) return fail(`${p}.${key}`, 'unknown field');
     for (const [key, field] of Object.entries(shape)) {
       const optional = typeof field === 'object';
       const check = optional ? field[OPTIONAL] : field;
@@ -205,7 +206,7 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
 
 /** First problem in a table's rows, or null. */
 export function validateRows(table: string, rows: unknown[]): string | null {
-  const schema = TABLE_SCHEMAS[table];
+  const schema = Object.hasOwn(TABLE_SCHEMAS, table) ? TABLE_SCHEMAS[table] : undefined;
   if (!schema) return `${table}: unknown table`;
   for (const [i, row] of rows.entries()) {
     const e = schema(row, `${table}[${i}]`);
