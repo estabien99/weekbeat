@@ -19,5 +19,9 @@ Weekbeat is pre-1.0 (v0.x). Only the latest release and `main` receive fixes.
 - All user data stays on the device (IndexedDB) in v0.x; there is no Weekbeat server holding user data.
 - Connector keys and tokens are stored only on the user's device and never exported in plain text.
 - Any optional proxy (e.g. a Cloudflare Worker for CORS) must store nothing.
+- Export files contain only an explicit list of tables (`EXPORT_TABLES` in `core/model/db.ts`); imports are checked
+  row by row against strict schemas (`core/model/validate.ts`) and only `https:` links are accepted.
+- The built app ships a Content-Security-Policy (`vite.config.ts`): scripts, styles and connections only from the
+  app's own origin until a connector declares its host.
 
 Reports about these guarantees being broken are especially welcome.

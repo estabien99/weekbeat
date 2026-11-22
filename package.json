@@ -2,7 +2,7 @@
   "name": "weekbeat",
   "private": true,
   "version": "0.0.0",
-  "description": "Weekbeat – open-source weekly planner for movement and wellness",
+  "description": "Weekbeat \u2013 open-source weekly planner for movement and wellness",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {
@@ -51,5 +51,10 @@
     "vite": "^8.3.8",
     "vite-plugin-pwa": "^2.0.0",
     "vitest": "^5.1.1"
+  },
+  "overrides": {
+    "workbox-build": {
+      "glob": "^14.0.6"
+    }
   }
 }

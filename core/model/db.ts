@@ -13,6 +13,7 @@ import type {
   Quest,
   XPEvent,
 } from './types.ts';
+import { validateRows } from './validate.ts';
 
 /**
  * Local-first storage in IndexedDB. Nothing leaves the device unless a connector the user
@@ -55,6 +56,28 @@ export class WeekbeatDB extends Dexie {
 export const EXPORT_FORMAT = 'weekbeat-export';
 export const EXPORT_VERSION = 1;
 
+/**
+ * The only tables that go into an export file. Explicit on purpose: a new table (e.g. connector settings with
+ * API keys) is never exported unless it is added here, and its schema must exist in validate.ts.
+ */
+export const EXPORT_TABLES = [
+  'households',
+  'profiles',
+  'activityTypes',
+  'programmes',
+  'memberships',
+  'places',
+  'availability',
+  'plannedSessions',
+  'loggedActivities',
+  'quests',
+  'badges',
+  'xpEvents',
+] as const;
+
+const isSupportedVersion = (v: unknown): v is number =>
+  typeof v === 'number' && Number.isInteger(v) && v >= 1 && v <= EXPORT_VERSION;
+
 export interface ExportFile {
   format: typeof EXPORT_FORMAT;
   version: number;
@@ -65,26 +88,44 @@ export interface ExportFile {
 /** Whole database as one JSON-serialisable object (export/import principle). */
 export async function exportAll(db: WeekbeatDB): Promise<ExportFile> {
   const tables: Record<string, unknown[]> = {};
-  for (const table of db.tables) tables[table.name] = await table.toArray();
+  for (const name of EXPORT_TABLES) tables[name] = await db.table(name).toArray();
   return { format: EXPORT_FORMAT, version: EXPORT_VERSION, exportedAt: new Date().toISOString(), tables };
 }
 
-/** Replaces all data with an export file. Unknown tables are rejected, not silently dropped. */
+/**
+ * Replaces the exported tables with an export file. Everything is checked before anything is written:
+ * unknown tables and any invalid row reject the whole file.
+ */
 export async function importAll(db: WeekbeatDB, file: ExportFile): Promise<void> {
-  if (file.format !== EXPORT_FORMAT) throw new ImportError('not-weekbeat', 'Not a Weekbeat export file');
-  if (file.version > EXPORT_VERSION) {
-    throw new ImportError('too-new', `Export version ${file.version} is newer than this app`);
-  }
-  const known = new Set(db.tables.map((t) => t.name));
-  const unknown = Object.keys(file.tables).filter((n) => !known.has(n));
-  if (unknown.length) throw new ImportError('bad-table', `Unknown tables in export: ${unknown.join(', ')}`);
-  await db.transaction('rw', db.tables, async () => {
-    for (const table of db.tables) {
+  checkFile(file);
+  const tables = EXPORT_TABLES.map((name) => db.table(name));
+  await db.transaction('rw', tables, async () => {
+    for (const table of tables) {
       await table.clear();
       const rows = file.tables[table.name];
       if (rows?.length) await table.bulkAdd(rows);
     }
   });
+}
+
+function checkFile(file: ExportFile): void {
+  if (!file || typeof file !== 'object' || file.format !== EXPORT_FORMAT) {
+    throw new ImportError('not-weekbeat', 'Not a Weekbeat export file');
+  }
+  if (!isSupportedVersion(file.version)) {
+    throw new ImportError('too-new', `Export version ${String(file.version)} is not supported by this app`);
+  }
+  if (!file.tables || typeof file.tables !== 'object' || Array.isArray(file.tables)) {
+    throw new ImportError('not-weekbeat', 'Not a Weekbeat export file');
+  }
+  const allowed = new Set<string>(EXPORT_TABLES);
+  const unknown = Object.keys(file.tables).filter((n) => !allowed.has(n));
+  if (unknown.length) throw new ImportError('bad-table', `Unknown tables in export: ${unknown.join(', ')}`);
+  for (const [name, rows] of Object.entries(file.tables)) {
+    if (!Array.isArray(rows)) throw new ImportError('bad-table', `Table ${name} is not a list`);
+    const problem = validateRows(name, rows);
+    if (problem) throw new ImportError('bad-table', problem);
+  }
 }
 
 export class ImportError extends Error {
@@ -105,22 +146,8 @@ export function parseExportFile(text: string): ExportFile {
   } catch {
     throw new ImportError('not-json', 'File is not valid JSON');
   }
-  const f = data as Partial<ExportFile> | null;
-  if (!f || typeof f !== 'object' || f.format !== EXPORT_FORMAT || typeof f.tables !== 'object' || !f.tables) {
-    throw new ImportError('not-weekbeat', 'Not a Weekbeat export file');
-  }
-  if (typeof f.version !== 'number' || f.version > EXPORT_VERSION) {
-    throw new ImportError('too-new', `Export version ${String(f.version)} is not supported by this app`);
-  }
-  for (const [name, rows] of Object.entries(f.tables)) {
-    if (
-      !Array.isArray(rows) ||
-      rows.some((r) => !r || typeof r !== 'object' || typeof (r as { id?: unknown }).id !== 'string')
-    ) {
-      throw new ImportError('bad-table', `Table ${name} has rows without an id`);
-    }
-  }
-  return f as ExportFile;
+  checkFile(data as ExportFile);
+  return data as ExportFile;
 }
 
 /** File name for an export, e.g. weekbeat-2026-11-22.json (local date). */

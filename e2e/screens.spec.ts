@@ -124,6 +124,21 @@ for (const lang of ['de', 'en'] as const) {
   });
 }
 
+test('has a Content-Security-Policy and no violations', async ({ page }) => {
+  const violations: string[] = [];
+  page.on('console', (m) => {
+    if (/Content Security Policy|Content-Security-Policy/i.test(m.text())) violations.push(m.text());
+  });
+  await page.goto('/');
+  const csp = await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content');
+  expect(csp).toContain("script-src 'self'");
+  expect(csp).toContain("object-src 'none'");
+  await expect(page.getByRole('heading', { level: 2 })).toBeVisible();
+  // The service worker registers under the policy.
+  await expect.poll(() => page.evaluate(async () => (await navigator.serviceWorker.getRegistrations()).length)).toBe(1);
+  expect(violations).toEqual([]);
+});
+
 test('is installable: manifest is linked and valid', async ({ page, request }) => {
   await page.goto('/');
   const href = await page.locator('link[rel="manifest"]').getAttribute('href');
