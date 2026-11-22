@@ -24,6 +24,12 @@ describe('planWeek', () => {
     expect(plan.notes).toEqual([]);
   });
 
+  it('counts only sessions of the planned week toward its goal (the app passes every saved session)', () => {
+    const lastWeek = { ...saturdayMtb, id: 'last-week', start: '2026-11-21T09:00', status: 'done' as const };
+    const nextWeek = { ...saturdayMtb, id: 'next-week', start: '2026-12-05T09:00', status: 'accepted' as const };
+    expect(starts(planWeek(input({ anchors: [saturdayMtb, lastWeek, nextWeek] })))).toEqual(starts(planWeek(input())));
+  });
+
   it('gives the same plan for the same input, whatever the order of the lists', () => {
     const a = planWeek(input());
     const shuffled = input();
