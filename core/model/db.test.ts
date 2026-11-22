@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto';
 import { afterEach, describe, expect, it } from 'vitest';
 import { EXPORT_TABLES, ImportError, WeekbeatDB, exportAll, exportFileName, importAll, parseExportFile } from './db.ts';
-import { TABLE_SCHEMAS } from './validate.ts';
+import { TABLE_SCHEMAS, validateRows } from './validate.ts';
 
 let db: WeekbeatDB;
 afterEach(async () => {
@@ -137,5 +137,26 @@ describe('export scope', () => {
     };
     await expect(importAll(db, bad)).rejects.toThrow(ImportError);
     expect((await db.households.toArray()).map((h) => h.name)).toEqual(['Alt']);
+  });
+});
+
+describe('validateRows', () => {
+  const badge = { id: 'b1', profileId: 'p1', key: 'k', earnedAt: '2026-11-22T10:00' };
+
+  it('rejects keys that exist only on the prototype chain (#29)', () => {
+    expect(validateRows('badges', [badge])).toBeNull();
+    for (const key of ['toString', 'constructor', 'valueOf', 'hasOwnProperty']) {
+      expect(validateRows('badges', [{ ...badge, [key]: 'x' }])).toBe(`badges[0].${key}: unknown field`);
+    }
+    // JSON.parse creates __proto__ as an own property, as an import file would.
+    const row: unknown = JSON.parse(
+      '{"id":"b1","profileId":"p1","key":"k","earnedAt":"2026-11-22T10:00","__proto__":{"polluted":true}}',
+    );
+    expect(validateRows('badges', [row])).toBe('badges[0].__proto__: unknown field');
+  });
+
+  it('only knows its own tables', () => {
+    expect(validateRows('constructor', [{}])).toBe('constructor: unknown table');
+    expect(validateRows('__proto__', [{}])).toBe('__proto__: unknown table');
   });
 });
