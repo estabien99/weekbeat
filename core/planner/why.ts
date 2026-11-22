@@ -8,7 +8,7 @@ import { type Candidate, type ScoreTerm, TERMS } from './types.ts';
  * Plain templates (core has no i18n library); the app shows the text in the person's language.
  */
 
-const WEEKDAYS: I18nText[] = [
+export const WEEKDAYS: I18nText[] = [
   { de: 'Montag', en: 'Monday' },
   { de: 'Dienstag', en: 'Tuesday' },
   { de: 'Mittwoch', en: 'Wednesday' },
@@ -76,6 +76,10 @@ function phrase(term: ScoreTerm['term'], c: Candidate, ctx: ScoreContext): I18nT
       if (!p) return undefined;
       const n = ctx.week.done.filter((d) => d.programmeId === p.id).length + 1;
       return { de: `Tag ${n} von ${p.daysPerWeek} in „${p.name}“`, en: `day ${n} of ${p.daysPerWeek} in "${p.name}"` };
+    }
+    case 'together': {
+      const names = (c.withProfileIds ?? []).map((id) => ctx.names?.get(id) ?? id);
+      return { de: `zusammen mit ${join(names, 'und')}`, en: `together with ${join(names, 'and')}` };
     }
     case 'complement':
       return complementPhrase(c, ctx);

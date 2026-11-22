@@ -2,7 +2,7 @@ import { openComplements } from '../knowledge.ts';
 import type { ActivityType, Place, Profile, Programme } from '../model/types.ts';
 import { placeFits } from './constraints.ts';
 import { DAY_MIN, dayIndexOf, hhmmToMin, subtract } from './time.ts';
-import type { Candidate, PlanInput } from './types.ts';
+import type { Candidate, PlanInput, SharedSession } from './types.ts';
 import { type ProfileWeek, occupied } from './week.ts';
 
 /** Step 1, collect inputs: what the person could do this week, and where and when it would fit. */
@@ -91,16 +91,26 @@ function startsIn(free: { start: number; end: number }, place: Place | undefined
  * Candidates: every option at every fitting place (or nowhere in particular, for activities that need no
  * place), at the earliest start in each free stretch of the person's windows. Hard constraints check them next.
  */
-export function candidatesFor(week: ProfileWeek, options: readonly Option[], places: readonly Place[]): Candidate[] {
+export function candidatesFor(
+  week: ProfileWeek,
+  options: readonly Option[],
+  places: readonly Place[],
+  shared: readonly SharedSession[] = [],
+): Candidate[] {
   const blocked = [...week.busy, ...week.done.map(occupied)];
   const free = week.windows.flatMap((w) => subtract(w, blocked));
+  const others = shared.filter((s) => s.profileId !== week.profile.id);
   const out: Candidate[] = [];
   for (const option of options) {
     const at: (Place | undefined)[] = places.filter((p) => placeFits(option.activity, p));
     if (option.equipment.length === 0 && placeFits(option.activity, undefined)) at.push(undefined);
-    for (const place of at)
-      for (const f of free)
-        for (const start of startsIn(f, place))
+    for (const place of at) {
+      const joinable = others.filter((s) => s.activityId === option.activity.id && s.placeId === place?.id);
+      for (const f of free) {
+        // Also try the start of a household member's same session, so the two can train together.
+        const joins = joinable.map((s) => s.start).filter((s) => s >= f.start && s < f.end);
+        for (const start of [...new Set([...startsIn(f, place), ...joins])].sort((a, b) => a - b)) {
+          const together = joinable.filter((s) => s.start === start).map((s) => s.profileId);
           out.push({
             profileId: week.profile.id,
             activity: option.activity,
@@ -110,7 +120,11 @@ export function candidatesFor(week: ProfileWeek, options: readonly Option[], pla
             equipment: option.equipment,
             start,
             durationMin: option.durationMin,
+            ...(together.length > 0 ? { withProfileIds: [...new Set(together)].sort() } : {}),
           });
+        }
+      }
+    }
   }
   return out;
 }
