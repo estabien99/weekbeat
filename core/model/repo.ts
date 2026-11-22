@@ -11,6 +11,8 @@ export interface NewProfile {
   lang: Lang;
   level: Level;
   goal: WeeklyGoal;
+  /** Usual session length in minutes; optional (the planner asks for it when it needs one). */
+  sessionMin?: number;
 }
 
 export class ValidationError extends Error {
@@ -51,6 +53,9 @@ function validateProfile(p: NewProfile): void {
   if (!p.name.trim()) throw new ValidationError('name', 'Name is required');
   if (!Number.isInteger(p.goal.target) || p.goal.target < 1) {
     throw new ValidationError('goal', 'Weekly goal must be a positive whole number');
+  }
+  if (p.sessionMin !== undefined && (!Number.isInteger(p.sessionMin) || p.sessionMin < 1)) {
+    throw new ValidationError('sessionMin', 'Session length must be a positive whole number of minutes');
   }
 }
 
@@ -97,6 +102,7 @@ function buildProfile(householdId: Id, p: NewProfile): Profile {
     hobbies: [],
     limitations: [],
     game: { enabled: true },
+    ...(p.sessionMin !== undefined ? { preferredSessionMin: p.sessionMin } : {}),
   };
 }
 
@@ -118,7 +124,14 @@ export async function updateProfile(db: WeekbeatDB, id: Id, p: NewProfile): Prom
   const existing = await db.profiles.get(id);
   if (!existing) throw new ValidationError('profile', 'Unknown profile');
   const goals = [p.goal, ...existing.goals.slice(1)];
-  await db.profiles.update(id, { name: p.name.trim(), lang: p.lang, level: p.level, goals });
+  // An empty length field clears the setting (Dexie removes properties updated to undefined).
+  await db.profiles.update(id, {
+    name: p.name.trim(),
+    lang: p.lang,
+    level: p.level,
+    goals,
+    preferredSessionMin: p.sessionMin,
+  });
 }
 
 export async function getAvailability(db: WeekbeatDB, profileId: Id): Promise<Availability | undefined> {

@@ -85,9 +85,16 @@ for (const lang of ['de', 'en'] as const) {
       await page.getByRole('link', { name: t.nav.settings }).click();
       await page.getByRole('button', { name: t.settings.addPerson }).click();
       await page.getByLabel(t.profile.name).fill('Sam');
+      await page.getByLabel(t.profile.sessionMin).fill('0');
+      await page.getByRole('button', { name: t.common.save }).click();
+      await expect(page.getByRole('alert')).toHaveText(t.errors.sessionMin);
+      await page.getByLabel(t.profile.sessionMin).fill('45');
       await page.getByRole('button', { name: t.common.save }).click();
       await page.getByRole('button', { name: t.common.save }).click(); // times step, none added
       await expect(page.locator('.people li')).toHaveCount(2);
+      await expect(page.locator('.people li').nth(1)).toContainText(
+        t.profile.sessionMinSummary.replace('{{count}}', '45'),
+      );
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
       await shot(page, '4-settings', project, lang);

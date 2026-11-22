@@ -62,6 +62,24 @@ export function ProfileFields({ value, onChange }: { value: NewProfile; onChange
         </div>
       </fieldset>
       <div className="field">
+        <label htmlFor={`${id}-session`}>{t('profile.sessionMin')}</label>
+        <input
+          id={`${id}-session`}
+          type="number"
+          inputMode="numeric"
+          min={1}
+          step={1}
+          aria-describedby={`${id}-session-hint`}
+          value={value.sessionMin ?? ''}
+          onChange={(e) =>
+            onChange({ ...value, sessionMin: e.target.value === '' ? undefined : Number(e.target.value) })
+          }
+        />
+        <p id={`${id}-session-hint`} className="muted">
+          {t('profile.sessionMinHint')}
+        </p>
+      </div>
+      <div className="field">
         <label htmlFor={`${id}-lang`}>{t('profile.lang')}</label>
         <select
           id={`${id}-lang`}
