@@ -16,8 +16,20 @@ export default defineConfig({
     launchOptions: { executablePath },
   },
   projects: [
-    { name: 'phone', use: { browserName: 'chromium', viewport: { width: 412, height: 915 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true } },
-    { name: 'tablet', use: { browserName: 'chromium', viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1, hasTouch: true } },
+    {
+      name: 'phone',
+      use: {
+        browserName: 'chromium',
+        viewport: { width: 412, height: 915 },
+        deviceScaleFactor: 1,
+        isMobile: true,
+        hasTouch: true,
+      },
+    },
+    {
+      name: 'tablet',
+      use: { browserName: 'chromium', viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1, hasTouch: true },
+    },
   ],
   webServer: {
     command: 'npm run build && npm run preview -- --port 4173 --strictPort',

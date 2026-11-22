@@ -5,7 +5,8 @@ import type { Availability, LoggedActivity, Place, PlannedSession, Programme } f
  * Connectors are optional: everything they deliver can also be entered by hand.
  * They feed the core with data; they never decide (only the planner decides).
  */
-export type ConnectorKind = 'membership' | 'coach-plan' | 'activities' | 'calendar' | 'context' | 'smart-home' | 'household';
+export type ConnectorKind =
+  'membership' | 'coach-plan' | 'activities' | 'calendar' | 'context' | 'smart-home' | 'household';
 
 export type Capability =
   | 'read-activities'

@@ -1,0 +1,31 @@
+name: Knowledge rule / Trainingsregel
+description: Propose a new or changed training rule for the knowledge base.
+labels: [knowledge]
+body:
+  - type: dropdown
+    id: part
+    attributes:
+      label: Part
+      options: [activity-catalogue, weekly-targets, complement, load-recovery, safety]
+    validations:
+      required: true
+  - type: textarea
+    id: rule
+    attributes:
+      label: Rule (German and English) / Regel
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Primary source URL / Quelle
+      description: Guideline, position stand, peer-reviewed review or compendium; not a blog post.
+    validations:
+      required: true
+  - type: dropdown
+    id: confidence
+    attributes:
+      label: Confidence
+      options: [low, medium, high]
+    validations:
+      required: true

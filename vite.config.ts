@@ -36,5 +36,13 @@ export default defineConfig({
   test: {
     include: ['{core,connectors,knowledge,app}/**/*.test.ts'],
     environment: 'node',
+    coverage: {
+      provider: 'v8',
+      include: ['core/**/*.ts', 'connectors/**/*.ts', 'knowledge/**/*.ts'],
+      exclude: ['**/*.test.ts', '**/types.ts', '**/index.ts'],
+      reporter: ['text-summary', 'html', 'lcov'],
+      // The planner and game must stay well tested; raise these as v0.1 grows.
+      thresholds: { lines: 80, functions: 80, branches: 75, statements: 80 },
+    },
   },
 });

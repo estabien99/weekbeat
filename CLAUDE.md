@@ -9,12 +9,14 @@ Chat with the user in English. Everything in the app (UI text, notifications, st
 English second**. Code, comments, commits, issues and PRs are in English.
 
 ## Start of every session
+
 1. `git pull --rebase` on the working branch; read this file and only the doc sections the task needs.
 2. `npm ci` if `node_modules` is missing; `npm run check` must be green before you change anything.
 3. This repo is separate from the Home Assistant maintenance setup ("Unser Nest"). Don't change HA from here;
    the HA connector (v0.3) talks to HA only through its documented REST API with the user's own token.
 
 ## Principles (from the concept doc, decided 22.11.2026)
+
 - **The weekly planner is the core.** Everything else feeds it or reacts to it. Only the planner decides.
 - **Everything else is optional**, gamification and memberships included. With no connector the app works on
   manual entries.
@@ -31,6 +33,7 @@ English second**. Code, comments, commits, issues and PRs are in English.
 - **Open source** (Apache-2.0 code, CC BY 4.0 knowledge base) so people can trust it with health data.
 
 ## Architecture
+
 - One TypeScript core on the device, the same on web, Android and iPhone. Connectors are plugins that feed it,
   the UI is a thin layer on top.
 - Folders and import rules (ESLint enforces them):
@@ -55,6 +58,7 @@ English second**. Code, comments, commits, issues and PRs are in English.
 - Storage schema changes: add a new `db.version(n)`, never edit an old one; keep export/import working.
 
 ## Roadmap
+
 0.1 Foundation (core + planner, knowledge base v1, gamification, Wellpass manual, Freeletics plan, two profiles,
 export/import) → 0.2 Data (Garmin via intervals.icu, iCal, Open-Meteo) → 0.3 Everyday (Home Assistant,
 reminders, Google Calendar two-way, family planner) → 0.4 Phones (Capacitor, Health Connect, Apple Health,
@@ -62,6 +66,7 @@ app stores) → later (EU sync, AI coach, Urban Sports Club, friends). We use ea
 next starts. No dates yet.
 
 ## Rules
+
 - **Ask before:** anything outside the request; adding a dependency or service; anything that costs money or
   creates accounts; changing the licence, name or a principle; publishing, releasing or promoting the app;
   network/environment changes; deleting anything that isn't ours from this session.
@@ -82,7 +87,12 @@ next starts. No dates yet.
 - Dates and weekdays: compute with `date -d` or code, never from memory.
 
 ## Workflow
-- `npm run check` = lint + typecheck + unit tests + build (what CI runs on every PR, plus the e2e job).
+
+- `npm run check` = lint + Prettier check + typecheck + unit tests with coverage thresholds + build. CI runs it on
+  every PR, plus e2e screenshots with axe accessibility checks (WCAG 2.2 AA tags), CodeQL and a DCO sign-off
+  check. Run `npm run format` before committing. Dependabot opens grouped update PRs weekly (TypeScript minor/major
+  and `@playwright/test` are excluded on purpose, see `.github/dependabot.yml`).
+- Work is tracked as GitHub issues with the labels `v0.1` … and `knowledge`, `connector`, `bug`, `enhancement`.
 - Tests: unit tests next to the code (`*.test.ts`, Vitest); UI screenshots in `e2e/` (Playwright, fixed clock).
   In cloud sessions the pre-installed Chromium matches `@playwright/test` 1.63.0 (pinned exactly; bump both
   together, or set `PW_CHROMIUM=/opt/pw-browsers/chromium`).
@@ -93,4 +103,5 @@ next starts. No dates yet.
 - Long sessions get expensive: when a topic is done, suggest a fresh session; this file + the doc make that cheap.
 
 ## Lessons learned (add one line whenever something went wrong or the user corrected you)
+
 - (none yet)

@@ -4,7 +4,7 @@
 schon machst und hast – Hobbys, Trainings-Apps, Mitgliedschaften, Kalender – eine realistische Woche macht und dich
 mit gesunder Gamification dranbleiben lässt. Lokal auf deinem Gerät, ohne Konto.
 
-*Your week for movement and wellness.* Weekbeat is an open-source weekly planner that turns what you already do and
+_Your week for movement and wellness._ Weekbeat is an open-source weekly planner that turns what you already do and
 own (hobbies, training apps, memberships, calendar) into a realistic week and keeps you going with healthy
 gamification. Local-first, no account.
 

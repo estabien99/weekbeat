@@ -39,9 +39,7 @@ export function App() {
         <section aria-labelledby="week-title">
           <div className="week-head">
             <h2 id="week-title">{t('week.title', { week })}</h2>
-            <p className="muted">
-              {t('week.range', { from: dateFmt.format(days[0]), to: dateFmt.format(days[6]) })}
-            </p>
+            <p className="muted">{t('week.range', { from: dateFmt.format(days[0]), to: dateFmt.format(days[6]) })}</p>
           </div>
           <ol className="week">
             {days.map((d) => {

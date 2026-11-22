@@ -1,6 +1,6 @@
 # Contributing to Weekbeat
 
-Thanks for helping! Weekbeat is a local-first weekly planner for movement and wellness.
+Thanks for helping! Please follow our [Code of Conduct](CODE_OF_CONDUCT.md). Weekbeat is a local-first weekly planner for movement and wellness.
 The UI is **German first, English second**; code, comments, issues and pull requests are in English.
 
 ## Setup
@@ -9,18 +9,19 @@ The UI is **German first, English second**; code, comments, issues and pull requ
 nvm use            # Node 22 (see .nvmrc)
 npm ci
 npm run dev        # http://localhost:5173
-npm run check      # lint + typecheck + unit tests + build (what CI runs)
+npm run format     # Prettier
+npm run check      # lint + format check + typecheck + tests with coverage + build (what CI runs)
 npx playwright install chromium && npm run e2e   # screenshots at phone and tablet width → screenshots/
 ```
 
 ## Where things go
 
-| Folder | What | May import |
-|---|---|---|
-| `core/` | data model, planner, game; pure TypeScript, no UI | nothing from `app/` or `connectors/` |
-| `knowledge/` | sourced training rules as JSON (CC BY 4.0) | `core/` types |
-| `connectors/<id>/` | one folder per connector, implements `connectors/types.ts` | `core/` |
-| `app/` | React UI, i18n | everything |
+| Folder             | What                                                       | May import                           |
+| ------------------ | ---------------------------------------------------------- | ------------------------------------ |
+| `core/`            | data model, planner, game; pure TypeScript, no UI          | nothing from `app/` or `connectors/` |
+| `knowledge/`       | sourced training rules as JSON (CC BY 4.0)                 | `core/` types                        |
+| `connectors/<id>/` | one folder per connector, implements `connectors/types.ts` | `core/`                              |
+| `app/`             | React UI, i18n                                             | everything                           |
 
 ESLint enforces the import rules.
 

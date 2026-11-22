@@ -1,0 +1,21 @@
+name: Connector request / Anbindung
+description: Suggest a new connector (membership, calendar, activity source …).
+labels: [connector]
+body:
+  - type: input
+    id: provider
+    attributes:
+      label: Provider / Anbieter
+    validations:
+      required: true
+  - type: textarea
+    id: access
+    attributes:
+      label: How can it be accessed? / Wie ist er erreichbar?
+      description: Official API, iCal, export file, health platform … Link the provider's own docs.
+    validations:
+      required: true
+  - type: textarea
+    id: data
+    attributes:
+      label: Which data, and what would leave the device? / Welche Daten?

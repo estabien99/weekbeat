@@ -1,7 +1,17 @@
 import Dexie, { type EntityTable } from 'dexie';
 import type {
-  ActivityType, Availability, Badge, Household, LoggedActivity, Membership, Place,
-  PlannedSession, Profile, Programme, Quest, XPEvent,
+  ActivityType,
+  Availability,
+  Badge,
+  Household,
+  LoggedActivity,
+  Membership,
+  Place,
+  PlannedSession,
+  Profile,
+  Programme,
+  Quest,
+  XPEvent,
 } from './types.ts';
 
 /**
