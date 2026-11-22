@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { validateRows } from '../core/model/validate.ts';
 import { activityCatalogue, knowledgeRules } from './index.ts';
 
 const PARTS = ['intensity', 'weekly-targets', 'principle'];
@@ -86,6 +87,10 @@ describe('knowledge rules', () => {
 });
 
 describe('activity catalogue', () => {
+  it('passes the import schema (catalogue rows can be stored and exported)', () => {
+    expect(validateRows('activityTypes', activityCatalogue)).toBeNull();
+  });
+
   it('has unique ids', () => {
     const ids = activityCatalogue.map((a) => a.id);
     expect(new Set(ids).size).toBe(ids.length);

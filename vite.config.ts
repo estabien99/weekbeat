@@ -1,14 +1,42 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // GitHub Pages serves the app under /<repo>/; set BASE_PATH there. Local and other hosts use /.
 const base = process.env.BASE_PATH ?? '/';
 
+/**
+ * Content-Security-Policy for the built app (GitHub Pages cannot send headers, so it is a meta tag).
+ * Only in builds: the dev server injects an inline React refresh script that 'self' would block.
+ * Connectors add their declared hosts to connect-src when they arrive.
+ */
+export const CSP = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join('; ');
+
+const cspMeta = (): Plugin => ({
+  name: 'weekbeat-csp',
+  apply: 'build',
+  transformIndexHtml: () => [
+    { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: CSP }, injectTo: 'head-prepend' },
+  ],
+});
+
 export default defineConfig({
   base,
   plugins: [
+    cspMeta(),
     react(),
     VitePWA({
       registerType: 'prompt',
