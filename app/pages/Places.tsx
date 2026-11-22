@@ -9,29 +9,34 @@ import {
   deletePlace,
   updateMembership,
   updatePlace,
+  monthlyLimit,
+  toIsoDate,
   withLinked,
   type ActivityCategory,
   type Id,
   type Lang,
   type Membership,
-  type NewMembership,
   type NewPlace,
   type Place,
   type Profile,
 } from '../../core/index.ts';
 import { providerById } from '../../connectors/membership/providers.ts';
 import { AvailabilityEditor } from '../components/AvailabilityEditor.tsx';
+import { CheckInForm } from '../components/CheckInForm.tsx';
+import { ValueMeterCard } from '../components/ValueMeterCard.tsx';
 import { MembershipFields } from '../components/MembershipFields.tsx';
 import { ProviderIcon } from '../components/ProviderIcon.tsx';
 import { db } from '../db.ts';
-import { weekdayNames } from '../format.ts';
+import { localeOf, weekdayNames } from '../format.ts';
 import {
   draftOf,
   emptyDraft,
   formatEur,
   membershipLabel,
+  membershipOf,
   optionalNumber,
   sortMemberships,
+  withProviderLimits,
   type MembershipDraft,
 } from '../memberships.ts';
 
@@ -43,6 +48,7 @@ type Editing =
   | { kind: 'place'; id?: Id }
   | { kind: 'confirm-membership'; id: Id }
   | { kind: 'confirm-place'; id: Id }
+  | { kind: 'checkin'; id: Id }
   | null;
 
 /** Turns a validation error into the translated message for its field. */
@@ -64,14 +70,47 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
   const lang = (i18n.resolvedLanguage ?? 'de') as Lang;
   const stored = useLiveQuery(() => db.memberships.toArray(), []);
   const places = useLiveQuery(() => db.places.orderBy('id').toArray(), []);
+  const logs = useLiveQuery(() => db.loggedActivities.toArray(), []);
+  const [today] = useState(() => toIsoDate(new Date()));
+  const month = today.slice(0, 7);
   const [editing, setEditing] = useState<Editing>(null);
   const [status, setStatus] = useState('');
   const errorText = useErrorText();
 
-  if (!stored || !places) return null;
+  if (!stored || !places || !logs) return null;
+  const active = profiles.find((p) => p.id === activeId);
   const memberships = sortMemberships(stored, profiles);
   const sortedPlaces = [...places].sort((a, b) => a.name.localeCompare(b.name, lang));
   const byId = new Map(memberships.map((m) => [m.id, m]));
+  // "3 von 10 Check-ins im November" (or when a provider's limit starts later, from when it applies).
+  const effective = new Map(withProviderLimits(memberships).map((m) => [m.id, m]));
+  const limitText = (stored: Membership) => {
+    const m = effective.get(stored.id) ?? stored;
+    const parts: string[] = [];
+    if (m.dailyCheckInLimit !== undefined) parts.push(t('membership.perDaySummary', { count: m.dailyCheckInLimit }));
+    if (m.monthlyCheckInLimit !== undefined) {
+      if (monthlyLimit(m, today) === undefined) {
+        parts.push(
+          t('membership.limitFromSummary', {
+            count: m.monthlyCheckInLimit,
+            date: new Intl.DateTimeFormat(localeOf(lang), { dateStyle: 'medium' }).format(
+              new Date(`${m.monthlyCheckInLimitFrom}T12:00`),
+            ),
+          }),
+        );
+      } else {
+        const used = logs.filter(
+          (l) =>
+            l.profileId === m.ownerProfileId &&
+            !l.mergedIntoId &&
+            l.start.startsWith(month) &&
+            places.some((p) => p.id === l.placeId && p.membershipIds.includes(m.id)),
+        ).length;
+        parts.push(t('membership.usedSummary', { used, count: m.monthlyCheckInLimit }));
+      }
+    }
+    return parts.map((x) => ` · ${x}`).join('');
+  };
   const done = (text: string) => {
     setEditing(null);
     setStatus(text);
@@ -84,6 +123,10 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
       <p role="status" className="ok">
         {status}
       </p>
+
+      {active && (
+        <ValueMeterCard profile={active} month={month} logs={logs} places={places} memberships={memberships} />
+      )}
 
       <div className="card">
         <h3>{t('membership.title')}</h3>
@@ -107,6 +150,7 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
                           ` · ${t('membership.linkedSummary', { main: membershipLabel(main, profiles, t, lang) })}`}
                         {m.monthlyCostShareEur !== undefined &&
                           ` · ${t('membership.shareSummary', { amount: formatEur(m.monthlyCostShareEur, lang) })}`}
+                        {limitText(m)}
                       </span>
                     </div>
                   </div>
@@ -169,6 +213,9 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
             {sortedPlaces.map((p) => (
               <li key={p.id}>
                 <PlaceSummary place={p} memberships={memberships} profiles={profiles} />
+                {editing?.kind === 'checkin' && editing.id === p.id && active ? (
+                  <CheckInForm place={p} profile={active} onDone={done} onCancel={() => setEditing(null)} />
+                ) : null}
                 {editing?.kind === 'confirm-place' && editing.id === p.id ? (
                   <Confirm
                     text={t('places.confirmRemove', { name: p.name })}
@@ -180,6 +227,11 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
                   />
                 ) : (
                   <div className="actions">
+                    {editing?.kind !== 'checkin' || editing.id !== p.id ? (
+                      <button type="button" onClick={() => setEditing({ kind: 'checkin', id: p.id })}>
+                        {t('checkIn.open', { name: p.name })}
+                      </button>
+                    ) : null}
                     {p.bookingUrl && (
                       <a className="button ghost" href={p.bookingUrl} target="_blank" rel="noopener noreferrer">
                         {t('places.book', { name: p.name })}
@@ -265,6 +317,8 @@ function PlaceSummary({
         {' · '}
         {t(`places.kinds.${place.kind}`)}
         {place.travelMin !== undefined && ` · ${t('places.travelSummary', { count: place.travelMin })}`}
+        {place.monthlyVisitLimit !== undefined &&
+          ` · ${t('places.visitLimitSummary', { count: place.monthlyVisitLimit })}`}
         {place.singleVisitPriceEur !== undefined &&
           ` · ${t('places.priceSummary', { amount: formatEur(place.singleVisitPriceEur, lang) })}`}
       </span>
@@ -321,13 +375,7 @@ function MembershipForm({
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    const m: NewMembership = {
-      provider: draft.provider,
-      ownerProfileId: owner,
-      tier: draft.tier,
-      monthlyCostShareEur: optionalNumber(draft.share),
-      ...(draft.linkedTo ? { linkedToMembershipId: draft.linkedTo } : {}),
-    };
+    const m = membershipOf(draft, owner);
     try {
       if (existing) await updateMembership(db, existing.id, m);
       else await addMembership(db, m);
@@ -395,6 +443,7 @@ interface PlaceDraft {
   bookingUrl: string;
   price: string;
   travel: string;
+  visitLimit: string;
 }
 
 function placeDraft(p?: Place): PlaceDraft {
@@ -409,6 +458,7 @@ function placeDraft(p?: Place): PlaceDraft {
     bookingUrl: p?.bookingUrl ?? '',
     price: p?.singleVisitPriceEur === undefined ? '' : String(p.singleVisitPriceEur),
     travel: p?.travelMin === undefined ? '' : String(p.travelMin),
+    visitLimit: p?.monthlyVisitLimit === undefined ? '' : String(p.monthlyVisitLimit),
   };
 }
 
@@ -447,6 +497,7 @@ function PlaceForm({
       bookingUrl: d.bookingUrl,
       singleVisitPriceEur: optionalNumber(d.price),
       travelMin: optionalNumber(d.travel),
+      monthlyVisitLimit: optionalNumber(d.visitLimit),
     };
     try {
       if (existing) await updatePlace(db, existing.id, p);
@@ -567,6 +618,22 @@ function PlaceForm({
           onChange={(e) => set({ travel: e.target.value })}
         />
       </div>
+      {d.membershipIds.length > 0 && (
+        <div className="field">
+          <label htmlFor={`${id}-visits`}>{t('places.visitLimit')}</label>
+          <input
+            id={`${id}-visits`}
+            inputMode="numeric"
+            autoComplete="off"
+            aria-describedby={`${id}-visits-hint`}
+            value={d.visitLimit}
+            onChange={(e) => set({ visitLimit: e.target.value })}
+          />
+          <p className="muted small" id={`${id}-visits-hint`}>
+            {t('places.visitLimitHint')}
+          </p>
+        </div>
+      )}
       <div className="field">
         <label htmlFor={`${id}-address`}>{t('places.address')}</label>
         <input

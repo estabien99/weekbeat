@@ -1,6 +1,7 @@
 import type { IsoDate, IsoDateTime, PlanInput } from '../core/index.ts';
 import { activityCatalogue, knowledgeRules } from '../knowledge/index.ts';
 import { db } from './db.ts';
+import { withProviderLimits } from './memberships.ts';
 
 /** Everything the planner reads, straight from this device's database (nothing leaves the device). */
 export async function loadPlanInput(weekStart: IsoDate, notBefore: IsoDateTime): Promise<PlanInput> {
@@ -19,7 +20,7 @@ export async function loadPlanInput(weekStart: IsoDate, notBefore: IsoDateTime):
     profiles,
     availability,
     places,
-    memberships,
+    memberships: withProviderLimits(memberships),
     programmes,
     anchors,
     logs,

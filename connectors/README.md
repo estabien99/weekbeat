@@ -20,7 +20,15 @@ Rules:
 Wellpass, Urban Sports Club, Wellhub, a single gym or club, or any other membership share one manual module:
 `membership/providers.ts` lists the providers (names only, neutral icons, no logos), and the core keeps memberships
 and the household's own places (`core/model/memberships.ts`). No provider offers a member API, so there is no
-`sync`; check-ins are logged by hand (source `checkin:<provider>`).
+`sync`; check-ins are logged by hand (source `checkin:<provider>`, `sourceRef` = membership id, `placeId`).
+Marking a planned session at a place as done logs the visit too.
+
+- Check-in limits: per day and per month on the membership, per month on a venue, as the person enters them.
+  Where the monthly limit is left empty, the app applies a limit the provider states (`providers.ts` → `limits`,
+  e.g. the Wellpass Plus 1 limit from 1 Jan 2027). The planner never plans past a limit and says so in a neutral
+  note.
+- Value meter: the month's visits through the person's memberships at their single-visit prices, next to the
+  own share. Information only, no target or loss wording.
 
 - Coverage is explicit: a place lists every membership that covers it. A linked add-on (Wellpass Plus 1) starts
   ticked with its main membership and can be unticked per place.

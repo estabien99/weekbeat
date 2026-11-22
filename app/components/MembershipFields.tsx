@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import type { Id, Lang, Membership, Profile } from '../../core/index.ts';
 import { factsFor, membershipProviders, providerById } from '../../connectors/membership/providers.ts';
 import { localeOf } from '../format.ts';
-import { membershipLabel, providerName, type MembershipDraft } from '../memberships.ts';
+import { membershipLabel, providerLimit, providerName, type MembershipDraft } from '../memberships.ts';
 
 /**
  * Controlled fields for one membership of `ownerId`; the parent owns the form and submit. `noneLabel` adds a
@@ -18,6 +18,7 @@ export function MembershipFields({
   profiles,
   noneLabel,
   describedBy,
+  showLimits = true,
 }: {
   value: MembershipDraft;
   onChange: (v: MembershipDraft) => void;
@@ -27,6 +28,8 @@ export function MembershipFields({
   profiles: readonly Profile[];
   noneLabel?: string;
   describedBy?: string;
+  /** The interview leaves limits out (the provider's stated limit still applies); the Places form shows them. */
+  showLimits?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const lang = (i18n.resolvedLanguage ?? 'de') as Lang;
@@ -36,6 +39,7 @@ export function MembershipFields({
     (m) => m.provider === value.provider && !m.linkedToMembershipId && m.id !== selfId && m.ownerProfileId !== ownerId,
   );
   const addOn = providerById(value.provider).addOn?.[lang] ?? t('membership.addOnGeneric');
+  const stated = value.provider ? providerLimit(value.provider, value.linkedTo !== '') : undefined;
 
   return (
     <>
@@ -98,6 +102,46 @@ export function MembershipFields({
               {t('membership.shareHint')}
             </p>
           </div>
+          {showLimits && (
+            <fieldset className="field">
+              <legend>{t('membership.limits')}</legend>
+              <p className="muted small" id={`${id}-limits-hint`}>
+                {stated
+                  ? t('membership.limitsStated', {
+                      count: stated.perMonth,
+                      date: new Intl.DateTimeFormat(localeOf(lang), { dateStyle: 'medium' }).format(
+                        new Date(`${stated.from}T12:00`),
+                      ),
+                    })
+                  : t('membership.limitsHint')}
+              </p>
+              <div className="row">
+                <label className="inline" htmlFor={`${id}-daily`}>
+                  <span>{t('membership.perDay')}</span>
+                  <input
+                    id={`${id}-daily`}
+                    inputMode="numeric"
+                    autoComplete="off"
+                    aria-describedby={`${id}-limits-hint`}
+                    value={value.daily}
+                    onChange={(e) => onChange({ ...value, daily: e.target.value })}
+                  />
+                </label>
+                <label className="inline" htmlFor={`${id}-monthly`}>
+                  <span>{t('membership.perMonth')}</span>
+                  <input
+                    id={`${id}-monthly`}
+                    inputMode="numeric"
+                    autoComplete="off"
+                    aria-describedby={`${id}-limits-hint`}
+                    value={value.monthly}
+                    placeholder={stated ? String(stated.perMonth) : undefined}
+                    onChange={(e) => onChange({ ...value, monthly: e.target.value })}
+                  />
+                </label>
+              </div>
+            </fieldset>
+          )}
         </>
       )}
     </>
