@@ -3,7 +3,7 @@ import { matchesSuggestion } from '../core/knowledge.ts';
 import { validateRows } from '../core/model/validate.ts';
 import { activityCatalogue, knowledgeRules } from './index.ts';
 
-const PARTS = ['intensity', 'weekly-targets', 'impact', 'complement', 'deload', 'principle'];
+const PARTS = ['intensity', 'weekly-targets', 'impact', 'complement', 'deload', 'recovery', 'principle'];
 const today = Date.now();
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 

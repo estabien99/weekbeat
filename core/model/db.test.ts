@@ -47,6 +47,19 @@ describe('parseExportFile', () => {
       },
     });
 
+  const profile = {
+    id: 'pr',
+    householdId: 'h1',
+    name: 'A',
+    lang: 'de',
+    level: 'beginner',
+    goals: [],
+    hobbies: [],
+    limitations: [],
+    game: { enabled: false },
+  };
+  const withProfile = (extra: object) => JSON.stringify({ ...ok, tables: { profiles: [{ ...profile, ...extra }] } });
+
   it('accepts a valid file', () => {
     expect(parseExportFile(JSON.stringify(ok)).tables.households).toHaveLength(1);
   });
@@ -66,6 +79,8 @@ describe('parseExportFile', () => {
     ['bad-table', withPlace('http://example.org')],
     ['bad-table', JSON.stringify({ ...ok, tables: { households: [{ name: 'no id' }] } })],
     ['bad-table', JSON.stringify({ ...ok, tables: { households: 'x' } })],
+    ['bad-table', withProfile({ preferredSessionMin: 0 })],
+    ['bad-table', withProfile({ preferredSessionMin: -30 })],
   ])('rejects %s', (reason, text) => {
     try {
       parseExportFile(text);
@@ -74,6 +89,10 @@ describe('parseExportFile', () => {
       expect(e).toBeInstanceOf(ImportError);
       expect((e as ImportError).reason).toBe(reason);
     }
+  });
+
+  it('accepts a positive session length', () => {
+    expect(parseExportFile(withProfile({ preferredSessionMin: 45 })).tables.profiles).toHaveLength(1);
   });
 
   it('accepts https links', () => {

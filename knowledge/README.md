@@ -7,7 +7,7 @@ Licensed under [CC BY 4.0](LICENSE) (the code is Apache-2.0), so others can reus
 
 - `activities.json` — activity catalogue: MET value and verbatim Compendium entry, Health Connect / HealthKit / FIT
   mapping, sources, confidence, `lastReviewed`. Intensity is derived from MET with the WHO thresholds.
-- `rules.json` — rules (`intensity`, `weekly-targets`, `impact`, `complement`, `deload`, `principle`), each with the
+- `rules.json` — rules (`intensity`, `weekly-targets`, `impact`, `complement`, `deload`, `recovery`, `principle`), each with the
   verbatim `quote` it encodes. `complement` rules say which need an activity leaves open (e.g. bone loading after
   cycling) and which activities cover it; the planner may suggest, never require them.
 - `SOURCES.md` — how each source was used and checked, plus open points.
