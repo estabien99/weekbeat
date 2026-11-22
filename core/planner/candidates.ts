@@ -20,11 +20,16 @@ export interface Option {
  * goal when the profile has both. Undefined when neither exists (the planner then asks instead of guessing).
  */
 export function sessionLength(profile: Profile): number | undefined {
-  if (profile.preferredSessionMin) return profile.preferredSessionMin;
+  if (profile.preferredSessionMin !== undefined) return validLength(profile.preferredSessionMin);
   const minutes = profile.goals.find((g) => g.kind === 'minutes');
   const sessions = profile.goals.find((g) => g.kind === 'sessions');
-  if (minutes && sessions && sessions.target > 0) return Math.round(minutes.target / sessions.target);
+  if (minutes && sessions && sessions.target > 0) return validLength(Math.round(minutes.target / sessions.target));
   return undefined;
+}
+
+/** Lengths below one minute count as unknown, so the planner asks instead of planning empty sessions. */
+function validLength(n: number): number | undefined {
+  return Number.isFinite(n) && n >= 1 ? n : undefined;
 }
 
 export interface Options {
@@ -41,7 +46,7 @@ export function optionsFor(week: ProfileWeek, input: PlanInput): Options {
   for (const programme of input.programmes.filter((p) => p.profileId === profile.id)) {
     const count = week.done.filter((d) => d.programmeId === programme.id).length;
     const typical = programme.typicalSessions[count % programme.typicalSessions.length];
-    if (count >= programme.daysPerWeek || !typical) continue;
+    if (count >= programme.daysPerWeek || !typical || validLength(typical.durationMin) === undefined) continue;
     const activity = byId.get(typical.activityTypeId);
     if (!activity) continue;
     options.push({

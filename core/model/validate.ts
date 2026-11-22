@@ -12,6 +12,8 @@ const fail = (path: string, what: string) => `${path}: ${what}`;
 const str: Check = (v, p) => (typeof v === 'string' ? ok : fail(p, 'expected text'));
 const nonEmpty: Check = (v, p) => (typeof v === 'string' && v.trim() !== '' ? ok : fail(p, 'expected non-empty text'));
 const num: Check = (v, p) => (typeof v === 'number' && Number.isFinite(v) ? ok : fail(p, 'expected a number'));
+const positive: Check = (v, p) =>
+  typeof v === 'number' && Number.isFinite(v) && v > 0 ? ok : fail(p, 'expected a positive number');
 const bool: Check = (v, p) => (typeof v === 'boolean' ? ok : fail(p, 'expected true/false'));
 const pattern =
   (re: RegExp, what: string): Check =>
@@ -98,7 +100,7 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     hobbies: arr(nonEmpty),
     limitations: arr(obj({ tag: str, note: opt(str) })),
     game: obj({ enabled: bool, weeklyMaxSessions: opt(num) }),
-    preferredSessionMin: opt(num),
+    preferredSessionMin: opt(positive),
     pausedUntil: opt(isoDate),
   }),
   activityTypes: obj({
@@ -126,7 +128,7 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     name: str,
     connectorId: opt(str),
     daysPerWeek: num,
-    typicalSessions: arr(obj({ activityTypeId: nonEmpty, durationMin: num, equipment: arr(str) })),
+    typicalSessions: arr(obj({ activityTypeId: nonEmpty, durationMin: positive, equipment: arr(str) })),
   }),
   memberships: obj({
     id: nonEmpty,

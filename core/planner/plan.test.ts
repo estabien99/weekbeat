@@ -288,6 +288,43 @@ describe('session length', () => {
     ).toBe(38);
     expect(sessionLength(profile({ preferredSessionMin: undefined }))).toBeUndefined();
   });
+
+  it('treats a length below one minute as unknown and asks for one', () => {
+    const tiny = profile({
+      preferredSessionMin: undefined,
+      goals: [
+        { kind: 'sessions', target: 3 },
+        { kind: 'minutes', target: 1 },
+      ],
+    });
+    expect(sessionLength(tiny)).toBeUndefined();
+    expect(sessionLength(profile({ preferredSessionMin: -30 }))).toBeUndefined();
+    expect(sessionLength(profile({ preferredSessionMin: 0.4 }))).toBeUndefined();
+
+    const plan = planWeek(input({ programmes: [], profiles: [tiny] }));
+    expect(plan.proposals).toEqual([]);
+    expect(plan.notes.map((n) => n.kind)).toEqual(['no-duration']);
+    const negative = planWeek(input({ programmes: [], profiles: [profile({ preferredSessionMin: -30 })] }));
+    expect(negative.notes.map((n) => n.kind)).toEqual(['no-duration']);
+  });
+
+  it('skips programme sessions without a positive length', () => {
+    const plan = planWeek(
+      input({
+        programmes: [
+          {
+            id: 'prog-zero',
+            profileId: 'p-a',
+            name: 'Broken',
+            daysPerWeek: 2,
+            typicalSessions: [{ activityTypeId: 'bodyweight-vigorous', durationMin: 0, equipment: [] }],
+          },
+        ],
+      }),
+    );
+    expect(plan.proposals.every((p) => p.session.durationMin >= 1)).toBe(true);
+    expect(new Set(plan.proposals.map((p) => p.session.id)).size).toBe(plan.proposals.length);
+  });
 });
 
 describe('hard constraints', () => {
