@@ -19,7 +19,8 @@
     "people": "Personen im Haushalt {{household}}",
     "addPerson": "Person hinzufügen",
     "editPerson": "{{name}} bearbeiten",
-    "editTimes": "Zeiten von {{name}}"
+    "editTimes": "Zeiten von {{name}}",
+    "editPrefs": "Vorlieben von {{name}}"
   },
   "pwa": {
     "update": "Eine neue Version ist da.",
@@ -35,7 +36,8 @@
     "save": "Speichern",
     "cancel": "Abbrechen",
     "add": "Hinzufügen",
-    "remove": "Entfernen"
+    "remove": "Entfernen",
+    "back": "Zurück"
   },
   "nav": {
     "label": "Hauptnavigation",
@@ -52,7 +54,9 @@
     "you": "Über dich",
     "availabilityTitle": "Wann hast du Zeit, {{name}}?",
     "availabilityHint": "Trag die Zeitfenster ein, in denen Bewegung meistens passt. Du kannst sie jederzeit ändern.",
-    "finish": "Fertig"
+    "prefsTitle": "Deine Vorlieben (optional)",
+    "prefsIntro": "Drei kurze Fragen, damit Weekbeat deine Woche planen kann. Du kannst sie überspringen und später in den Einstellungen beantworten.",
+    "skip": "Überspringen"
   },
   "profile": {
     "name": "Vorname",
@@ -74,7 +78,8 @@
     "sessionMin": "Übliche Dauer pro Einheit (Minuten)",
     "sessionMinHint": "Optional. Damit kann Weekbeat Einheiten vorschlagen, die in deine Zeitfenster passen.",
     "sessionMinSummary": "{{count}} Min. pro Einheit",
-    "lang": "Sprache für Erinnerungen"
+    "lang": "Sprache für Erinnerungen",
+    "autoPlanOn": "Wochenvorschlag automatisch"
   },
   "availability": {
     "none": "Noch keine Zeitfenster.",
@@ -92,7 +97,8 @@
     "sessionMin": "Die Dauer muss eine ganze Zahl ab 1 sein.",
     "time": "Bitte eine gültige Zeit wählen.",
     "day": "Bitte einen Wochentag wählen.",
-    "profile": "Diese Person gibt es nicht mehr."
+    "profile": "Diese Person gibt es nicht mehr.",
+    "hobbies": "Bitte nur Aktivitäten aus der Liste wählen."
   },
   "data": {
     "title": "Deine Daten",
@@ -110,5 +116,31 @@
       "too-new": "Die Datei stammt aus einer neueren Weekbeat-Version. Bitte aktualisiere die App.",
       "bad-table": "Die Datei ist beschädigt oder unvollständig."
     }
+  },
+  "interview": {
+    "progress": "Frage {{n}} von {{of}}",
+    "finish": "Fertig",
+    "hobbies": {
+      "title": "Was machst du gern, {{name}}?",
+      "hint": "Wähle alles, was passt – auch, was du ausprobieren möchtest. Weekbeat plant daraus und ergänzt, was dazu passt."
+    },
+    "length": {
+      "title": "Wie lange dauert eine Einheit meistens?",
+      "hint": "In Minuten. Leer lassen, wenn es sehr unterschiedlich ist."
+    },
+    "auto": {
+      "title": "Soll Weekbeat deine Woche automatisch vorschlagen?",
+      "hint": "Am Sonntag oder sobald eine neue Woche noch keinen Plan hat. Du bestätigst jeden Vorschlag selbst und kannst das jederzeit in den Einstellungen ändern.",
+      "yes": "Ja, jede Woche automatisch vorschlagen",
+      "no": "Nein, ich starte die Planung selbst"
+    }
+  },
+  "activityCategories": {
+    "cycling": "Radfahren",
+    "endurance": "Ausdauer",
+    "strength": "Kraft",
+    "hiit": "HIIT",
+    "mobility": "Mobilität",
+    "swimming": "Schwimmen"
   }
 }

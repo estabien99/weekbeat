@@ -69,7 +69,25 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.locator('.windows li')).toHaveCount(2);
       await expectAccessible(page);
       await shot(page, '2-availability', project, lang);
-      await page.getByRole('button', { name: t.setup.finish }).click();
+      await page.getByRole('button', { name: t.common.next, exact: true }).click();
+
+      // Step 3: optional interview (hobbies, session length, automatic proposal)
+      await expect(page.getByRole('heading', { name: t.setup.prefsTitle })).toBeVisible();
+      const q1 = t.interview.hobbies.title.replace('{{name}}', 'Alex');
+      await expect(page.getByRole('heading', { name: q1 })).toBeFocused();
+      const mtb = lang === 'de' ? 'Mountainbiken' : 'Mountain biking';
+      await page.getByRole('checkbox', { name: mtb }).check();
+      await page.getByRole('checkbox', { name: 'Yoga', exact: true }).check();
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '3-interview', project, lang);
+      await page.getByRole('button', { name: t.common.next, exact: true }).click();
+      await expect(page.getByRole('heading', { name: t.interview.length.title })).toBeFocused();
+      await page.getByLabel(t.profile.sessionMin).fill('45');
+      await page.getByRole('button', { name: t.common.next, exact: true }).click();
+      await page.getByRole('radio', { name: t.interview.auto.yes }).check();
+      await expectAccessible(page);
+      await page.getByRole('button', { name: t.interview.finish }).click();
 
       // Week view shows the free windows
       await expect(page.getByRole('heading', { level: 2 })).toHaveText(t.week.title.replace('{{week}}', '47'));
@@ -79,7 +97,7 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.locator('.day').nth(5)).toContainText('09:00–11:00');
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
-      await shot(page, '3-week', project, lang);
+      await shot(page, '4-week', project, lang);
 
       // Settings: add a second person, switch to them
       await page.getByRole('link', { name: t.nav.settings }).click();
@@ -91,13 +109,19 @@ for (const lang of ['de', 'en'] as const) {
       await page.getByLabel(t.profile.sessionMin).fill('45');
       await page.getByRole('button', { name: t.common.save }).click();
       await page.getByRole('button', { name: t.common.save }).click(); // times step, none added
+      // A new person is offered the interview too; Sam leaves it for later.
+      await expect(
+        page.getByRole('heading', { name: t.interview.hobbies.title.replace('{{name}}', 'Sam') }),
+      ).toBeFocused();
+      await page.getByRole('button', { name: t.common.cancel }).click();
       await expect(page.locator('.people li')).toHaveCount(2);
+      await expect(page.locator('.people li').nth(0)).toContainText(t.profile.autoPlanOn);
       await expect(page.locator('.people li').nth(1)).toContainText(
         t.profile.sessionMinSummary.replace('{{count}}', '45'),
       );
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
-      await shot(page, '4-settings', project, lang);
+      await shot(page, '5-settings', project, lang);
 
       // Export, then import the same file again (replaces data after confirmation)
       const downloadP = page.waitForEvent('download');
@@ -108,7 +132,7 @@ for (const lang of ['de', 'en'] as const) {
       await page.getByLabel(t.data.import).setInputFiles(file);
       await expect(page.getByRole('alertdialog')).toContainText(t.data.confirmText);
       await expectAccessible(page);
-      await shot(page, '5-import', project, lang);
+      await shot(page, '6-import', project, lang);
       await page.getByRole('button', { name: t.data.confirm }).click();
       await expect(page.getByRole('status').filter({ hasText: t.data.imported })).toBeVisible();
       await expect(page.locator('.people li')).toHaveCount(2);
