@@ -8,7 +8,7 @@ no clock, no storage, no randomness. Entry point: `planWeek(input)`.
 | Collect inputs   | `week.ts`        | One person's week in week minutes: windows, busy blocks, anchors, logs, memberships                   |
 |                  | `candidates.ts`  | Options (programme days, hobbies, sourced complements) × places × free stretches                      |
 | Hard constraints | `constraints.ts` | Pause, setting, equipment, window, overlap (travel included), opening hours, programme days, recovery |
-| Score candidates | `score.ts`       | Goal fit, programme, complement, variety, membership, spread, distance (0…1 each)                     |
+| Score candidates | `score.ts`       | Goal fit, programme, together, complement, variety, membership, spread, distance (0…1 each)           |
 | Pick and explain | `plan.ts`        | Greedy pick up to the goal and the weekly maximum, fixed tie-break order                              |
 |                  | `why.ts`         | One line per session, de + en, from the two strongest terms                                           |
 | Offers and notes | `plan.ts`        | Deload offers (never applied) and neutral notes when the week falls short                             |
