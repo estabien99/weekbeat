@@ -372,3 +372,56 @@ button.danger {
   color: var(--accent-text);
   font-weight: 600;
 }
+
+/* Interview: large, tappable choices (checkboxes and radios), wrapping from 320 px up. */
+.interview {
+  display: grid;
+  gap: 12px;
+}
+.interview h3:focus {
+  outline: none;
+}
+.interview h3:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 8px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.choices > legend {
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 8px;
+}
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.choice:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.choice:focus-within {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.choice input {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  margin: 0;
+  flex: none;
+  accent-color: var(--accent);
+}

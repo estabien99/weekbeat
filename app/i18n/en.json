@@ -19,7 +19,8 @@
     "people": "People in household {{household}}",
     "addPerson": "Add person",
     "editPerson": "Edit {{name}}",
-    "editTimes": "Times of {{name}}"
+    "editTimes": "Times of {{name}}",
+    "editPrefs": "Preferences of {{name}}"
   },
   "pwa": {
     "update": "A new version is available.",
@@ -35,7 +36,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "add": "Add",
-    "remove": "Remove"
+    "remove": "Remove",
+    "back": "Back"
   },
   "nav": {
     "label": "Main navigation",
@@ -52,7 +54,9 @@
     "you": "About you",
     "availabilityTitle": "When do you have time, {{name}}?",
     "availabilityHint": "Add the time windows when exercise usually fits. You can change them any time.",
-    "finish": "Done"
+    "prefsTitle": "Your preferences (optional)",
+    "prefsIntro": "Three short questions so Weekbeat can plan your week. You can skip them and answer later in the settings.",
+    "skip": "Skip"
   },
   "profile": {
     "name": "First name",
@@ -74,7 +78,8 @@
     "sessionMin": "Usual session length (minutes)",
     "sessionMinHint": "Optional. Lets Weekbeat suggest sessions that fit your time windows.",
     "sessionMinSummary": "{{count}} min per session",
-    "lang": "Language for reminders"
+    "lang": "Language for reminders",
+    "autoPlanOn": "weekly proposal: automatic"
   },
   "availability": {
     "none": "No time windows yet.",
@@ -92,7 +97,8 @@
     "sessionMin": "The length must be a whole number of at least 1.",
     "time": "Please choose a valid time.",
     "day": "Please choose a weekday.",
-    "profile": "This person no longer exists."
+    "profile": "This person no longer exists.",
+    "hobbies": "Please choose activities from the list."
   },
   "data": {
     "title": "Your data",
@@ -110,5 +116,31 @@
       "too-new": "The file comes from a newer Weekbeat version. Please update the app.",
       "bad-table": "The file is damaged or incomplete."
     }
+  },
+  "interview": {
+    "progress": "Question {{n}} of {{of}}",
+    "finish": "Done",
+    "hobbies": {
+      "title": "What do you like to do, {{name}}?",
+      "hint": "Pick everything that fits, including things you would like to try. Weekbeat plans from these and adds what complements them."
+    },
+    "length": {
+      "title": "How long is a session usually?",
+      "hint": "In minutes. Leave it empty if it varies a lot."
+    },
+    "auto": {
+      "title": "Should Weekbeat propose your week automatically?",
+      "hint": "On Sunday, or as soon as a new week has no plan yet. You confirm every proposal yourself and can change this any time in the settings.",
+      "yes": "Yes, propose every week automatically",
+      "no": "No, I will start planning myself"
+    }
+  },
+  "activityCategories": {
+    "cycling": "Cycling",
+    "endurance": "Endurance",
+    "strength": "Strength",
+    "hiit": "HIIT",
+    "mobility": "Mobility",
+    "swimming": "Swimming"
   }
 }

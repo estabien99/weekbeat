@@ -50,6 +50,11 @@ export interface Profile {
   game: { enabled: boolean; weeklyMaxSessions?: number };
   /** Usual session length in minutes, set by the person; the planner uses it where no programme sets one. */
   preferredSessionMin?: number;
+  /**
+   * Propose the week by itself (on Sunday, or when a new week has no plan yet). Set in the optional interview;
+   * the person still confirms every proposal.
+   */
+  autoPlan?: boolean;
   /** Pause mode (illness, holidays, injury) freezes goals and streaks. */
   pausedUntil?: IsoDate;
 }

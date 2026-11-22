@@ -102,6 +102,7 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     limitations: arr(obj({ tag: str, note: opt(str) })),
     game: obj({ enabled: bool, weeklyMaxSessions: opt(num) }),
     preferredSessionMin: opt(positive),
+    autoPlan: opt(bool),
     pausedUntil: opt(isoDate),
   }),
   activityTypes: obj({

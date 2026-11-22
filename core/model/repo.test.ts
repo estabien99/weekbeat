@@ -8,6 +8,7 @@ import {
   getAvailability,
   getHousehold,
   normalizeWindows,
+  savePreferences,
   setWindows,
   updateProfile,
   type NewProfile,
@@ -81,6 +82,28 @@ describe('household and profiles', () => {
     const cleared = await db.profiles.get(profile.id);
     expect(cleared && 'preferredSessionMin' in cleared).toBe(false);
     expect((await addProfile(db, ben)).preferredSessionMin).toBeUndefined();
+  });
+});
+
+describe('preferences (interview)', () => {
+  it('stores hobbies, length and automatic planning, and can clear the length', async () => {
+    const { profile } = await createHousehold(db, 'Wir', anna);
+    await savePreferences(db, profile.id, { hobbies: ['yoga', 'mtb', 'yoga'], sessionMin: 45, autoPlan: true });
+    let p = await db.profiles.get(profile.id);
+    expect(p).toMatchObject({ hobbies: ['mtb', 'yoga'], preferredSessionMin: 45, autoPlan: true });
+    await savePreferences(db, profile.id, { hobbies: [], autoPlan: false });
+    p = await db.profiles.get(profile.id);
+    expect(p).toMatchObject({ hobbies: [], autoPlan: false });
+    expect(p && 'preferredSessionMin' in p).toBe(false);
+  });
+
+  it('validates the answers', async () => {
+    const { profile } = await createHousehold(db, 'Wir', anna);
+    await expect(savePreferences(db, profile.id, { hobbies: [], sessionMin: 0, autoPlan: false })).rejects.toThrow(
+      /Session length/,
+    );
+    await expect(savePreferences(db, profile.id, { hobbies: [' '], autoPlan: false })).rejects.toThrow(/Hobbies/);
+    await expect(savePreferences(db, 'nope', { hobbies: [], autoPlan: false })).rejects.toThrow(/Unknown/);
   });
 });
 

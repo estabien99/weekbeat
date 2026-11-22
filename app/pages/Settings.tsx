@@ -14,13 +14,19 @@ import {
   type Profile,
 } from '../../core/index.ts';
 import { DataCard } from '../components/DataCard.tsx';
+import { Interview } from '../components/Interview.tsx';
 import { AvailabilityEditor } from '../components/AvailabilityEditor.tsx';
 import { ProfileFields } from '../components/ProfileFields.tsx';
 import { emptyProfile } from '../profileDefaults.ts';
 import { db } from '../db.ts';
 import { LANGS, setLang } from '../i18n/index.ts';
 
-type Editing = { kind: 'new' } | { kind: 'edit'; id: Id } | { kind: 'times'; id: Id } | null;
+type Editing =
+  | { kind: 'new' }
+  | { kind: 'edit'; id: Id }
+  | { kind: 'times'; id: Id; next?: 'prefs' }
+  | { kind: 'prefs'; id: Id }
+  | null;
 
 export function Settings({ profiles }: { profiles: Profile[] }) {
   const { t, i18n } = useTranslation();
@@ -60,6 +66,7 @@ export function Settings({ profiles }: { profiles: Profile[] }) {
                     ` · ${t('profile.goalSummary', { count: p.goals[0].target, kind: t(`profile.goalKinds.${p.goals[0].kind}`) })}`}
                   {p.preferredSessionMin !== undefined &&
                     ` · ${t('profile.sessionMinSummary', { count: p.preferredSessionMin })}`}
+                  {p.autoPlan && ` · ${t('profile.autoPlanOn')}`}
                 </span>
               </div>
               <div className="actions">
@@ -79,6 +86,14 @@ export function Settings({ profiles }: { profiles: Profile[] }) {
                 >
                   {t('settings.editTimes', { name: p.name })}
                 </button>
+                <button
+                  type="button"
+                  className="ghost"
+                  aria-label={t('settings.editPrefs', { name: p.name })}
+                  onClick={() => setEditing({ kind: 'prefs', id: p.id })}
+                >
+                  {t('settings.editPrefs', { name: p.name })}
+                </button>
               </div>
             </li>
           ))}
@@ -95,7 +110,7 @@ export function Settings({ profiles }: { profiles: Profile[] }) {
             onCancel={() => setEditing(null)}
             onSubmit={async (v) => {
               const p = await addProfile(db, v);
-              setEditing({ kind: 'times', id: p.id });
+              setEditing({ kind: 'times', id: p.id, next: 'prefs' });
             }}
           />
         )}
@@ -103,7 +118,14 @@ export function Settings({ profiles }: { profiles: Profile[] }) {
           <PersonEdit id={editing.id} profiles={profiles} onClose={() => setEditing(null)} />
         )}
         {editing?.kind === 'times' && (
-          <TimesEdit id={editing.id} profiles={profiles} onClose={() => setEditing(null)} />
+          <TimesEdit
+            id={editing.id}
+            profiles={profiles}
+            onClose={() => setEditing(editing.next === 'prefs' ? { kind: 'prefs', id: editing.id } : null)}
+          />
+        )}
+        {editing?.kind === 'prefs' && (
+          <PrefsEdit id={editing.id} profiles={profiles} onClose={() => setEditing(null)} />
         )}
       </div>
 
@@ -133,6 +155,18 @@ function PersonEdit({ id, profiles, onClose }: { id: Id; profiles: Profile[]; on
         onClose();
       }}
     />
+  );
+}
+
+function PrefsEdit({ id, profiles, onClose }: { id: Id; profiles: Profile[]; onClose: () => void }) {
+  const { t } = useTranslation();
+  const p = profiles.find((x) => x.id === id);
+  if (!p) return null;
+  return (
+    <div className="subcard">
+      <h4>{t('settings.editPrefs', { name: p.name })}</h4>
+      <Interview profile={p} skipLabel={t('common.cancel')} onDone={onClose} onSkip={onClose} />
+    </div>
   );
 }
 

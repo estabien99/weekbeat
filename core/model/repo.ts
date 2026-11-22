@@ -49,14 +49,26 @@ export function normalizeWindows(windows: TimeWindow[]): TimeWindow[] {
   return out;
 }
 
+/** Answers of the optional planning interview. */
+export interface Preferences {
+  /** Activity ids from the catalogue. */
+  hobbies: Id[];
+  sessionMin?: number;
+  autoPlan: boolean;
+}
+
+function validateSessionMin(n: number | undefined): void {
+  if (n !== undefined && (!Number.isInteger(n) || n < 1)) {
+    throw new ValidationError('sessionMin', 'Session length must be a positive whole number of minutes');
+  }
+}
+
 function validateProfile(p: NewProfile): void {
   if (!p.name.trim()) throw new ValidationError('name', 'Name is required');
   if (!Number.isInteger(p.goal.target) || p.goal.target < 1) {
     throw new ValidationError('goal', 'Weekly goal must be a positive whole number');
   }
-  if (p.sessionMin !== undefined && (!Number.isInteger(p.sessionMin) || p.sessionMin < 1)) {
-    throw new ValidationError('sessionMin', 'Session length must be a positive whole number of minutes');
-  }
+  validateSessionMin(p.sessionMin);
 }
 
 const newId = (): Id => crypto.randomUUID();
@@ -146,4 +158,19 @@ export async function setWindows(db: WeekbeatDB, profileId: Id, windows: TimeWin
     else await db.availability.add({ id: newId(), profileId, windows: normalized, busy: [] });
   });
   return normalized;
+}
+
+/** Saves the interview answers; an empty length clears it (Dexie removes properties updated to undefined). */
+export async function savePreferences(db: WeekbeatDB, id: Id, prefs: Preferences): Promise<void> {
+  validateSessionMin(prefs.sessionMin);
+  if (prefs.hobbies.some((h) => typeof h !== 'string' || h.trim() === '')) {
+    throw new ValidationError('hobbies', 'Hobbies must be activity ids');
+  }
+  const existing = await db.profiles.get(id);
+  if (!existing) throw new ValidationError('profile', 'Unknown profile');
+  await db.profiles.update(id, {
+    hobbies: [...new Set(prefs.hobbies)].sort(),
+    preferredSessionMin: prefs.sessionMin,
+    autoPlan: prefs.autoPlan,
+  });
 }
