@@ -1,9 +1,9 @@
 import { deloadOffered } from '../knowledge.ts';
-import type { ActivityCategory, I18nText, Profile, WeeklyGoal } from '../model/types.ts';
+import type { ActivityCategory, I18nText, IsoDate, PlannedSession, Profile, WeeklyGoal } from '../model/types.ts';
 import { candidatesFor, optionsFor } from './candidates.ts';
 import { type ConstraintContext, recoveryContext, rejectionOf } from './constraints.ts';
 import { type ScoreContext, counts, progress, scoreTerms, total, unmetGoals } from './score.ts';
-import { WEEK_MIN, isoAt } from './time.ts';
+import { WEEK_MIN, isoAt, minuteOfWeek } from './time.ts';
 import {
   type Candidate,
   DEFAULT_WEIGHTS,
@@ -12,15 +12,24 @@ import {
   type PlanInput,
   type PlanNote,
   type Proposal,
+  type ScoreTerm,
+  type ScoringWeights,
+  type SharedSession,
 } from './types.ts';
-import { type ProfileWeek, addPick, buildWeek, pausedThroughDay } from './week.ts';
+import { COUNTING, type ProfileWeek, addPick, buildWeek, pausedThroughDay } from './week.ts';
 import { CATEGORIES, explain, formatDate } from './why.ts';
 
 const byId = <T extends { id: string }>(xs: readonly T[]) => [...xs].sort((a, b) => a.id.localeCompare(b.id));
 const ORIGIN_ORDER: Record<Candidate['origin'], number> = { programme: 0, hobby: 1, complement: 2 };
 
+export interface Ranked {
+  c: Candidate;
+  terms: ScoreTerm[];
+  score: number;
+}
+
 /** Total order for equal scores, so the same input always gives the same plan. */
-function better(a: { c: Candidate; score: number }, b: { c: Candidate; score: number }): number {
+function better(a: Ranked, b: Ranked): number {
   return (
     b.score - a.score ||
     a.c.start - b.c.start ||
@@ -31,8 +40,66 @@ function better(a: { c: Candidate; score: number }, b: { c: Candidate; score: nu
   );
 }
 
+/** Steps 2 and 3: drop candidates that break a hard constraint, score the rest, best first. */
+export function rank(
+  candidates: readonly Candidate[],
+  cctx: ConstraintContext,
+  sctx: ScoreContext,
+  weights: ScoringWeights,
+): Ranked[] {
+  return candidates
+    .filter((c) => rejectionOf(c, cctx) === null)
+    .map((c) => {
+      const terms = scoreTerms(c, sctx, weights);
+      return { c, terms, score: total(terms) };
+    })
+    .sort(better);
+}
+
+export function toSession(c: Candidate, weekStart: IsoDate, id: string, why: I18nText): PlannedSession {
+  return {
+    id,
+    profileId: c.profileId,
+    activityTypeId: c.activity.id,
+    placeId: c.place?.id,
+    programmeId: c.programme?.id,
+    start: isoAt(weekStart, c.start),
+    durationMin: c.durationMin,
+    why,
+    status: 'proposed',
+    ...(c.withProfileIds ? { withProfileIds: c.withProfileIds } : {}),
+  };
+}
+
+export function contexts(week: ProfileWeek, input: PlanInput): { cctx: ConstraintContext; sctx: ScoreContext } {
+  return {
+    cctx: { week, weekStart: input.weekStart, ...recoveryContext(input.rules) },
+    sctx: {
+      week,
+      rules: input.rules,
+      catalogue: input.catalogue,
+      names: new Map(input.profiles.map((p) => [p.id, p.name])),
+    },
+  };
+}
+
+/** Sessions of the person's household members (anchors and this run's proposals) they could join. */
+export function sharedFor(profile: Profile, input: PlanInput, proposals: readonly Proposal[]): SharedSession[] {
+  const household = new Set(
+    input.profiles.filter((p) => p.householdId === profile.householdId && p.id !== profile.id).map((p) => p.id),
+  );
+  return [...input.anchors.filter((s) => COUNTING.has(s.status)), ...proposals.map((p) => p.session)]
+    .filter((s) => household.has(s.profileId))
+    .map((s) => ({
+      profileId: s.profileId,
+      activityId: s.activityTypeId,
+      placeId: s.placeId,
+      start: minuteOfWeek(s.start, input.weekStart),
+    }));
+}
+
 /** Sorts every list by id, so the order the caller passes things in never changes the plan. */
-function normalize(input: PlanInput): PlanInput {
+export function normalize(input: PlanInput): PlanInput {
   return {
     ...input,
     profiles: byId(input.profiles),
@@ -126,8 +193,7 @@ function planProfile(profile: Profile, input: PlanInput, plan: Plan): void {
     plan.offers.push(...deloadOffers(week, input));
   }
 
-  const cctx: ConstraintContext = { week, weekStart: input.weekStart, ...recoveryContext(input.rules) };
-  const sctx: ScoreContext = { week, rules: input.rules, catalogue: input.catalogue };
+  const { cctx, sctx } = contexts(week, input);
   const max = profile.game.weeklyMaxSessions;
   let stop: 'goal-short' | 'no-duration' | 'no-activity' | undefined;
   let missing = false;
@@ -138,36 +204,25 @@ function planProfile(profile: Profile, input: PlanInput, plan: Plan): void {
     if (max !== undefined && week.done.length >= max) break;
     const { options, missingLength } = optionsFor(week, input);
     missing = missingLength;
-    const best = candidatesFor(week, options, input.places)
-      .filter((c) => unmet.some((g) => counts(g, c.activity)))
-      .filter((c) => rejectionOf(c, cctx) === null)
-      .map((c) => {
-        const terms = scoreTerms(c, sctx, weights);
-        return { c, terms, score: total(terms) };
-      })
-      .sort(better)[0];
+    const candidates = candidatesFor(week, options, input.places, sharedFor(profile, input, plan.proposals)).filter(
+      (c) => unmet.some((g) => counts(g, c.activity)),
+    );
+    const best = rank(candidates, cctx, sctx, weights)[0];
     if (!best) {
       stop = options.length > 0 ? 'goal-short' : missingLength ? 'no-duration' : 'no-activity';
       break;
     }
     const why = explain(best.c, best.terms, sctx);
     const start = isoAt(input.weekStart, best.c.start);
-    const proposal: Proposal = {
-      session: {
-        id: `plan:${profile.id}:${start}:${best.c.activity.id}`,
-        profileId: profile.id,
-        activityTypeId: best.c.activity.id,
-        placeId: best.c.place?.id,
-        programmeId: best.c.programme?.id,
-        start,
-        durationMin: best.c.durationMin,
-        why,
-        status: 'proposed',
-      },
-      score: best.score,
-      terms: best.terms,
-    };
-    plan.proposals.push(proposal);
+    const session = toSession(best.c, input.weekStart, `plan:${profile.id}:${start}:${best.c.activity.id}`, why);
+    // The member being joined sees it too (their why line stays as it was planned).
+    for (const other of plan.proposals) {
+      const s = other.session;
+      if (!best.c.withProfileIds?.includes(s.profileId)) continue;
+      if (s.activityTypeId !== session.activityTypeId || s.placeId !== session.placeId || s.start !== start) continue;
+      s.withProfileIds = [...new Set([...(s.withProfileIds ?? []), profile.id])].sort();
+    }
+    plan.proposals.push({ session, score: best.score, terms: best.terms });
     addPick(week, best.c);
   }
 

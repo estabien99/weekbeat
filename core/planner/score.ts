@@ -22,6 +22,8 @@ export function unmetGoals(week: ProfileWeek): WeeklyGoal[] {
 
 export interface ScoreContext {
   week: ProfileWeek;
+  /** Names of household members, for "together with …". */
+  names?: ReadonlyMap<string, string>;
   rules: readonly KnowledgeRule[];
   catalogue: readonly ActivityType[];
 }
@@ -38,6 +40,8 @@ const TERM_FNS: Record<Term, (c: Candidate, ctx: ScoreContext) => number> = {
     const unmet = unmetGoals(ctx.week);
     return unmet.length === 0 ? 0 : unmet.filter((g) => counts(g, c.activity)).length / unmet.length;
   },
+  /** Same activity, place and start as a household member: train together. */
+  together: (c) => (c.withProfileIds?.length ? 1 : 0),
   /** A session of the person's own programme (e.g. a Coach day). */
   programme: (c) => (c.origin === 'programme' ? 1 : 0),
   /** Covers a complement need from the knowledge base (e.g. strength next to MTB). */

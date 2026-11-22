@@ -24,7 +24,8 @@ export interface ProfileWeek {
   membershipIds: Set<Id>;
 }
 
-const COUNTING = new Set(['proposed', 'accepted', 'done']);
+/** Session statuses that block time and count toward goals. */
+export const COUNTING: ReadonlySet<string> = new Set(['proposed', 'accepted', 'done']);
 
 export function endOf(d: Pick<Done, 'start' | 'durationMin'>): number {
   return d.start + d.durationMin;

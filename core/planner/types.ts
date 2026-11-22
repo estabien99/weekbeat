@@ -37,7 +37,16 @@ export interface PlanInput {
 }
 
 /** Scoring terms, in the order they are listed in a "why" when they weigh the same. */
-export const TERMS = ['programme', 'complement', 'goalFit', 'variety', 'membership', 'spread', 'distance'] as const;
+export const TERMS = [
+  'programme',
+  'together',
+  'complement',
+  'goalFit',
+  'variety',
+  'membership',
+  'spread',
+  'distance',
+] as const;
 export type Term = (typeof TERMS)[number];
 
 /**
@@ -48,6 +57,7 @@ export type ScoringWeights = Record<Term, number>;
 
 export const DEFAULT_WEIGHTS: ScoringWeights = {
   programme: 2,
+  together: 2,
   complement: 2,
   goalFit: 3,
   variety: 1,
@@ -67,6 +77,17 @@ export interface Candidate {
   equipment: string[];
   start: number;
   durationMin: number;
+  /** Household members who have the same activity at the same place and start. */
+  withProfileIds?: Id[];
+}
+
+/** A household member's session another person could join (same activity, place and start). */
+export interface SharedSession {
+  profileId: Id;
+  activityId: Id;
+  placeId?: Id;
+  /** Week minutes. */
+  start: number;
 }
 
 export type Rejection =
