@@ -8,10 +8,18 @@
     "range": "{{from}} – {{to}}",
     "today": "Heute",
     "empty": "Noch nichts geplant",
-    "hint": "Hier schlägt Weekbeat bald jeden Sonntag deine Woche vor – mit einem Satz, warum."
+    "hint": "Hier schlägt Weekbeat bald jeden Sonntag deine Woche vor – mit einem Satz, warum.",
+    "free": "Zeit: {{from}}–{{to}}",
+    "freeTime": "Freie Zeitfenster"
   },
   "settings": {
-    "language": "Sprache"
+    "language": "Sprache",
+    "title": "Einstellungen",
+    "app": "App",
+    "people": "Personen im Haushalt {{household}}",
+    "addPerson": "Person hinzufügen",
+    "editPerson": "{{name}} bearbeiten",
+    "editTimes": "Zeiten von {{name}}"
   },
   "pwa": {
     "update": "Eine neue Version ist da.",
@@ -21,5 +29,65 @@
   },
   "footer": {
     "disclaimer": "Fitness und Wohlbefinden, keine medizinische Beratung. Deine Daten bleiben auf diesem Gerät."
+  },
+  "common": {
+    "next": "Weiter",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "add": "Hinzufügen",
+    "remove": "Entfernen"
+  },
+  "nav": {
+    "label": "Hauptnavigation",
+    "week": "Woche",
+    "settings": "Einstellungen",
+    "person": "Person"
+  },
+  "setup": {
+    "step": "Schritt {{n}} von {{of}}",
+    "title": "Willkommen bei Weekbeat",
+    "intro": "Ein paar Angaben, dann planst du deine erste Woche. Alles bleibt auf diesem Gerät.",
+    "household": "Name eures Haushalts",
+    "householdPlaceholder": "z. B. Unser Nest",
+    "you": "Über dich",
+    "availabilityTitle": "Wann hast du Zeit, {{name}}?",
+    "availabilityHint": "Trag die Zeitfenster ein, in denen Bewegung meistens passt. Du kannst sie jederzeit ändern.",
+    "finish": "Fertig"
+  },
+  "profile": {
+    "name": "Vorname",
+    "level": "Erfahrung",
+    "levels": {
+      "beginner": "Einsteiger:in",
+      "intermediate": "Fortgeschritten",
+      "advanced": "Erfahren"
+    },
+    "goal": "Wochenziel",
+    "goalTarget": "Anzahl",
+    "goalKind": "Einheit",
+    "goalKinds": {
+      "sessions": "Einheiten",
+      "minutes": "Minuten"
+    },
+    "perWeek": "pro Woche",
+    "goalSummary": "{{count}} {{kind}} pro Woche",
+    "lang": "Sprache für Erinnerungen"
+  },
+  "availability": {
+    "none": "Noch keine Zeitfenster.",
+    "add": "Zeitfenster hinzufügen",
+    "day": "Wochentag",
+    "from": "Von",
+    "to": "Bis",
+    "remove": "Entfernen: {{day}} {{from}}–{{to}}",
+    "invalid": "Bitte eine gültige Zeit wählen; das Ende muss nach dem Beginn liegen."
+  },
+  "errors": {
+    "name": "Bitte einen Namen eingeben.",
+    "household": "Bitte einen Namen für den Haushalt eingeben.",
+    "goal": "Das Wochenziel muss eine ganze Zahl ab 1 sein.",
+    "time": "Bitte eine gültige Zeit wählen.",
+    "day": "Bitte einen Wochentag wählen.",
+    "profile": "Diese Person gibt es nicht mehr."
   }
 }

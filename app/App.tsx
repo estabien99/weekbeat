@@ -1,20 +1,36 @@
+import { useLiveQuery } from 'dexie-react-hooks';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { isoWeek, toIsoDate, weekOf, type Lang } from '../core/index.ts';
-import { LANGS, setLang } from './i18n/index.ts';
+import { getHousehold } from '../core/index.ts';
+import { db } from './db.ts';
 import { PwaPrompt } from './PwaPrompt.tsx';
+import { Settings } from './pages/Settings.tsx';
+import { Setup } from './pages/Setup.tsx';
+import { WeekView } from './pages/WeekView.tsx';
+import { useActiveProfile } from './useActiveProfile.ts';
 
-const LOCALE: Record<Lang, string> = { de: 'de-DE', en: 'en-GB' };
+type Page = 'week' | 'settings';
+
+function pageFromHash(): Page {
+  return location.hash === '#/einstellungen' ? 'settings' : 'week';
+}
 
 export function App() {
-  const { t, i18n } = useTranslation();
-  const lang = (i18n.resolvedLanguage ?? 'de') as Lang;
-  const locale = LOCALE[lang];
-  const now = new Date();
-  const days = weekOf(now);
-  const today = toIsoDate(now);
-  const { week } = isoWeek(now);
-  const dayFmt = new Intl.DateTimeFormat(locale, { weekday: 'long' });
-  const dateFmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' });
+  const { t } = useTranslation();
+  // null = checked, no household yet; undefined = still loading.
+  const household = useLiveQuery(async () => (await getHousehold(db)) ?? null, []);
+  const { profiles, active, select } = useActiveProfile();
+  const [page, setPage] = useState<Page>(pageFromHash);
+  // Keeps the setup on screen for step 2, after the household already exists.
+  const [setupActive, setSetupActive] = useState(false);
+
+  useEffect(() => {
+    const onHash = () => setPage(pageFromHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  const ready = household !== undefined && profiles !== undefined;
 
   return (
     <>
@@ -23,42 +39,45 @@ export function App() {
           <h1>{t('app.name')}</h1>
           <p className="muted">{t('app.tagline')}</p>
         </div>
-        <label className="lang">
-          <span className="sr-only">{t('settings.language')}</span>
-          <select value={lang} onChange={(e) => setLang(e.target.value as Lang)} aria-label={t('settings.language')}>
-            {LANGS.map((l) => (
-              <option key={l} value={l}>
-                {l === 'de' ? 'Deutsch' : 'English'}
-              </option>
-            ))}
-          </select>
-        </label>
+        {household && profiles && profiles.length > 1 && active && (
+          <label className="switcher">
+            <span className="sr-only">{t('nav.person')}</span>
+            <select value={active.id} onChange={(e) => select(e.target.value)} aria-label={t('nav.person')}>
+              {profiles.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
       </header>
 
+      {household && !setupActive && (
+        <nav className="tabs" aria-label={t('nav.label')}>
+          <a href="#/" aria-current={page === 'week' ? 'page' : undefined}>
+            {t('nav.week')}
+          </a>
+          <a href="#/einstellungen" aria-current={page === 'settings' ? 'page' : undefined}>
+            {t('nav.settings')}
+          </a>
+        </nav>
+      )}
+
       <main>
-        <section aria-labelledby="week-title">
-          <div className="week-head">
-            <h2 id="week-title">{t('week.title', { week })}</h2>
-            <p className="muted">{t('week.range', { from: dateFmt.format(days[0]), to: dateFmt.format(days[6]) })}</p>
-          </div>
-          <ol className="week">
-            {days.map((d) => {
-              const iso = toIsoDate(d);
-              const isToday = iso === today;
-              return (
-                <li key={iso} className={isToday ? 'day today' : 'day'} aria-current={isToday ? 'date' : undefined}>
-                  <div className="day-head">
-                    <span className="day-name">{dayFmt.format(d)}</span>
-                    <span className="muted">{dateFmt.format(d)}</span>
-                    {isToday && <span className="badge">{t('week.today')}</span>}
-                  </div>
-                  <p className="muted empty">{t('week.empty')}</p>
-                </li>
-              );
-            })}
-          </ol>
-          <p className="hint">{t('week.hint')}</p>
-        </section>
+        {!ready ? null : household === null || setupActive ? (
+          <Setup
+            onStart={() => setSetupActive(true)}
+            onDone={(id) => {
+              select(id);
+              setSetupActive(false);
+            }}
+          />
+        ) : page === 'settings' ? (
+          <Settings profiles={profiles} />
+        ) : active ? (
+          <WeekView profile={active} />
+        ) : null}
       </main>
 
       <footer className="muted">{t('footer.disclaimer')}</footer>
