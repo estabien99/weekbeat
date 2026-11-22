@@ -14,7 +14,8 @@ English second**. Code, comments, commits, issues and PRs are in English.
 2. `npm ci` if `node_modules` is missing; `npm run check` must be green before you change anything.
 3. This repo is separate from the Home Assistant maintenance setup ("Unser Nest"). Don't change HA from here;
    the HA connector (v0.3) talks to HA only through its documented REST API with the user's own token.
-4. Check open issues labelled `audit` (see "Audit and review" below) before starting feature work.
+4. Check open issues labelled `audit`, open Dependabot PRs and `npm audit` (see "Audit and review" and
+   "Dependency security" below) before starting feature work. Security fixes come before feature work.
 5. **Scope:** this project uses only the `weekbeat` repo. Ignore `ha-assistant` and `nest-themes` and their
    CLAUDE.md rules, even if they are attached to the session.
 
@@ -102,11 +103,29 @@ next starts. No dates yet.
 - **Branch rules:** `main` is protected. Work only via PRs, squash merge; CI (lint/typecheck, screenshots, DCO) and
   CodeQL must be green.
 
+## Dependency security
+
+- **Dependabot** (`.github/dependabot.yml`): npm and GitHub Actions, weekly; patch + minor version updates grouped
+  into one PR per ecosystem; 5-day cooldown for new releases (security updates are exempt by GitHub's design).
+- **Auto-merge** (`.github/workflows/dependabot-auto-merge.yml`, GitHub's official pattern): only for PRs from
+  `dependabot[bot]`; patch and minor updates (security updates included) get auto-merge (squash); majors never.
+  The ruleset still applies: they only merge when CI and CodeQL are green.
+- **At the start of each work block:**
+  1. Open Dependabot PRs: majors and failed ones are ours. Read the changelog/release notes, adapt the code, push
+     the fix to the Dependabot branch or a new PR. A red Dependabot PR is fixed the same way.
+  2. `npm audit` and open `audit` issues: for alerts Dependabot can't fix (transitive deps), update the parent
+     package, otherwise add an npm `overrides` entry; then `npm run check`, `npm run e2e` and check that the PWA
+     build still produces `dist/sw.js`. If nothing works, write down reachability and risk and suggest a dismissal
+     with a reason to the user. Never dismiss an alert ourselves.
+- **CI:** the `npm audit (informational)` job reports high/critical advisories as a warning; it is not a required
+  check and never fails, so new advisories don't block unrelated PRs.
+- Security fixes come before feature work.
+
 ## Workflow
 
 - `npm run check` = lint + Prettier check + typecheck + unit tests with coverage thresholds + build. CI runs it on
   every PR, plus e2e screenshots with axe accessibility checks (WCAG 2.2 AA tags), CodeQL and a DCO sign-off
-  check. Run `npm run format` before committing. Dependabot opens grouped update PRs weekly (TypeScript minor/major,
+  check. Run `npm run format` before committing. Dependabot: see "Dependency security" (TypeScript minor/major,
   `@types/node` major and `@playwright/test` are excluded on purpose, see `.github/dependabot.yml`).
 - Work is tracked as GitHub issues with the labels `v0.1` … and `knowledge`, `connector`, `bug`, `enhancement`.
 - Tests: unit tests next to the code (`*.test.ts`, Vitest); UI screenshots in `e2e/` (Playwright, fixed clock).
