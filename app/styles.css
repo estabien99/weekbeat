@@ -7,6 +7,8 @@
   --accent: #0f766e;
   --accent-soft: #ccfbf1;
   --on-accent: #ffffff;
+  --accent-text: #0f766e;
+  --error: #b42318;
   color-scheme: light;
   font-family:
     system-ui,
@@ -27,6 +29,8 @@
     --accent: #2dd4bf;
     --accent-soft: #134e4a;
     --on-accent: #062b27;
+    --accent-text: #5eead4;
+    --error: #fda29b;
     color-scheme: dark;
   }
 }
@@ -206,4 +210,141 @@ footer {
     flex-direction: column;
     gap: 2px;
   }
+}
+
+/* Forms and pages (setup, settings) */
+main {
+  display: block;
+}
+h3 {
+  font-size: 1.0625rem;
+  margin: 8px 0 0;
+}
+h4 {
+  font-size: 1rem;
+  margin: 0;
+}
+.small {
+  font-size: 0.8125rem;
+}
+.stack {
+  display: grid;
+  gap: 16px;
+}
+.card,
+.subcard {
+  display: grid;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 640px;
+}
+.subcard {
+  border-style: dashed;
+}
+.step {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 0;
+}
+.field {
+  display: grid;
+  gap: 4px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.field > label,
+.field > legend {
+  font-weight: 600;
+  padding: 0;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+input {
+  font: inherit;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--muted);
+  background: var(--surface);
+  color: var(--text);
+  min-width: 0;
+}
+input[type='number'] {
+  width: 6em;
+}
+select {
+  border-color: var(--muted);
+}
+.error {
+  color: var(--error);
+  font-weight: 600;
+}
+.windows,
+.people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.windows li,
+.people li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.availability {
+  display: grid;
+  gap: 12px;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.tabs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--line);
+}
+.tabs a[aria-current='page'] {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+}
+
+.free {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  font-size: 0.875rem;
+}
+.free li {
+  color: var(--accent-text);
+  font-weight: 600;
 }

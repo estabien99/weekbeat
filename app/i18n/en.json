@@ -8,10 +8,18 @@
     "range": "{{from}} – {{to}}",
     "today": "Today",
     "empty": "Nothing planned yet",
-    "hint": "Soon Weekbeat will propose your week here every Sunday – with one line on why."
+    "hint": "Soon Weekbeat will propose your week here every Sunday – with one line on why.",
+    "free": "Free: {{from}}–{{to}}",
+    "freeTime": "Free time windows"
   },
   "settings": {
-    "language": "Language"
+    "language": "Language",
+    "title": "Settings",
+    "app": "App",
+    "people": "People in household {{household}}",
+    "addPerson": "Add person",
+    "editPerson": "Edit {{name}}",
+    "editTimes": "Times of {{name}}"
   },
   "pwa": {
     "update": "A new version is available.",
@@ -21,5 +29,65 @@
   },
   "footer": {
     "disclaimer": "Fitness and wellness, not medical advice. Your data stays on this device."
+  },
+  "common": {
+    "next": "Next",
+    "save": "Save",
+    "cancel": "Cancel",
+    "add": "Add",
+    "remove": "Remove"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "week": "Week",
+    "settings": "Settings",
+    "person": "Person"
+  },
+  "setup": {
+    "step": "Step {{n}} of {{of}}",
+    "title": "Welcome to Weekbeat",
+    "intro": "A few details, then you plan your first week. Everything stays on this device.",
+    "household": "Name of your household",
+    "householdPlaceholder": "e.g. Our nest",
+    "you": "About you",
+    "availabilityTitle": "When do you have time, {{name}}?",
+    "availabilityHint": "Add the time windows when exercise usually fits. You can change them any time.",
+    "finish": "Done"
+  },
+  "profile": {
+    "name": "First name",
+    "level": "Experience",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "goal": "Weekly goal",
+    "goalTarget": "Amount",
+    "goalKind": "Unit",
+    "goalKinds": {
+      "sessions": "sessions",
+      "minutes": "minutes"
+    },
+    "perWeek": "per week",
+    "goalSummary": "{{count}} {{kind}} per week",
+    "lang": "Language for reminders"
+  },
+  "availability": {
+    "none": "No time windows yet.",
+    "add": "Add a time window",
+    "day": "Weekday",
+    "from": "From",
+    "to": "To",
+    "remove": "Remove: {{day}} {{from}}–{{to}}",
+    "invalid": "Please choose a valid time; the end must be after the start."
+  },
+  "errors": {
+    "name": "Please enter a name.",
+    "household": "Please enter a name for the household.",
+    "goal": "The weekly goal must be a whole number from 1.",
+    "time": "Please choose a valid time.",
+    "day": "Please choose a weekday.",
+    "profile": "This person no longer exists."
   }
 }

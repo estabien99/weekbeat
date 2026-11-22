@@ -104,4 +104,7 @@ next starts. No dates yet.
 
 ## Lessons learned (add one line whenever something went wrong or the user corrected you)
 
-- (none yet)
+- Multi-step flows that write early (setup step 1 creates the household) must hold their own "in progress" state:
+  `useLiveQuery` re-renders the shell at once and jumped past step 2 (22.11.2026).
+- Headless Chromium shows `<input type="time">` in 12 h format whatever the context locale; real German devices
+  show 24 h. Don't "fix" this in the app.

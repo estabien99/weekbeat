@@ -46,7 +46,8 @@ export interface Profile {
   hobbies: Id[];
   /** Free text the person enters; the planner only reads structured limitations. */
   limitations: { tag: string; note?: string }[];
-  game: { enabled: boolean; weeklyMaxSessions: number };
+  /** weeklyMaxSessions comes from the knowledge base (load rules), never a hard-coded number. */
+  game: { enabled: boolean; weeklyMaxSessions?: number };
   /** Pause mode (illness, holidays, injury) freezes goals and streaks. */
   pausedUntil?: IsoDate;
 }
