@@ -216,7 +216,10 @@
     "share": "Dein Anteil pro Monat in € (optional)",
     "shareHint": "Was du selbst zahlst, zum Beispiel nach dem Zuschuss deines Arbeitgebers. 0 ist auch möglich.",
     "shareSummary": "{{amount}} pro Monat",
-    "confirmRemove": "{{label}} wirklich entfernen? Die Orte bleiben, nur die Zuordnung zu dieser Mitgliedschaft fällt weg."
+    "confirmRemove": "{{label}} wirklich entfernen? Die Orte bleiben, nur die Zuordnung zu dieser Mitgliedschaft fällt weg.",
+    "factsTitle": "Gut zu wissen, laut Anbieter",
+    "source": "Quelle",
+    "factsReviewed": "Zuletzt geprüft: {{date}}. Maßgeblich ist, was der Anbieter in seiner App angibt."
   },
   "places": {
     "title": "Orte",

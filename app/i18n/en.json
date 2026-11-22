@@ -216,7 +216,10 @@
     "share": "Your share per month in € (optional)",
     "shareHint": "What you pay yourself, for example after your employer’s subsidy. 0 is fine too.",
     "shareSummary": "{{amount}} per month",
-    "confirmRemove": "Really remove {{label}}? The places stay; only their link to this membership goes."
+    "confirmRemove": "Really remove {{label}}? The places stay; only their link to this membership goes.",
+    "factsTitle": "Good to know, according to the provider",
+    "source": "Source",
+    "factsReviewed": "Last checked: {{date}}. What the provider shows in its app is what counts."
   },
   "places": {
     "title": "Places",
