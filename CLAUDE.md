@@ -97,7 +97,9 @@ next starts. No dates yet.
   In cloud sessions the pre-installed Chromium matches `@playwright/test` 1.63.0 (pinned exactly; bump both
   together, or set `PW_CHROMIUM=/opt/pw-browsers/chromium`).
 - Commits: small, English, imperative; sign off with `-s` (DCO, see CONTRIBUTING.md). Branch per task;
-  PRs only when the user asks.
+  PRs only when the user asks. `main` is protected (PR + green checks) and allows **squash merges only**: the PR
+  title becomes the commit title, so write it like a commit message. Merged branches are deleted; start the next
+  task from a fresh `main`.
 - Model choice: architecture and hard decisions on Opus; everyday implementation on Sonnet. If a task looks
   like it needs a stronger model than the session runs on, say so instead of guessing.
 - Long sessions get expensive: when a topic is done, suggest a fresh session; this file + the doc make that cheap.
