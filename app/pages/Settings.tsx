@@ -13,6 +13,7 @@ import {
   type NewProfile,
   type Profile,
 } from '../../core/index.ts';
+import { DataCard } from '../components/DataCard.tsx';
 import { AvailabilityEditor } from '../components/AvailabilityEditor.tsx';
 import { ProfileFields } from '../components/ProfileFields.tsx';
 import { emptyProfile } from '../profileDefaults.ts';
@@ -103,6 +104,8 @@ export function Settings({ profiles }: { profiles: Profile[] }) {
           <TimesEdit id={editing.id} profiles={profiles} onClose={() => setEditing(null)} />
         )}
       </div>
+
+      <DataCard />
     </section>
   );
 }
