@@ -71,6 +71,9 @@
     },
     "perWeek": "pro Woche",
     "goalSummary": "{{count}} {{kind}} pro Woche",
+    "sessionMin": "Übliche Dauer pro Einheit (Minuten)",
+    "sessionMinHint": "Optional. Damit kann Weekbeat Einheiten vorschlagen, die in deine Zeitfenster passen.",
+    "sessionMinSummary": "{{count}} Min. pro Einheit",
     "lang": "Sprache für Erinnerungen"
   },
   "availability": {
@@ -86,6 +89,7 @@
     "name": "Bitte einen Namen eingeben.",
     "household": "Bitte einen Namen für den Haushalt eingeben.",
     "goal": "Das Wochenziel muss eine ganze Zahl ab 1 sein.",
+    "sessionMin": "Die Dauer muss eine ganze Zahl ab 1 sein.",
     "time": "Bitte eine gültige Zeit wählen.",
     "day": "Bitte einen Wochentag wählen.",
     "profile": "Diese Person gibt es nicht mehr."

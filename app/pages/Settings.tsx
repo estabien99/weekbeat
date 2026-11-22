@@ -58,6 +58,8 @@ export function Settings({ profiles }: { profiles: Profile[] }) {
                   {t(`profile.levels.${p.level}`)}
                   {p.goals[0] &&
                     ` · ${t('profile.goalSummary', { count: p.goals[0].target, kind: t(`profile.goalKinds.${p.goals[0].kind}`) })}`}
+                  {p.preferredSessionMin !== undefined &&
+                    ` · ${t('profile.sessionMinSummary', { count: p.preferredSessionMin })}`}
                 </span>
               </div>
               <div className="actions">
@@ -119,6 +121,7 @@ function PersonEdit({ id, profiles, onClose }: { id: Id; profiles: Profile[]; on
     lang: p.lang,
     level: p.level,
     goal: p.goals[0] ?? { kind: 'sessions', target: 3 },
+    sessionMin: p.preferredSessionMin,
   };
   return (
     <PersonForm

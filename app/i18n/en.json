@@ -71,6 +71,9 @@
     },
     "perWeek": "per week",
     "goalSummary": "{{count}} {{kind}} per week",
+    "sessionMin": "Usual session length (minutes)",
+    "sessionMinHint": "Optional. Lets Weekbeat suggest sessions that fit your time windows.",
+    "sessionMinSummary": "{{count}} min per session",
     "lang": "Language for reminders"
   },
   "availability": {
@@ -86,6 +89,7 @@
     "name": "Please enter a name.",
     "household": "Please enter a name for the household.",
     "goal": "The weekly goal must be a whole number from 1.",
+    "sessionMin": "The length must be a whole number of at least 1.",
     "time": "Please choose a valid time.",
     "day": "Please choose a weekday.",
     "profile": "This person no longer exists."

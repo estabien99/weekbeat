@@ -69,6 +69,19 @@ describe('household and profiles', () => {
     expect(p?.goals[0]?.target).toBe(4);
     await expect(updateProfile(db, 'nope', anna)).rejects.toThrow(/Unknown/);
   });
+
+  it('stores, validates and clears the usual session length', async () => {
+    const { profile } = await createHousehold(db, 'Wir', { ...anna, sessionMin: 45 });
+    expect((await db.profiles.get(profile.id))?.preferredSessionMin).toBe(45);
+    for (const sessionMin of [0, -10, 12.5, Number.NaN])
+      await expect(updateProfile(db, profile.id, { ...anna, sessionMin })).rejects.toThrow(/Session length/);
+    await updateProfile(db, profile.id, { ...anna, sessionMin: 30 });
+    expect((await db.profiles.get(profile.id))?.preferredSessionMin).toBe(30);
+    await updateProfile(db, profile.id, anna);
+    const cleared = await db.profiles.get(profile.id);
+    expect(cleared && 'preferredSessionMin' in cleared).toBe(false);
+    expect((await addProfile(db, ben)).preferredSessionMin).toBeUndefined();
+  });
 });
 
 describe('availability', () => {
