@@ -1,7 +1,8 @@
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Id, Lang, Membership, Profile } from '../../core/index.ts';
-import { membershipProviders, providerById } from '../../connectors/membership/providers.ts';
+import { factsFor, membershipProviders, providerById } from '../../connectors/membership/providers.ts';
+import { localeOf } from '../format.ts';
 import { membershipLabel, providerName, type MembershipDraft } from '../memberships.ts';
 
 /**
@@ -73,6 +74,7 @@ export function MembershipFields({
               </select>
             </div>
           )}
+          <ProviderFacts provider={value.provider} linked={value.linkedTo !== ''} lang={lang} />
           <div className="field">
             <label htmlFor={`${id}-tier`}>{t('membership.tier')}</label>
             <input
@@ -99,5 +101,38 @@ export function MembershipFields({
         </>
       )}
     </>
+  );
+}
+
+/** What the provider's own help pages say, with the source; shown as information, never applied silently. */
+function ProviderFacts({ provider, linked, lang }: { provider: string; linked: boolean; lang: Lang }) {
+  const { t } = useTranslation();
+  const facts = factsFor(provider, linked);
+  if (facts.length === 0) return null;
+  return (
+    <aside className="facts" aria-label={t('membership.factsTitle')}>
+      <p className="facts-title">{t('membership.factsTitle')}</p>
+      <ul>
+        {facts.map((f) => (
+          <li key={f.text.en}>
+            {f.text[lang]}{' '}
+            <a href={f.source.url} target="_blank" rel="noopener noreferrer">
+              {t('membership.source')}
+              <span className="sr-only">
+                {': '}
+                {f.source.title} {t('common.newTab')}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p className="muted small">
+        {t('membership.factsReviewed', {
+          date: new Intl.DateTimeFormat(localeOf(lang), { dateStyle: 'medium' }).format(
+            new Date(`${facts[0]!.lastReviewed}T12:00`),
+          ),
+        })}
+      </p>
+    </aside>
   );
 }

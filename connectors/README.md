@@ -24,5 +24,8 @@ and the household's own places (`core/model/memberships.ts`). No provider offers
 
 - Coverage is explicit: a place lists every membership that covers it. A linked add-on (Wellpass Plus 1) starts
   ticked with its main membership and can be unticked per place.
-- Prices, plans and check-in limits differ by plan and country and are entered by the person. A provider fact goes
-  into `providers.ts` only with a primary source (the provider's own help pages).
+- Prices, plans and check-in limits differ by plan and city and are entered by the person. A provider fact goes
+  into `providers.ts` only with a primary source (the provider's own pages), a verbatim quote and a review date;
+  the form shows it as a hint with its source. Checked 22.11.2026: Wellpass (help centre, incl. the Plus 1 limit of
+  10 check-ins per month from 1 Jan 2027), Urban Sports Club (prices page), Wellhub (partner academy only: the
+  member help centre blocks automated reads).

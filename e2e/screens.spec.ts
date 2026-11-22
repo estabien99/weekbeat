@@ -190,6 +190,10 @@ for (const lang of ['de', 'en'] as const) {
       await page
         .getByLabel(t.membership.linkedTo.replace('{{addOn}}', 'Plus 1'))
         .selectOption({ label: 'Wellpass (Alex)' });
+      // The provider's own facts, with a source: for a Plus 1 including the monthly check-in limit from 2027.
+      await expect(page.getByRole('complementary', { name: t.membership.factsTitle })).toContainText('2027');
+      await expectAccessible(page);
+      await shot(page, '7a-plus1', project, lang);
       await page.getByLabel(t.membership.share).fill('25');
       await page.getByRole('button', { name: t.common.save }).click();
       await expect(page.getByRole('status').filter({ hasText: t.common.saved })).toBeVisible();

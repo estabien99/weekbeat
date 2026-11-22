@@ -597,3 +597,25 @@ a.button:hover {
 .subcard h4:focus {
   outline: none;
 }
+.facts {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 8px;
+  padding: 10px 12px;
+  overflow-wrap: break-word;
+}
+.facts-title {
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+.facts ul {
+  margin: 0 0 4px;
+  padding-left: 1.2em;
+  display: grid;
+  gap: 4px;
+}
+.facts a {
+  color: var(--text);
+  display: inline-block;
+  min-height: 24px;
+}
