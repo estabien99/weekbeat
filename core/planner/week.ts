@@ -53,7 +53,14 @@ export function buildWeek(profile: Profile, input: PlanInput): ProfileWeek {
     .map((b) => ({ start: minuteOfWeek(b.start, weekStart), end: minuteOfWeek(b.end, weekStart) }))
     .sort((a, b) => a.start - b.start || a.end - b.end);
 
-  const anchors = input.anchors.filter((s) => s.profileId === profile.id && COUNTING.has(s.status));
+  // The app passes every saved session; only this week's count toward this week (and block its time).
+  const thisWeek = (iso: string) => {
+    const m = minuteOfWeek(iso, weekStart);
+    return m >= 0 && m < 7 * DAY_MIN;
+  };
+  const anchors = input.anchors.filter(
+    (s) => s.profileId === profile.id && COUNTING.has(s.status) && thisWeek(s.start),
+  );
   const anchorIds = new Set(anchors.map((s) => s.id));
   const fromAnchors: Done[] = anchors.map((s) => ({
     activity: byId.get(s.activityTypeId),
