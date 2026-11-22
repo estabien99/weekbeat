@@ -11,3 +11,4 @@ export {
   type ExportFile,
 } from './model/db.ts';
 export * from './model/repo.ts';
+export * from './knowledge.ts';

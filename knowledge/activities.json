@@ -1,0 +1,864 @@
+[
+  {
+    "id": "mtb",
+    "name": {
+      "de": "Mountainbiken",
+      "en": "Mountain biking"
+    },
+    "category": "cycling",
+    "met": 8.5,
+    "compendium": {
+      "code": "01009",
+      "met": 8.5,
+      "description": "Bicycling, mountain, general"
+    },
+    "setting": "outdoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_BIKING",
+      "healthKit": "cycling",
+      "fit": {
+        "sport": "cycling",
+        "subSport": "mountain"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Bicycling",
+        "url": "https://pacompendium.com/bicycling/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "cycling",
+    "name": {
+      "de": "Radfahren",
+      "en": "Cycling"
+    },
+    "category": "cycling",
+    "met": 7.0,
+    "compendium": {
+      "code": "01014",
+      "met": 7.0,
+      "description": "Bicycling, general"
+    },
+    "setting": "outdoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_BIKING",
+      "healthKit": "cycling",
+      "fit": {
+        "sport": "cycling",
+        "subSport": "generic"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Bicycling",
+        "url": "https://pacompendium.com/bicycling/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "cycling-easy",
+    "name": {
+      "de": "Radfahren, locker",
+      "en": "Cycling, easy"
+    },
+    "category": "cycling",
+    "met": 4.3,
+    "compendium": {
+      "code": "01015",
+      "met": 4.3,
+      "description": "Bicycling, self-selected easy pace"
+    },
+    "setting": "outdoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_BIKING",
+      "healthKit": "cycling",
+      "fit": {
+        "sport": "cycling",
+        "subSport": "generic"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Bicycling",
+        "url": "https://pacompendium.com/bicycling/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "indoor-cycling-class",
+    "name": {
+      "de": "Indoor-Cycling-Kurs",
+      "en": "Indoor cycling class"
+    },
+    "category": "cycling",
+    "met": 9.0,
+    "compendium": {
+      "code": "01270",
+      "met": 9.0,
+      "description": "Bicycling, stationary, RPM/Spin bike class"
+    },
+    "setting": "indoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_BIKING_STATIONARY",
+      "healthKit": "cycling",
+      "fit": {
+        "sport": "cycling",
+        "subSport": "spin"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Bicycling",
+        "url": "https://pacompendium.com/bicycling/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "stationary-bike",
+    "name": {
+      "de": "Ergometer",
+      "en": "Stationary bike"
+    },
+    "category": "cycling",
+    "met": 6.8,
+    "compendium": {
+      "code": "01200",
+      "met": 6.8,
+      "description": "Bicycling, stationary, general"
+    },
+    "setting": "indoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_BIKING_STATIONARY",
+      "healthKit": "cycling",
+      "fit": {
+        "sport": "cycling",
+        "subSport": "indoorCycling"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Bicycling",
+        "url": "https://pacompendium.com/bicycling/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "bodyweight-moderate",
+    "name": {
+      "de": "Körpergewichtstraining, moderat",
+      "en": "Bodyweight training, moderate"
+    },
+    "category": "strength",
+    "met": 3.8,
+    "compendium": {
+      "code": "02022",
+      "met": 3.8,
+      "description": "Calisthenics (e.g., pushups, sit ups, pull-ups, lunges), moderate effort"
+    },
+    "setting": "both",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_CALISTHENICS",
+      "healthKit": "functionalStrengthTraining",
+      "fit": {
+        "sport": "training",
+        "subSport": "strengthTraining"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "bodyweight-vigorous",
+    "name": {
+      "de": "Körpergewichtstraining, intensiv",
+      "en": "Bodyweight training, vigorous"
+    },
+    "category": "strength",
+    "met": 7.5,
+    "compendium": {
+      "code": "02020",
+      "met": 7.5,
+      "description": "Calisthenics (e.g., pushups, sit ups, pull-ups, jumping jacks, burpees, battling ropes), vigorous effort"
+    },
+    "setting": "both",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_CALISTHENICS",
+      "healthKit": "functionalStrengthTraining",
+      "fit": {
+        "sport": "training",
+        "subSport": "strengthTraining"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "bodyweight-circuit",
+    "name": {
+      "de": "Zirkeltraining mit Körpergewicht",
+      "en": "Bodyweight circuit"
+    },
+    "category": "strength",
+    "met": 6.0,
+    "compendium": {
+      "code": "02032",
+      "met": 6.0,
+      "description": "Circuit training, body weight exercises"
+    },
+    "setting": "both",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_CALISTHENICS",
+      "healthKit": "functionalStrengthTraining",
+      "fit": {
+        "sport": "training",
+        "subSport": "strengthTraining"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "hiit",
+    "name": {
+      "de": "Hochintensives Intervalltraining (HIIT)",
+      "en": "High-intensity interval training (HIIT)"
+    },
+    "category": "hiit",
+    "met": 11.0,
+    "compendium": {
+      "code": "02214",
+      "met": 11.0,
+      "description": "High intensity interval exercise,  burpees, mountain climbers, squat jumps, Tabata, vigorous effort"
+    },
+    "setting": "both",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_HIGH_INTENSITY_INTERVAL_TRAINING",
+      "healthKit": "highIntensityIntervalTraining",
+      "fit": {
+        "sport": "training",
+        "subSport": "hiit"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "medium",
+    "lastReviewed": "2026-11-22",
+    "mappingNote": "FIT: the SDK has both sport \"hiit\" (62) and subSport \"hiit\" (70); which one Garmin devices write must be checked with real files (v0.2)."
+  },
+  {
+    "id": "weight-training",
+    "name": {
+      "de": "Krafttraining mit Gewichten",
+      "en": "Weight training"
+    },
+    "category": "strength",
+    "met": 3.5,
+    "compendium": {
+      "code": "02054",
+      "met": 3.5,
+      "description": "Resistance (weight) training, multiple exercises, 8-15 reps at varied resistance"
+    },
+    "setting": "indoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_STRENGTH_TRAINING",
+      "healthKit": "traditionalStrengthTraining",
+      "fit": {
+        "sport": "training",
+        "subSport": "strengthTraining"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "weight-training-vigorous",
+    "name": {
+      "de": "Krafttraining mit Gewichten, intensiv",
+      "en": "Weight training, vigorous"
+    },
+    "category": "strength",
+    "met": 6.0,
+    "compendium": {
+      "code": "02050",
+      "met": 6.0,
+      "description": "Resistance (weight lifting – free weight, nautilus or universal-type), power lifting or body building, vigorous effort (Taylor Code 210)"
+    },
+    "setting": "indoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_STRENGTH_TRAINING",
+      "healthKit": "traditionalStrengthTraining",
+      "fit": {
+        "sport": "training",
+        "subSport": "strengthTraining"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "yoga",
+    "name": {
+      "de": "Yoga",
+      "en": "Yoga"
+    },
+    "category": "mobility",
+    "met": 2.3,
+    "compendium": {
+      "code": "02175",
+      "met": 2.3,
+      "description": "Yoga, General"
+    },
+    "setting": "both",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_YOGA",
+      "healthKit": "yoga",
+      "fit": {
+        "sport": "training",
+        "subSport": "yoga"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "power-yoga",
+    "name": {
+      "de": "Power Yoga",
+      "en": "Power yoga"
+    },
+    "category": "mobility",
+    "met": 4.0,
+    "compendium": {
+      "code": "02160",
+      "met": 4.0,
+      "description": "Yoga, Power"
+    },
+    "setting": "both",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_YOGA",
+      "healthKit": "yoga",
+      "fit": {
+        "sport": "training",
+        "subSport": "yoga"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "pilates",
+    "name": {
+      "de": "Pilates",
+      "en": "Pilates"
+    },
+    "category": "mobility",
+    "met": 2.8,
+    "compendium": {
+      "code": "02105",
+      "met": 2.8,
+      "description": "Pilates, general"
+    },
+    "setting": "both",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_PILATES",
+      "healthKit": "pilates",
+      "fit": {
+        "sport": "fitnessEquipment",
+        "subSport": "pilates"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "medium",
+    "lastReviewed": "2026-11-22",
+    "mappingNote": "FIT: the SDK lists subSport pilates with the comment \"Fitness Equipment\"; Garmin devices may record it under sport training. Check with real files (v0.2)."
+  },
+  {
+    "id": "stretching",
+    "name": {
+      "de": "Dehnen und Mobilität",
+      "en": "Stretching and mobility"
+    },
+    "category": "mobility",
+    "met": 2.3,
+    "compendium": {
+      "code": "02101",
+      "met": 2.3,
+      "description": "Stretching, mild"
+    },
+    "setting": "both",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_STRETCHING",
+      "healthKit": "flexibility",
+      "fit": {
+        "sport": "training",
+        "subSport": "flexibilityTraining"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Conditioning Exercise",
+        "url": "https://pacompendium.com/conditioning-exercise/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "jogging",
+    "name": {
+      "de": "Joggen",
+      "en": "Jogging"
+    },
+    "category": "endurance",
+    "met": 7.5,
+    "compendium": {
+      "code": "12020",
+      "met": 7.5,
+      "description": "Jogging, general, self-selected pace"
+    },
+    "setting": "outdoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_RUNNING",
+      "healthKit": "running",
+      "fit": {
+        "sport": "running",
+        "subSport": "generic"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Running",
+        "url": "https://pacompendium.com/running/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "brisk-walking",
+    "name": {
+      "de": "Zügiges Gehen",
+      "en": "Brisk walking"
+    },
+    "category": "endurance",
+    "met": 4.8,
+    "compendium": {
+      "code": "17200",
+      "met": 4.8,
+      "description": "Walking, 3.5 to 3.9 mph, level, brisk, firm surface, walking for exercise"
+    },
+    "setting": "outdoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_WALKING",
+      "healthKit": "walking",
+      "fit": {
+        "sport": "walking",
+        "subSport": "generic"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Walking",
+        "url": "https://pacompendium.com/walking/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "hiking",
+    "name": {
+      "de": "Wandern",
+      "en": "Hiking"
+    },
+    "category": "endurance",
+    "met": 6.0,
+    "compendium": {
+      "code": "17080",
+      "met": 6.0,
+      "description": "Hiking, cross country (Taylor Code 040)"
+    },
+    "setting": "outdoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_HIKING",
+      "healthKit": "hiking",
+      "fit": {
+        "sport": "hiking",
+        "subSport": "generic"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Walking",
+        "url": "https://pacompendium.com/walking/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "swimming-laps",
+    "name": {
+      "de": "Bahnenschwimmen, locker",
+      "en": "Lap swimming, easy"
+    },
+    "category": "swimming",
+    "met": 5.8,
+    "compendium": {
+      "code": "18240",
+      "met": 5.8,
+      "description": "Swimming laps, freestyle, slow, recreational"
+    },
+    "setting": "indoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_SWIMMING_POOL",
+      "healthKit": "swimming",
+      "fit": {
+        "sport": "swimming",
+        "subSport": "lapSwimming"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Water Activities",
+        "url": "https://pacompendium.com/water-activities/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "swimming-open-water",
+    "name": {
+      "de": "Schwimmen im See oder Meer",
+      "en": "Open-water swimming"
+    },
+    "category": "swimming",
+    "met": 6.0,
+    "compendium": {
+      "code": "18300",
+      "met": 6.0,
+      "description": "Swimming, lake, ocean, river (Taylor Codes 280,  295)"
+    },
+    "setting": "outdoor",
+    "mapping": {
+      "healthConnect": "EXERCISE_TYPE_SWIMMING_OPEN_WATER",
+      "healthKit": "swimming",
+      "fit": {
+        "sport": "swimming",
+        "subSport": "openWater"
+      }
+    },
+    "sources": [
+      {
+        "title": "2024 Adult Compendium of Physical Activities: Water Activities",
+        "url": "https://pacompendium.com/water-activities/"
+      },
+      {
+        "title": "Android Developers: ExerciseSessionRecord (Health Connect)",
+        "url": "https://developer.android.com/reference/kotlin/androidx/health/connect/client/records/ExerciseSessionRecord"
+      },
+      {
+        "title": "Apple Developer: HKWorkoutActivityType",
+        "url": "https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype"
+      },
+      {
+        "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
+        "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      }
+    ],
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  }
+]

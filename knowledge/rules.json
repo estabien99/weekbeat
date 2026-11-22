@@ -1,1 +1,133 @@
-[]
+[
+  {
+    "id": "who-intensity-thresholds",
+    "part": "intensity",
+    "summary": {
+      "de": "Intensität nach MET: leicht ab 1,5, moderat ab 3, intensiv ab 6 MET.",
+      "en": "Intensity by MET: light from 1.5, moderate from 3, vigorous from 6 METs."
+    },
+    "data": {
+      "lightFromMet": 1.5,
+      "moderateFromMet": 3,
+      "vigorousFromMet": 6
+    },
+    "source": {
+      "title": "Bull FC et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. Br J Sports Med 2020;54:1451–1462. doi:10.1136/bjsports-2020-102955",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7719906/"
+    },
+    "quote": "On an absolute scale, light intensity refers to physical activity that is performed between 1.5 and 3 METs. […] moderate-intensity refers to the physical activity that is performed between 3 and <6 times the intensity of rest (METs). […] vigorous intensity refers to physical activity that is performed at 6.0 or more METs.",
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "who-weekly-targets-adults",
+    "part": "weekly-targets",
+    "summary": {
+      "de": "Erwachsene (18–64): 150–300 Min. moderat oder 75–150 Min. intensiv pro Woche (oder eine gleichwertige Mischung) und an mindestens 2 Tagen Kräftigung aller großen Muskelgruppen.",
+      "en": "Adults (18–64): 150–300 min moderate or 75–150 min vigorous per week (or an equivalent mix), plus muscle strengthening of all major muscle groups on 2 or more days."
+    },
+    "data": {
+      "ageFrom": 18,
+      "ageTo": 64,
+      "moderateMinutes": {
+        "min": 150,
+        "max": 300
+      },
+      "vigorousMinutes": {
+        "min": 75,
+        "max": 150
+      },
+      "strengthDaysMin": 2
+    },
+    "source": {
+      "title": "Bull FC et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. Br J Sports Med 2020;54:1451–1462. doi:10.1136/bjsports-2020-102955",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7719906/"
+    },
+    "quote": "Adults should do at least 150–300 min of moderate-intensity aerobic physical activity, or at least 75–150 min of vigorous-intensity aerobic physical activity, or an equivalent combination of moderate-intensity and vigorous-intensity activity throughout the week for substantial health benefits; Adults should also do muscle-strengthening activities at moderate or greater intensity that involve all major muscle groups on 2 or more days a week, as these provide additional health benefits.",
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "who-weekly-targets-older-adults",
+    "part": "weekly-targets",
+    "summary": {
+      "de": "Ab 65: wie Erwachsene, plus an mindestens 3 Tagen vielseitige Aktivität mit Gleichgewicht und Kraft.",
+      "en": "65 and older: as adults, plus varied multicomponent activity emphasising balance and strength on 3 or more days."
+    },
+    "data": {
+      "ageFrom": 65,
+      "moderateMinutes": {
+        "min": 150,
+        "max": 300
+      },
+      "vigorousMinutes": {
+        "min": 75,
+        "max": 150
+      },
+      "strengthDaysMin": 2,
+      "extraDaysMin": 3,
+      "extraKind": "multicomponent-balance-strength"
+    },
+    "source": {
+      "title": "Bull FC et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. Br J Sports Med 2020;54:1451–1462. doi:10.1136/bjsports-2020-102955",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7719906/"
+    },
+    "quote": "As for adults, plus […] As part of their weekly physical activity, older adults should do varied multicomponent physical activity that emphasises functional balance and strength training at moderate or greater intensity on 3 or more days a week, to enhance functional capacity and to prevent falls.",
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "who-weekly-targets-children",
+    "part": "weekly-targets",
+    "summary": {
+      "de": "5–17 Jahre: im Schnitt 60 Min. pro Tag moderat bis intensiv, an mindestens 3 Tagen intensiv sowie Muskel- und Knochenkräftigung.",
+      "en": "Ages 5–17: an average of 60 min a day moderate to vigorous, with vigorous and muscle- and bone-strengthening activity on at least 3 days."
+    },
+    "data": {
+      "ageFrom": 5,
+      "ageTo": 17,
+      "mvpaMinutesPerDayAverage": 60,
+      "extraDaysMin": 3,
+      "extraKind": "vigorous-muscle-bone"
+    },
+    "source": {
+      "title": "Bull FC et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. Br J Sports Med 2020;54:1451–1462. doi:10.1136/bjsports-2020-102955",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7719906/"
+    },
+    "quote": "Children and adolescents should do at least an average of 60 min/day of moderate-to-vigorous intensity, mostly aerobic, physical activity, across the week; Vigorous-intensity aerobic activities, as well as those that strengthen muscle and bone should be incorporated at least 3 days a week.",
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "who-start-small",
+    "part": "principle",
+    "summary": {
+      "de": "Etwas Bewegung ist besser als keine. Klein anfangen und Häufigkeit, Intensität und Dauer nach und nach steigern.",
+      "en": "Some activity is better than none. Start small and gradually increase frequency, intensity and duration."
+    },
+    "data": {},
+    "source": {
+      "title": "Bull FC et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. Br J Sports Med 2020;54:1451–1462. doi:10.1136/bjsports-2020-102955",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7719906/"
+    },
+    "quote": "Some physical activity is better than none. If not currently meeting these recommendations, doing some physical activity will bring benefits to health. Start with small amounts of physical activity and gradually increase frequency, intensity and duration over time.",
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "who-any-bout-counts",
+    "part": "principle",
+    "summary": {
+      "de": "Jede Dauer zählt: auch kurze Einheiten unter 10 Minuten zählen zum Wochenziel.",
+      "en": "Every bout counts: sessions shorter than 10 minutes count towards the weekly target too."
+    },
+    "data": {},
+    "source": {
+      "title": "Bull FC et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. Br J Sports Med 2020;54:1451–1462. doi:10.1136/bjsports-2020-102955",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7719906/"
+    },
+    "quote": "MVPA bouts of any duration now count towards these recommendations, reflecting new evidence to support the value of total physical activity volume, regardless of bout length. This recommendation differs from the requirement of bouts of at least 10 min in the previous WHO 2010 guidelines.",
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  }
+]
