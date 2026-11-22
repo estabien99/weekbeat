@@ -1,4 +1,16 @@
-import type { Intensity, IntensityThresholdsData, KnowledgeRule, WeeklyTargetData } from './model/types.ts';
+import type {
+  ActivityCategory,
+  ActivityType,
+  BodyArea,
+  ComplementData,
+  DeloadData,
+  Id,
+  Impact,
+  Intensity,
+  IntensityThresholdsData,
+  KnowledgeRule,
+  WeeklyTargetData,
+} from './model/types.ts';
 
 /**
  * Pure functions over knowledge rules. The rules are passed in (from knowledge/), never hard-coded here,
@@ -55,4 +67,65 @@ export function weeklyAerobicStatus(
   if (!m) throw new Error('Target has no moderate range');
   if (moderateEquivalent < m.min) return 'below';
   return moderateEquivalent <= m.max ? 'in-range' : 'above';
+}
+
+const IMPACT_ORDER: Record<Impact, number> = { low: 0, medium: 1, high: 2 };
+
+/** Whether an activity covers a complement rule's suggestion (category or minimum impact). */
+export function matchesSuggestion(activity: ActivityType, suggest: ComplementData['suggest']): boolean {
+  if (suggest.categories?.includes(activity.category)) return true;
+  if (suggest.minImpact && activity.impact) return IMPACT_ORDER[activity.impact] >= IMPACT_ORDER[suggest.minImpact];
+  return false;
+}
+
+export interface OpenComplement {
+  ruleId: Id;
+  need: ComplementData['need'];
+  focusAreas: BodyArea[];
+  /** Catalogue activities that would cover the need. */
+  candidates: ActivityType[];
+}
+
+/**
+ * Complement needs a set of activities (e.g. one week's) leaves open: a rule applies when one of its
+ * `forActivityIds` is in the set, and stays open while no activity in the set matches its suggestion.
+ */
+export function openComplements(
+  activityIds: readonly Id[],
+  catalogue: readonly ActivityType[],
+  rules: readonly KnowledgeRule[],
+): OpenComplement[] {
+  const done = catalogue.filter((a) => activityIds.includes(a.id));
+  return rules.flatMap((r) => {
+    if (r.part !== 'complement') return [];
+    const d = r.data;
+    if (!d.forActivityIds.some((id) => activityIds.includes(id))) return [];
+    if (done.some((a) => matchesSuggestion(a, d.suggest))) return [];
+    return [
+      {
+        ruleId: r.id,
+        need: d.need,
+        focusAreas: d.focusAreas ?? [],
+        candidates: catalogue.filter((a) => matchesSuggestion(a, d.suggest)),
+      },
+    ];
+  });
+}
+
+/** The deload rule for a category, if the knowledge base has one. */
+export function deloadRuleFor(
+  category: ActivityCategory,
+  rules: readonly KnowledgeRule[],
+): (DeloadData & { ruleId: Id }) | undefined {
+  for (const r of rules)
+    if (r.part === 'deload' && r.data.forCategories.includes(category)) return { ...r.data, ruleId: r.id };
+  return undefined;
+}
+
+/**
+ * Whether a deload may be offered after this many consecutive training weeks. An offer only: the planner
+ * never forces a deload, and pause mode (not this) handles breaks.
+ */
+export function deloadOffered(trainingWeeks: number, rule: Pick<DeloadData, 'everyWeeks'>): boolean {
+  return trainingWeeks >= rule.everyWeeks.min;
 }

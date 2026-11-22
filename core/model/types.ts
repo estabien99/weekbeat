@@ -74,6 +74,9 @@ export interface CompendiumEntry {
   description: string;
 }
 
+/** Bone-loading impact: low = non-impact (e.g. cycling, swimming). */
+export type Impact = 'low' | 'medium' | 'high';
+
 export type ActivityCategory = 'cycling' | 'strength' | 'hiit' | 'mobility' | 'endurance' | 'swimming';
 
 /**
@@ -88,9 +91,10 @@ export interface ActivityType {
   met: number;
   compendium?: CompendiumEntry;
   setting: 'indoor' | 'outdoor' | 'both';
-  /** Filled by the complement rules (knowledge base v1, part 2). */
+  /** Catalogue: only where a source supports it (none yet, see knowledge/SOURCES.md). */
   muscleGroups?: string[];
-  impact?: 'low' | 'medium' | 'high';
+  /** Bone-loading impact; catalogue values must match an `impact` rule in knowledge/rules.json. */
+  impact?: Impact;
   mapping: ActivityMapping;
   /** Open question about a mapping, to settle with real data. */
   mappingNote?: string;
@@ -238,6 +242,36 @@ export interface WeeklyTargetData {
   extraKind?: 'vigorous-muscle-bone' | 'multicomponent-balance-strength';
 }
 
+/** Which catalogue activities have an impact level (the rule's quote names the activity kinds). */
+export interface ImpactData {
+  level: Impact;
+  activityIds: Id[];
+}
+
+/** Body areas a source names; shown in the planner's "why", never used for diagnosis. */
+export type BodyArea = 'neck' | 'hand-wrist' | 'low-back' | 'knee';
+
+/**
+ * Complement: doing any of `forActivityIds` leaves a need that activities matching `suggest` cover.
+ * The planner may suggest such an activity; it never makes one mandatory.
+ */
+export interface ComplementData {
+  need: 'bone-loading' | 'overuse-prevention';
+  forActivityIds: Id[];
+  /** An activity matches if it is in one of `categories` or has at least `minImpact` (either is enough). */
+  suggest: { categories?: ActivityCategory[]; minImpact?: Impact };
+  focusAreas?: BodyArea[];
+}
+
+/** Deload: a period of reduced training volume after a block of training in these categories. */
+export interface DeloadData {
+  forCategories: ActivityCategory[];
+  /** Weeks of training after which a deload may be offered. */
+  everyWeeks: { min: number; max: number };
+  durationDays: number;
+  reduce: 'volume';
+}
+
 interface RuleBase {
   id: Id;
   summary: I18nText;
@@ -252,4 +286,7 @@ interface RuleBase {
 export type KnowledgeRule =
   | (RuleBase & { part: 'intensity'; data: IntensityThresholdsData })
   | (RuleBase & { part: 'weekly-targets'; data: WeeklyTargetData })
+  | (RuleBase & { part: 'impact'; data: ImpactData })
+  | (RuleBase & { part: 'complement'; data: ComplementData })
+  | (RuleBase & { part: 'deload'; data: DeloadData })
   | (RuleBase & { part: 'principle'; data: Record<string, never> });

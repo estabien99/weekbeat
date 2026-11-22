@@ -129,5 +129,157 @@
     "quote": "MVPA bouts of any duration now count towards these recommendations, reflecting new evidence to support the value of total physical activity volume, regardless of bout length. This recommendation differs from the requirement of bouts of at least 10 min in the previous WHO 2010 guidelines.",
     "confidence": "high",
     "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "impact-low-cycling-swimming",
+    "part": "impact",
+    "summary": {
+      "de": "Radfahren und Schwimmen sind Sportarten ohne Stoßbelastung (geringer Impact).",
+      "en": "Cycling and swimming are non-impact sports (low impact)."
+    },
+    "data": {
+      "level": "low",
+      "activityIds": [
+        "cycling",
+        "cycling-easy",
+        "indoor-cycling-class",
+        "stationary-bike",
+        "swimming-laps",
+        "swimming-open-water"
+      ]
+    },
+    "source": {
+      "title": "Gómez-Bruton A, González-Agüero A, et al. Is bone tissue really affected by swimming? A systematic review. PLoS One 2013;8(8):e70119. doi:10.1371/journal.pone.0070119",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
+    },
+    "quote": "Recent literature reviews have shown that high impact sports seem to be more osteogenic than non impact sports such as swimming or cycling, in children [12] , young adults [12] or older adults [13] .",
+    "confidence": "high",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "impact-medium-running",
+    "part": "impact",
+    "summary": {
+      "de": "Laufen zählt in den Studien dieser Übersicht als mittlere, wiederholte Stoßbelastung.",
+      "en": "Running counts as medium, repetitive impact in the studies of this review."
+    },
+    "data": {
+      "level": "medium",
+      "activityIds": ["jogging"]
+    },
+    "source": {
+      "title": "Gómez-Bruton A, González-Agüero A, et al. Is bone tissue really affected by swimming? A systematic review. PLoS One 2013;8(8):e70119. doi:10.1371/journal.pone.0070119",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
+    },
+    "quote": "MED = Medium impact (running and field hockey) […] REP = Repetitive impact sports(running)",
+    "confidence": "low",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "complement-cycling-bone",
+    "part": "complement",
+    "summary": {
+      "de": "Wer vor allem Rad fährt, profitiert für die Knochen von einer Aktivität mit Stoßbelastung (z. B. Laufen).",
+      "en": "People who mainly cycle benefit their bones from an activity with impact (e.g. running)."
+    },
+    "data": {
+      "need": "bone-loading",
+      "forActivityIds": ["cycling", "cycling-easy", "indoor-cycling-class", "stationary-bike"],
+      "suggest": {
+        "minImpact": "medium"
+      }
+    },
+    "source": {
+      "title": "Olmedillas H, González-Agüero A, et al. Cycling and bone health: a systematic review. BMC Med 2012;10:168. doi:10.1186/1741-7015-10-168",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3554602/"
+    },
+    "quote": "Based on the available evidence, in general, cycling as a sole form of exercise is not recommended for people who are at risk of developing osteoporosis, unless it is complemented with some kind of osteogenic training. […] Beatty et al. [ 56 ] and Nichols et al. [ 42 ] proposed to incorporate impact activities in training programs for cyclists",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "complement-swimming-bone",
+    "part": "complement",
+    "summary": {
+      "de": "Schwimmen schadet den Knochen nicht, baut sie aber kaum auf: eine Aktivität mit Stoßbelastung ergänzt es.",
+      "en": "Swimming does not harm bones but builds little bone: an activity with impact complements it."
+    },
+    "data": {
+      "need": "bone-loading",
+      "forActivityIds": ["swimming-laps", "swimming-open-water"],
+      "suggest": {
+        "minImpact": "medium"
+      }
+    },
+    "source": {
+      "title": "Gómez-Bruton A, González-Agüero A, et al. Is bone tissue really affected by swimming? A systematic review. PLoS One 2013;8(8):e70119. doi:10.1371/journal.pone.0070119",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
+    },
+    "quote": "Swimming does not seem to negatively affect bone mass, although it may not be one of the best sports to be practised in order to increase this parameter, due to the hypogravity and lack of impact characteristic of this sport.",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "complement-mtb-overuse",
+    "part": "complement",
+    "summary": {
+      "de": "Mountainbiken belastet Nacken, Hand/Handgelenk, unteren Rücken und Knie; Krafttraining (neben Bike-Fitting) kann Überlastung vorbeugen.",
+      "en": "Mountain biking strains neck, hand/wrist, lower back and knees; strength training (besides bike fit) may help prevent overuse."
+    },
+    "data": {
+      "need": "overuse-prevention",
+      "forActivityIds": ["mtb"],
+      "suggest": {
+        "categories": ["strength"]
+      },
+      "focusAreas": ["neck", "hand-wrist", "low-back", "knee"]
+    },
+    "source": {
+      "title": "Arriel RA, Souza HLR, et al. Current perspectives of cross-country mountain biking: physiological and mechanical aspects, evolution of bikes, accidents and injuries. Int J Environ Res Public Health 2022;19(19):12552. doi:10.3390/ijerph191912552",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9565958/"
+    },
+    "quote": "The main syndromes affect the neck, hand/wrist, low back and knees [ 76 ]. […] Bike fit (i.e., bike adjustment according to the cyclist’s profile), correction of riding style, bicycle settings (such as suspension system) and resistance training seem to be an alternative to reduce such risks [ 77 ].",
+    "confidence": "low",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "deload-strength",
+    "part": "deload",
+    "summary": {
+      "de": "Nach 4–6 Wochen Krafttraining kann eine Entlastungswoche (~7 Tage, weniger Umfang) angeboten werden. Expertenkonsens aus dem Kraftsport.",
+      "en": "After 4–6 weeks of strength training a deload week (~7 days, less volume) may be offered. Expert consensus from strength sports."
+    },
+    "data": {
+      "forCategories": ["strength"],
+      "everyWeeks": {
+        "min": 4,
+        "max": 6
+      },
+      "durationDays": 7,
+      "reduce": "volume"
+    },
+    "source": {
+      "title": "Bell L, Strafford BW, et al. Integrating deloading into strength and physique sports training programmes: an international Delphi consensus approach. Sports Med Open 2023;9:87. doi:10.1186/s40798-023-00633-0",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10511399/"
+    },
+    "quote": "“Deloading is a period of reduced training stress designed to mitigate physiological and psychological fatigue, promote recovery, and enhance preparedness for subsequent training.” […] Deloading is generally undertaken every 4–6 weeks for a period of ~ 7 days, although some deloads might range in duration from a singular training session to 2 weeks [ 22 ].",
+    "confidence": "low",
+    "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "progression-no-proven-cap",
+    "part": "principle",
+    "summary": {
+      "de": "Für Steigerungen pro Woche gibt es keine belegte Obergrenze (auch nicht die „10 %-Regel“): langsam steigern, Steigerungen nur anbieten.",
+      "en": "There is no proven weekly increase limit (not even the \"10% rule\"): increase gradually and only offer increases."
+    },
+    "data": {},
+    "source": {
+      "title": "Fredette A, Roy JS, et al. The association between running injuries and training parameters: a systematic review. J Athl Train 2022;57(7):650. doi:10.4085/1062-6050-0195.21",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9528699/"
+    },
+    "quote": "Despite high rates of RRIs, current evidence does not consistently link RRIs with specific training parameters or recent changes in training parameters. Therefore, caution should be taken when recommending optimal parameters or progressions.",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-22"
   }
 ]

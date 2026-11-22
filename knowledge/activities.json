@@ -56,6 +56,7 @@
       "description": "Bicycling, general"
     },
     "setting": "outdoor",
+    "impact": "low",
     "mapping": {
       "healthConnect": "EXERCISE_TYPE_BIKING",
       "healthKit": "cycling",
@@ -80,6 +81,10 @@
       {
         "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
         "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      },
+      {
+        "title": "Gómez-Bruton A et al. Is bone tissue really affected by swimming? A systematic review (impact)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
       }
     ],
     "confidence": "high",
@@ -99,6 +104,7 @@
       "description": "Bicycling, self-selected easy pace"
     },
     "setting": "outdoor",
+    "impact": "low",
     "mapping": {
       "healthConnect": "EXERCISE_TYPE_BIKING",
       "healthKit": "cycling",
@@ -123,6 +129,10 @@
       {
         "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
         "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      },
+      {
+        "title": "Gómez-Bruton A et al. Is bone tissue really affected by swimming? A systematic review (impact)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
       }
     ],
     "confidence": "high",
@@ -142,6 +152,7 @@
       "description": "Bicycling, stationary, RPM/Spin bike class"
     },
     "setting": "indoor",
+    "impact": "low",
     "mapping": {
       "healthConnect": "EXERCISE_TYPE_BIKING_STATIONARY",
       "healthKit": "cycling",
@@ -166,6 +177,10 @@
       {
         "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
         "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      },
+      {
+        "title": "Gómez-Bruton A et al. Is bone tissue really affected by swimming? A systematic review (impact)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
       }
     ],
     "confidence": "high",
@@ -185,6 +200,7 @@
       "description": "Bicycling, stationary, general"
     },
     "setting": "indoor",
+    "impact": "low",
     "mapping": {
       "healthConnect": "EXERCISE_TYPE_BIKING_STATIONARY",
       "healthKit": "cycling",
@@ -209,6 +225,10 @@
       {
         "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
         "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      },
+      {
+        "title": "Gómez-Bruton A et al. Is bone tissue really affected by swimming? A systematic review (impact)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
       }
     ],
     "confidence": "high",
@@ -660,6 +680,7 @@
       "description": "Jogging, general, self-selected pace"
     },
     "setting": "outdoor",
+    "impact": "medium",
     "mapping": {
       "healthConnect": "EXERCISE_TYPE_RUNNING",
       "healthKit": "running",
@@ -684,6 +705,10 @@
       {
         "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
         "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      },
+      {
+        "title": "Gómez-Bruton A et al. Is bone tissue really affected by swimming? A systematic review (impact)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
       }
     ],
     "confidence": "high",
@@ -789,6 +814,7 @@
       "description": "Swimming laps, freestyle, slow, recreational"
     },
     "setting": "indoor",
+    "impact": "low",
     "mapping": {
       "healthConnect": "EXERCISE_TYPE_SWIMMING_POOL",
       "healthKit": "swimming",
@@ -813,6 +839,10 @@
       {
         "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
         "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      },
+      {
+        "title": "Gómez-Bruton A et al. Is bone tissue really affected by swimming? A systematic review (impact)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
       }
     ],
     "confidence": "high",
@@ -832,6 +862,7 @@
       "description": "Swimming, lake, ocean, river (Taylor Codes 280,  295)"
     },
     "setting": "outdoor",
+    "impact": "low",
     "mapping": {
       "healthConnect": "EXERCISE_TYPE_SWIMMING_OPEN_WATER",
       "healthKit": "swimming",
@@ -856,6 +887,10 @@
       {
         "title": "Garmin FIT JavaScript SDK, profile.js (Profile 21.222.0)",
         "url": "https://github.com/garmin/fit-javascript-sdk/blob/main/src/profile.js"
+      },
+      {
+        "title": "Gómez-Bruton A et al. Is bone tissue really affected by swimming? A systematic review (impact)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737199/"
       }
     ],
     "confidence": "high",
