@@ -1,0 +1,10 @@
+dist
+dev-dist
+coverage
+test-results
+playwright-report
+screenshots
+package-lock.json
+LICENSE
+knowledge/LICENSE
+CODE_OF_CONDUCT.md
