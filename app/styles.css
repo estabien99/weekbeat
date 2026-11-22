@@ -458,6 +458,8 @@ p[role='status']:empty {
   padding: 0;
   list-style: none;
   display: grid;
+  /* Never wider than the day column, even with long words (7 columns on tablets). */
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
 }
 .notes ul {
@@ -472,6 +474,13 @@ p[role='status']:empty {
   border-left: 4px solid var(--accent);
   border-radius: 8px;
   background: var(--surface);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+/* Short action labels wrap only between words, never inside one. */
+.session .actions button {
+  hyphens: manual;
+  overflow-wrap: normal;
 }
 .session p {
   margin: 0;
@@ -512,4 +521,23 @@ p[role='status']:empty {
 .offer-detail {
   display: block;
   font-size: 0.9375rem;
+}
+
+/* Seven narrow day columns (see .week above): less padding, full-width actions.
+   Kept last so it overrides the session rules. */
+@media (min-width: 900px) {
+  .day,
+  .session {
+    padding: 8px;
+  }
+  .session {
+    hyphens: auto;
+  }
+  .session button {
+    width: 100%;
+    padding: 4px 8px;
+  }
+  .session .replan {
+    padding: 8px;
+  }
 }
