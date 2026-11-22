@@ -5,6 +5,7 @@ import type {
   I18nText,
   Id,
   IsoDate,
+  IsoDateTime,
   KnowledgeRule,
   LoggedActivity,
   Membership,
@@ -32,6 +33,8 @@ export interface PlanInput {
   logs: LoggedActivity[];
   catalogue: ActivityType[];
   rules: KnowledgeRule[];
+  /** Earliest start for new sessions, usually "now" as the app sees it (the planner never reads the clock). */
+  notBefore?: IsoDateTime;
   /** Engine tuning; defaults to DEFAULT_WEIGHTS. */
   weights?: ScoringWeights;
 }
@@ -91,7 +94,16 @@ export interface SharedSession {
 }
 
 export type Rejection =
-  'paused' | 'outside-window' | 'overlap' | 'closed' | 'programme-day' | 'equipment' | 'setting' | 'recovery';
+  | 'past'
+  | 'declined'
+  | 'paused'
+  | 'outside-window'
+  | 'overlap'
+  | 'closed'
+  | 'programme-day'
+  | 'equipment'
+  | 'setting'
+  | 'recovery';
 
 export interface ScoreTerm {
   term: Term;

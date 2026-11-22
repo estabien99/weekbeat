@@ -17,6 +17,8 @@ import { type Done, type ProfileWeek, endOf, occupied, pausedThroughDay } from '
 export interface ConstraintContext {
   week: ProfileWeek;
   weekStart: IsoDate;
+  /** Week minute before which nothing is planned (from PlanInput.notBefore). */
+  notBefore?: number;
   recovery: RecoveryData[];
   /** Present when the knowledge base has an intensity rule (needed only by recovery rules). */
   thresholds?: IntensityThresholdsData;
@@ -37,6 +39,16 @@ export function placeFits(activity: ActivityType, place: Place | undefined): boo
     place.categories.includes(activity.category) ||
     place.categories.includes(activity.id);
   return settingOk && categoryOk;
+}
+
+/** Nothing is planned in the past. */
+export function notPast(c: Candidate, ctx: ConstraintContext): boolean {
+  return ctx.notBefore === undefined || c.start >= ctx.notBefore;
+}
+
+/** What the person let go, missed or moved is not proposed again in the same slot. */
+export function notDeclined(c: Candidate, ctx: ConstraintContext): boolean {
+  return !ctx.week.declined.some((d) => d.activityId === c.activity.id && d.start === c.start);
 }
 
 export function notPaused(c: Candidate, ctx: ConstraintContext): boolean {
@@ -108,6 +120,8 @@ export function recoveryGap(c: Candidate, ctx: ConstraintContext): boolean {
 }
 
 const CHECKS: [Rejection, (c: Candidate, ctx: ConstraintContext) => boolean][] = [
+  ['past', notPast],
+  ['declined', notDeclined],
   ['paused', notPaused],
   ['setting', settingFits],
   ['equipment', hasEquipment],

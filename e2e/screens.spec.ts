@@ -89,15 +89,38 @@ for (const lang of ['de', 'en'] as const) {
       await expectAccessible(page);
       await page.getByRole('button', { name: t.interview.finish }).click();
 
-      // Week view shows the free windows
+      // Week view shows the free windows and, with automatic proposals on, the proposal right away
       await expect(page.getByRole('heading', { level: 2 })).toHaveText(t.week.title.replace('{{week}}', '47'));
       await expect(page.locator('.day')).toHaveCount(7);
       await expect(page.locator('[aria-current="date"]')).toHaveCount(1);
       await expect(page.locator('.day').nth(0)).toContainText('18:00–19:30');
       await expect(page.locator('.day').nth(5)).toContainText('09:00–11:00');
+      // Wednesday 10:00: only Saturday's window is left; nothing is proposed in the past.
+      const proposed = page.locator('.session.proposed');
+      await expect(proposed).toHaveCount(2);
+      await expect(page.locator('.day').nth(5).locator('.session.proposed')).toHaveCount(2);
+      await expect(proposed.first().locator('.why')).not.toBeEmpty();
+      await expect(page.locator('.notes')).toContainText(lang === 'de' ? '2 von 3' : '2 of 3');
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
       await shot(page, '4-week', project, lang);
+
+      await page.getByRole('button', { name: t.plan.acceptAll }).click();
+      await expect(
+        page.getByRole('status').filter({ hasText: t.plan.accepted_other.replace('{{count}}', '2') }),
+      ).toBeVisible();
+      await expect(page.locator('.session.accepted')).toHaveCount(2);
+      await expect(proposed).toHaveCount(0);
+
+      // Moving a session offers alternatives (keyboard and screen-reader friendly, no drag and drop)
+      await page.locator('.session.accepted').first().getByRole('button', { name: t.plan.move }).click();
+      await expect(page.getByRole('heading', { name: t.plan.replanTitle })).toBeFocused();
+      await expectAccessible(page);
+      await shot(page, '4b-replan', project, lang);
+      const letGo = lang === 'de' ? 'Diesmal auslassen – kein Problem.' : 'Let it go this time – no problem.';
+      await page.getByRole('button', { name: letGo }).click();
+      await expect(page.getByRole('status').filter({ hasText: t.plan.saved })).toBeVisible();
+      await expect(page.locator('.session.accepted')).toHaveCount(1);
 
       // Settings: add a second person, switch to them
       await page.getByRole('link', { name: t.nav.settings }).click();
@@ -146,6 +169,11 @@ for (const lang of ['de', 'en'] as const) {
       await page.getByLabel(t.nav.person).selectOption({ label: 'Sam' });
       await page.getByRole('link', { name: t.nav.week }).click();
       await expect(page.locator('.day').nth(0)).not.toContainText('18:00');
+      // Sam skipped the interview: no automatic proposal; planning by hand explains what is missing.
+      await expect(page.locator('.session')).toHaveCount(0);
+      await page.getByRole('button', { name: t.plan.make }).click();
+      await expect(page.locator('.notes')).toBeVisible();
+      await expect(page.getByRole('button', { name: t.plan.remake })).toBeVisible();
 
       // Data survives a reload (stored on the device)
       await page.reload();

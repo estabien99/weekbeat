@@ -4,7 +4,7 @@ import type { KnowledgeRule, LoggedActivity } from '../model/types.ts';
 import { sessionLength } from './candidates.ts';
 import { hasEquipment, open, placeFits } from './constraints.ts';
 import { planWeek } from './plan.ts';
-import { WINDOWS, act, gym, home, input, profile, weekday } from './fixtures.ts';
+import { WINDOWS, act, gym, home, input, profile, saturdayMtb, weekday } from './fixtures.ts';
 import type { Candidate } from './types.ts';
 
 const starts = (p: ReturnType<typeof planWeek>) =>
@@ -42,6 +42,20 @@ describe('planWeek', () => {
     const capped = planWeek(input({ profiles: [profile({ game: { enabled: true, weeklyMaxSessions: 2 } })] }));
     expect(capped.proposals).toHaveLength(1);
     expect(capped.notes).toEqual([]);
+  });
+
+  it('plans nothing before notBefore (the app passes "now")', () => {
+    const plan = planWeek(input({ notBefore: '2026-11-24T19:00' }));
+    expect(plan.proposals.map((p) => p.session.start)).toEqual(['2026-11-25T18:15', '2026-11-26T18:15']);
+  });
+
+  it('does not propose a session again in a slot the person let go', () => {
+    const first = planWeek(input()).proposals[0]!.session;
+    const plan = planWeek(input({ anchors: [saturdayMtb, { ...first, status: 'skipped' }] }));
+    expect(
+      plan.proposals.some((p) => p.session.start === first.start && p.session.activityTypeId === first.activityTypeId),
+    ).toBe(false);
+    expect(plan.proposals).toHaveLength(2);
   });
 
   it('moves around calendar busy blocks', () => {

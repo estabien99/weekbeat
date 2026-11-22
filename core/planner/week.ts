@@ -22,6 +22,8 @@ export interface ProfileWeek {
   /** Logs before this week (recovery gaps, deload). */
   past: Done[];
   membershipIds: Set<Id>;
+  /** Sessions the person let go, missed or moved this week: never proposed again at the same time. */
+  declined: { activityId: Id; start: number }[];
 }
 
 /** Session statuses that block time and count toward goals. */
@@ -80,7 +82,10 @@ export function buildWeek(profile: Profile, input: PlanInput): ProfileWeek {
       .filter((m) => m.ownerProfileId === profile.id)
       .flatMap((m) => (m.linkedToMembershipId ? [m.id, m.linkedToMembershipId] : [m.id])),
   );
-  return { profile, windows, busy, done, past, membershipIds };
+  const declined = input.anchors
+    .filter((s) => s.profileId === profile.id && !COUNTING.has(s.status))
+    .map((s) => ({ activityId: s.activityTypeId, start: minuteOfWeek(s.start, weekStart) }));
+  return { profile, windows, busy, done, past, membershipIds, declined };
 }
 
 export function addPick(week: ProfileWeek, c: Candidate): void {
