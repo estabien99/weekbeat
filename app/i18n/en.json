@@ -115,7 +115,12 @@
     "placeKind": "Please choose a kind.",
     "travelMin": "Travel time must be a whole number of minutes.",
     "bookingUrl": "Please enter a link that starts with https://.",
-    "place": "This place no longer exists."
+    "place": "This place no longer exists.",
+    "dailyCheckInLimit": "The daily limit must be a whole number from 1, or stay empty.",
+    "monthlyCheckInLimit": "The monthly limit must be a whole number from 1, or stay empty.",
+    "monthlyVisitLimit": "The visit limit must be a whole number from 1, or stay empty.",
+    "activity": "Please choose an activity.",
+    "session": "This session no longer exists."
   },
   "data": {
     "title": "Your data",
@@ -219,7 +224,17 @@
     "confirmRemove": "Really remove {{label}}? The places stay; only their link to this membership goes.",
     "factsTitle": "Good to know, according to the provider",
     "source": "Source",
-    "factsReviewed": "Last checked: {{date}}. What the provider shows in its app is what counts."
+    "factsReviewed": "Last checked: {{date}}. What the provider shows in its app is what counts.",
+    "limits": "Check-in limits of your plan (optional)",
+    "limitsHint": "As your plan states them. Leave empty if there are none. Weekbeat then plans no more visits than that.",
+    "limitsStated_one": "Leave empty to use what the provider states: from {{date}} at most {{count}} check-in per month.",
+    "limitsStated_other": "Leave empty to use what the provider states: from {{date}} at most {{count}} check-ins per month.",
+    "perDay": "per day",
+    "perMonth": "per month",
+    "perDaySummary_one": "{{count}} check-in per day",
+    "perDaySummary_other": "{{count}} check-ins per day",
+    "usedSummary": "{{used}} of {{count}} check-ins this month",
+    "limitFromSummary": "from {{date}}: at most {{count}} check-ins per month"
   },
   "places": {
     "title": "Places",
@@ -254,6 +269,29 @@
     "address": "Address (optional)",
     "bookingUrl": "Booking link (optional)",
     "book": "Book at {{name}}",
-    "confirmRemove": "Really remove {{name}}? Sessions you already accepted stay in the plan."
+    "confirmRemove": "Really remove {{name}}? Sessions you already accepted stay in the plan.",
+    "visitLimit": "Visits per month at this place (optional)",
+    "visitLimitHint": "Only if the provider states a limit for this venue (for example on an Urban Sports Club venue profile).",
+    "visitLimitSummary": "at most {{count}} visits per month"
+  },
+  "checkIn": {
+    "open": "Check in at {{name}}",
+    "title": "Check-in at {{place}} ({{name}})",
+    "planned": "This is my planned session: {{activity}} at {{time}}",
+    "activity": "What are you doing there?",
+    "time": "Time (today)",
+    "duration": "Duration in minutes",
+    "save": "Check in",
+    "hint": "Saved on this device only. Check in with the provider in its app as usual.",
+    "done": "Check-in at {{name}} saved."
+  },
+  "value": {
+    "title": "{{month}} with your memberships ({{name}})",
+    "none": "No visits this month yet.",
+    "visits": "Visits",
+    "worth_one": "Worth at single-visit prices ({{count}} visit with a price)",
+    "worth_other": "Worth at single-visit prices ({{count}} visits with a price)",
+    "share": "Your share this month",
+    "hint": "Single-visit prices are your own entries under “Places”. Just for information."
   }
 }

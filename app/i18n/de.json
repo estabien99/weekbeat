@@ -115,7 +115,12 @@
     "placeKind": "Bitte eine Art wählen.",
     "travelMin": "Die Anfahrt muss eine ganze Zahl in Minuten sein.",
     "bookingUrl": "Bitte einen Link eingeben, der mit https:// beginnt.",
-    "place": "Diesen Ort gibt es nicht mehr."
+    "place": "Diesen Ort gibt es nicht mehr.",
+    "dailyCheckInLimit": "Das Tageslimit muss eine ganze Zahl ab 1 sein – oder leer bleiben.",
+    "monthlyCheckInLimit": "Das Monatslimit muss eine ganze Zahl ab 1 sein – oder leer bleiben.",
+    "monthlyVisitLimit": "Das Besuchslimit muss eine ganze Zahl ab 1 sein – oder leer bleiben.",
+    "activity": "Bitte eine Aktivität wählen.",
+    "session": "Diese Einheit gibt es nicht mehr."
   },
   "data": {
     "title": "Deine Daten",
@@ -219,7 +224,17 @@
     "confirmRemove": "{{label}} wirklich entfernen? Die Orte bleiben, nur die Zuordnung zu dieser Mitgliedschaft fällt weg.",
     "factsTitle": "Gut zu wissen, laut Anbieter",
     "source": "Quelle",
-    "factsReviewed": "Zuletzt geprüft: {{date}}. Maßgeblich ist, was der Anbieter in seiner App angibt."
+    "factsReviewed": "Zuletzt geprüft: {{date}}. Maßgeblich ist, was der Anbieter in seiner App angibt.",
+    "limits": "Check-in-Limits deines Tarifs (optional)",
+    "limitsHint": "Wie dein Tarif sie angibt. Leer lassen, wenn es keine gibt. Weekbeat plant dann nicht mehr Besuche ein.",
+    "limitsStated_one": "Leer lassen, um die Angabe des Anbieters zu übernehmen: ab {{date}} höchstens {{count}} Check-in pro Monat.",
+    "limitsStated_other": "Leer lassen, um die Angabe des Anbieters zu übernehmen: ab {{date}} höchstens {{count}} Check-ins pro Monat.",
+    "perDay": "pro Tag",
+    "perMonth": "pro Monat",
+    "perDaySummary_one": "{{count}} Check-in pro Tag",
+    "perDaySummary_other": "{{count}} Check-ins pro Tag",
+    "usedSummary": "{{used}} von {{count}} Check-ins diesen Monat",
+    "limitFromSummary": "ab {{date}}: höchstens {{count}} Check-ins pro Monat"
   },
   "places": {
     "title": "Orte",
@@ -254,6 +269,29 @@
     "address": "Adresse (optional)",
     "bookingUrl": "Buchungslink (optional)",
     "book": "Bei {{name}} buchen",
-    "confirmRemove": "{{name}} wirklich entfernen? Bereits übernommene Einheiten bleiben im Plan."
+    "confirmRemove": "{{name}} wirklich entfernen? Bereits übernommene Einheiten bleiben im Plan.",
+    "visitLimit": "Besuche pro Monat an diesem Ort (optional)",
+    "visitLimitHint": "Nur wenn der Anbieter für diesen Ort ein eigenes Limit nennt (zum Beispiel bei Urban Sports Club im Ortsprofil).",
+    "visitLimitSummary": "höchstens {{count}} Besuche pro Monat"
+  },
+  "checkIn": {
+    "open": "Bei {{name}} einchecken",
+    "title": "Check-in bei {{place}} ({{name}})",
+    "planned": "Das ist meine geplante Einheit: {{activity}} um {{time}}",
+    "activity": "Was machst du dort?",
+    "time": "Uhrzeit (heute)",
+    "duration": "Dauer in Minuten",
+    "save": "Einchecken",
+    "hint": "Nur auf diesem Gerät gespeichert. Den Check-in beim Anbieter machst du wie gewohnt in seiner App.",
+    "done": "Check-in bei {{name}} gespeichert."
+  },
+  "value": {
+    "title": "{{month}} bei euren Mitgliedschaften ({{name}})",
+    "none": "Noch keine Besuche in diesem Monat.",
+    "visits": "Besuche",
+    "worth_one": "Wert zu Einzelpreisen ({{count}} Besuch mit Preis)",
+    "worth_other": "Wert zu Einzelpreisen ({{count}} Besuche mit Preis)",
+    "share": "Dein Anteil diesen Monat",
+    "hint": "Einzelpreise sind eure eigenen Angaben unter „Orte“. Nur zur Information."
   }
 }

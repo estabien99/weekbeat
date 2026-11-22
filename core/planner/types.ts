@@ -103,7 +103,8 @@ export type Rejection =
   | 'programme-day'
   | 'equipment'
   | 'setting'
-  | 'recovery';
+  | 'recovery'
+  | 'check-in-limit';
 
 export interface ScoreTerm {
   term: Term;
@@ -130,12 +131,14 @@ export interface DeloadOffer {
   text: I18nText;
 }
 
-export type NoteKind = 'paused' | 'goal-short' | 'no-duration' | 'no-activity';
+export type NoteKind = 'paused' | 'goal-short' | 'no-duration' | 'no-activity' | 'check-in-limit';
 
 /** Neutral information for the person: why the plan has fewer sessions than the goal. Never a reproach. */
 export interface PlanNote {
   kind: NoteKind;
   profileId: Id;
+  /** For check-in-limit notes: the membership whose limit is reached (the app shows its name). */
+  membershipId?: Id;
   text: I18nText;
 }
 

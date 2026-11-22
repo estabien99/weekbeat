@@ -619,3 +619,30 @@ a.button:hover {
   display: inline-block;
   min-height: 24px;
 }
+
+/* Inline label + small input pairs (limits, check-in time and duration). */
+label.inline {
+  display: grid;
+  gap: 4px;
+  font-weight: 400;
+}
+label.inline input {
+  width: 8rem;
+  max-width: 100%;
+}
+/* Value meter: a few figures, read as label + value. */
+.figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 12px;
+  margin: 8px 0;
+}
+.figures dt {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.figures dd {
+  margin: 2px 0 0;
+  font-size: 1.375rem;
+  font-weight: 600;
+}

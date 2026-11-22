@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import {
   acceptSessions,
   applyReplan,
+  completeSession,
   getAvailability,
   isoWeek,
   isoWeekday,
   planWeek,
   replan,
-  setSessionStatus,
   toIsoDate,
   weekOf,
   type Lang,
@@ -20,6 +20,7 @@ import {
 import { activityCatalogue } from '../../knowledge/index.ts';
 import { db } from '../db.ts';
 import { localeOf } from '../format.ts';
+import { membershipLabel } from '../memberships.ts';
 import { loadPlanInput } from '../planInput.ts';
 
 const HIDDEN = new Set(['moved', 'skipped']);
@@ -65,6 +66,8 @@ export function WeekView({ profile }: { profile: Profile }) {
     [profile.id, weekStart, weekEnd],
   );
   const places = useLiveQuery(() => db.places.toArray(), []);
+  const memberships = useLiveQuery(() => db.memberships.toArray(), []);
+  const people = useLiveQuery(() => db.profiles.toArray(), []);
   const [replanning, setReplanning] = useState<Replanning | null>(null);
   const [message, setMessage] = useState('');
   // Which week the proposal is shown for. Automatic (interview setting) when the week has nothing planned yet;
@@ -87,6 +90,11 @@ export function WeekView({ profile }: { profile: Profile }) {
   const dayName = (iso: string) => dayFmt.format(new Date(`${iso.slice(0, 10)}T12:00`));
   const activityName = (id: string) => activityCatalogue.find((a) => a.id === id)?.name[lang] ?? id;
   const placeName = (id?: string) => places?.find((p) => p.id === id)?.name;
+  // A check-in-limit note names its membership, e.g. "Wellpass Plus 1 (Sam): ".
+  const noteMembership = (id?: string) => {
+    const m = id ? memberships?.find((x) => x.id === id) : undefined;
+    return m && people ? `${membershipLabel(m, people, t, lang)}: ` : '';
+  };
 
   const savedIds = new Set(sessions?.map((s) => s.id));
   const proposals = (plan?.proposals ?? []).filter(
@@ -151,7 +159,10 @@ export function WeekView({ profile }: { profile: Profile }) {
           <h3>{t('plan.notesTitle')}</h3>
           <ul>
             {notes.map((n) => (
-              <li key={n.kind + n.text.en}>{n.text[lang]}</li>
+              <li key={n.kind + (n.membershipId ?? '') + n.text.en}>
+                {noteMembership(n.membershipId)}
+                {n.text[lang]}
+              </li>
             ))}
             {offers.map((o) => (
               <li key={o.ruleId}>{o.text[lang]}</li>
@@ -201,7 +212,7 @@ export function WeekView({ profile }: { profile: Profile }) {
                                 <button
                                   type="button"
                                   aria-label={t('plan.doneLabel', label)}
-                                  onClick={() => void setSessionStatus(db, s.id, 'done')}
+                                  onClick={() => void completeSession(db, s.id)}
                                 >
                                   {t('plan.done')}
                                 </button>

@@ -14,7 +14,7 @@ import {
 } from '../../core/index.ts';
 import { activityCatalogue } from '../../knowledge/index.ts';
 import { db } from '../db.ts';
-import { draftOf, emptyDraft, optionalNumber, type MembershipDraft } from '../memberships.ts';
+import { draftOf, emptyDraft, membershipOf, optionalNumber, type MembershipDraft } from '../memberships.ts';
 import { MembershipFields } from './MembershipFields.tsx';
 
 const CATEGORIES: ActivityCategory[] = ['cycling', 'endurance', 'strength', 'hiit', 'mobility', 'swimming'];
@@ -98,12 +98,11 @@ export function Interview({
       if (existing) await deleteMembership(db, existing.id);
       return;
     }
+    // The interview does not show limits: keep what was entered elsewhere.
     const m = {
-      provider: membership.provider,
-      ownerProfileId: profile.id,
-      tier: membership.tier,
-      monthlyCostShareEur: optionalNumber(membership.share),
-      ...(membership.linkedTo ? { linkedToMembershipId: membership.linkedTo } : {}),
+      ...membershipOf(membership, profile.id),
+      dailyCheckInLimit: existing?.dailyCheckInLimit,
+      monthlyCheckInLimit: existing?.monthlyCheckInLimit,
     };
     if (existing) await updateMembership(db, existing.id, m);
     else await addMembership(db, m);
@@ -180,6 +179,7 @@ export function Interview({
           profiles={profiles}
           noneLabel={t('interview.membership.none')}
           describedBy={`${id}-hint`}
+          showLimits={false}
         />
       )}
 

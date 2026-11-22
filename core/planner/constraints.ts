@@ -5,10 +5,11 @@ import type {
   IntensityThresholdsData,
   IsoDate,
   KnowledgeRule,
+  Membership,
   Place,
   RecoveryData,
 } from '../model/types.ts';
-import { DAY_MIN, dayIndexOf, hhmmToMin, overlaps } from './time.ts';
+import { DAY_MIN, dateOfDay, dayIndexOf, hhmmToMin, overlaps } from './time.ts';
 import type { Candidate, Rejection } from './types.ts';
 import { type Done, type ProfileWeek, endOf, occupied, pausedThroughDay } from './week.ts';
 
@@ -119,6 +120,66 @@ export function recoveryGap(c: Candidate, ctx: ConstraintContext): boolean {
   return true;
 }
 
+/** Local date (YYYY-MM-DD) of a week minute; minutes before the week give earlier dates. */
+export function dateAt(weekStart: IsoDate, minute: number): IsoDate {
+  return dateOfDay(weekStart, dayIndexOf(minute));
+}
+
+/** Visits (sessions and logs with a place) of the week and before it, in week minutes. */
+export function visits(week: ProfileWeek): Done[] {
+  return [...week.past, ...week.done].filter((d) => d.placeId !== undefined);
+}
+
+/** Visits through membership `m` (at places it covers) on the date or in the month of `date`. */
+export function usage(
+  week: ProfileWeek,
+  weekStart: IsoDate,
+  m: Membership,
+  date: IsoDate,
+): { day: number; month: number } {
+  let day = 0;
+  let month = 0;
+  for (const v of visits(week)) {
+    if (!week.places.get(v.placeId!)?.membershipIds.includes(m.id)) continue;
+    const d = dateAt(weekStart, v.start);
+    if (d.slice(0, 7) === date.slice(0, 7)) month++;
+    if (d === date) day++;
+  }
+  return { day, month };
+}
+
+/** The monthly check-in limit of `m` that applies on `date`, if any. */
+export function monthlyLimit(m: Membership, date: IsoDate): number | undefined {
+  if (m.monthlyCheckInLimit === undefined) return undefined;
+  return m.monthlyCheckInLimitFrom && date < m.monthlyCheckInLimitFrom ? undefined : m.monthlyCheckInLimit;
+}
+
+/**
+ * A visit to a place the person reaches through a membership stays within that membership's daily and monthly
+ * check-in limits and the venue's own monthly limit. Places no membership of the person covers are not limited.
+ */
+export function withinCheckInLimits(c: Candidate, ctx: ConstraintContext): boolean {
+  const place = c.place;
+  if (!place) return true;
+  const covering = ctx.week.memberships.filter((m) => place.membershipIds.includes(m.id));
+  if (covering.length === 0) return true;
+  const date = dateAt(ctx.weekStart, c.start);
+  if (place.monthlyVisitLimit !== undefined) {
+    const atPlace = visits(ctx.week).filter(
+      (v) => v.placeId === place.id && dateAt(ctx.weekStart, v.start).slice(0, 7) === date.slice(0, 7),
+    ).length;
+    if (atPlace >= place.monthlyVisitLimit) return false;
+  }
+  return covering.some((m) => {
+    const used = usage(ctx.week, ctx.weekStart, m, date);
+    const perMonth = monthlyLimit(m, date);
+    return (
+      (m.dailyCheckInLimit === undefined || used.day < m.dailyCheckInLimit) &&
+      (perMonth === undefined || used.month < perMonth)
+    );
+  });
+}
+
 const CHECKS: [Rejection, (c: Candidate, ctx: ConstraintContext) => boolean][] = [
   ['past', notPast],
   ['declined', notDeclined],
@@ -130,6 +191,7 @@ const CHECKS: [Rejection, (c: Candidate, ctx: ConstraintContext) => boolean][] =
   ['closed', open],
   ['programme-day', programmeDay],
   ['recovery', recoveryGap],
+  ['check-in-limit', withinCheckInLimits],
 ];
 
 /** The first hard constraint a candidate breaks, or null if it passes all. */

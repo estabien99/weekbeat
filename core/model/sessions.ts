@@ -1,4 +1,5 @@
 import type { WeekbeatDB } from './db.ts';
+import { checkIn } from './memberships.ts';
 import { ValidationError } from './repo.ts';
 import type { Id, PlannedSession } from './types.ts';
 
@@ -18,6 +19,28 @@ export async function setSessionStatus(
 ): Promise<void> {
   const n = await db.plannedSessions.update(id, { status });
   if (n === 0 && !(await db.plannedSessions.get(id))) throw new ValidationError('session', 'Unknown session');
+}
+
+/**
+ * Marks a session done. A session at a place is also logged as a visit (a check-in), so it counts toward check-in
+ * limits and the value meter in later weeks too; marking it done twice logs it once.
+ */
+export async function completeSession(db: WeekbeatDB, id: Id): Promise<void> {
+  const s = await db.plannedSessions.get(id);
+  if (!s) throw new ValidationError('session', 'Unknown session');
+  const logged = await db.loggedActivities.where('plannedSessionId').equals(id).count();
+  if (!s.placeId || logged > 0 || !(await db.places.get(s.placeId))) {
+    await setSessionStatus(db, id, 'done');
+    return;
+  }
+  await checkIn(db, {
+    profileId: s.profileId,
+    placeId: s.placeId,
+    activityTypeId: s.activityTypeId,
+    start: s.start.slice(0, 16),
+    durationMin: s.durationMin,
+    plannedSessionId: s.id,
+  });
 }
 
 /**

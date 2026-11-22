@@ -3,6 +3,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { WeekbeatDB } from './db.ts';
 import {
   addMembership,
+  checkIn,
+  coveringMembership,
+  valueMeter,
   addPlace,
   deleteMembership,
   deletePlace,
@@ -13,6 +16,7 @@ import {
   type NewPlace,
 } from './memberships.ts';
 import { ValidationError, addProfile, createHousehold, type NewProfile } from './repo.ts';
+import { completeSession } from './sessions.ts';
 import type { Id } from './types.ts';
 
 const anna: NewProfile = { name: 'Anna', lang: 'de', level: 'intermediate', goal: { kind: 'sessions', target: 3 } };
@@ -153,5 +157,167 @@ describe('places', () => {
     await expect(updatePlace(db, 'missing', studio([]))).rejects.toThrow(ValidationError);
     await deletePlace(db, place.id);
     expect(await db.places.get(place.id)).toBeUndefined();
+  });
+});
+
+describe('check-in limits as entered', () => {
+  it('stores whole-number limits from 1 and rejects others', async () => {
+    const m = await addMembership(db, {
+      provider: 'urban-sports-club',
+      ownerProfileId: a,
+      dailyCheckInLimit: 1,
+      monthlyCheckInLimit: 8,
+    });
+    expect(m).toMatchObject({ dailyCheckInLimit: 1, monthlyCheckInLimit: 8 });
+    for (const bad of [0, 2.5, -1]) {
+      await expect(addMembership(db, { provider: 'gym', ownerProfileId: a, monthlyCheckInLimit: bad })).rejects.toThrow(
+        ValidationError,
+      );
+      await expect(addPlace(db, { ...studio([]), monthlyVisitLimit: bad })).rejects.toThrow(ValidationError);
+    }
+    expect(await addPlace(db, { ...studio([m.id]), monthlyVisitLimit: 4 })).toMatchObject({ monthlyVisitLimit: 4 });
+  });
+});
+
+describe('check-in and value meter', () => {
+  it('logs a check-in with the covering membership and marks the planned session done', async () => {
+    const main = await addMembership(db, { provider: 'wellpass', ownerProfileId: a, monthlyCostShareEur: 0 });
+    const place = await addPlace(db, { ...studio([main.id]), singleVisitPriceEur: 15.5 });
+    await db.plannedSessions.add({
+      id: 's1',
+      profileId: a,
+      activityTypeId: 'weight-training',
+      placeId: place.id,
+      start: '2026-11-23T18:00',
+      durationMin: 45,
+      why: { de: '', en: '' },
+      status: 'accepted',
+    });
+    const log = await checkIn(db, {
+      profileId: a,
+      placeId: place.id,
+      activityTypeId: 'weight-training',
+      start: '2026-11-23T18:05',
+      durationMin: 45,
+      plannedSessionId: 's1',
+    });
+    expect(log).toMatchObject({ source: 'checkin:wellpass', sourceRef: main.id, placeId: place.id });
+    expect((await db.plannedSessions.get('s1'))?.status).toBe('done');
+  });
+
+  it('rejects bad input and other people’s sessions', async () => {
+    const place = await addPlace(db, studio([]));
+    const base = {
+      profileId: a,
+      placeId: place.id,
+      activityTypeId: 'yoga',
+      start: '2026-11-23T18:00',
+      durationMin: 30,
+    };
+    await expect(checkIn(db, { ...base, start: 'yesterday' })).rejects.toThrow(ValidationError);
+    await expect(checkIn(db, { ...base, durationMin: 0 })).rejects.toThrow(ValidationError);
+    await expect(checkIn(db, { ...base, activityTypeId: ' ' })).rejects.toThrow(ValidationError);
+    await expect(checkIn(db, { ...base, placeId: 'nope' })).rejects.toThrow(ValidationError);
+    await expect(checkIn(db, { ...base, profileId: 'nobody' })).rejects.toThrow(ValidationError);
+    await db.plannedSessions.add({
+      id: 'theirs',
+      profileId: b,
+      activityTypeId: 'yoga',
+      start: '2026-11-23T18:00',
+      durationMin: 30,
+      why: { de: '', en: '' },
+      status: 'accepted',
+    });
+    await expect(checkIn(db, { ...base, plannedSessionId: 'theirs' })).rejects.toThrow(ValidationError);
+    // A place no membership covers is still a visit, with a plain source.
+    expect(await checkIn(db, base)).toMatchObject({ source: 'checkin', placeId: place.id });
+  });
+
+  it('marks a session at a place done once and logs the visit once', async () => {
+    const place = await addPlace(db, studio([]));
+    const s = {
+      id: 's2',
+      profileId: a,
+      activityTypeId: 'yoga',
+      placeId: place.id,
+      start: '2026-11-24T18:00',
+      durationMin: 30,
+      why: { de: '', en: '' },
+      status: 'accepted' as const,
+    };
+    await db.plannedSessions.add(s);
+    await completeSession(db, 's2');
+    await completeSession(db, 's2');
+    expect(await db.loggedActivities.where('plannedSessionId').equals('s2').count()).toBe(1);
+    await db.plannedSessions.add({ ...s, id: 's3', placeId: undefined });
+    await completeSession(db, 's3');
+    expect((await db.plannedSessions.get('s3'))?.status).toBe('done');
+    expect(await db.loggedActivities.where('plannedSessionId').equals('s3').count()).toBe(0);
+    await expect(completeSession(db, 'missing')).rejects.toThrow(ValidationError);
+  });
+
+  it('prefers the main membership when several cover a place', () => {
+    const all = [
+      { id: 'plus', provider: 'wellpass', ownerProfileId: a, linkedToMembershipId: 'x' },
+      { id: 'main', provider: 'urban-sports-club', ownerProfileId: a },
+      { id: 'other', provider: 'gym', ownerProfileId: b },
+    ];
+    expect(coveringMembership(all, a, { membershipIds: ['plus', 'main', 'other'] })?.id).toBe('main');
+    expect(coveringMembership(all, a, { membershipIds: ['other'] })).toBeUndefined();
+  });
+
+  it('adds up single-visit prices of the month’s membership visits next to the own share', () => {
+    const memberships = [
+      { id: 'wp', provider: 'wellpass', ownerProfileId: a, monthlyCostShareEur: 25 },
+      { id: 'gym', provider: 'gym', ownerProfileId: a },
+    ];
+    const places = [
+      {
+        id: 'p1',
+        name: 'A',
+        kind: 'partner' as const,
+        membershipIds: ['wp'],
+        categories: [],
+        equipment: [],
+        singleVisitPriceEur: 15.5,
+      },
+      { id: 'p2', name: 'B', kind: 'partner' as const, membershipIds: ['wp'], categories: [], equipment: [] },
+      {
+        id: 'p3',
+        name: 'C',
+        kind: 'own' as const,
+        membershipIds: [],
+        categories: [],
+        equipment: [],
+        singleVisitPriceEur: 99,
+      },
+    ];
+    const log = (id: string, start: string, placeId?: string, over = {}) => ({
+      id,
+      profileId: a,
+      activityTypeId: 'yoga',
+      start,
+      durationMin: 30,
+      source: 'checkin',
+      ...(placeId ? { placeId } : {}),
+      ...over,
+    });
+    const logs = [
+      log('1', '2026-11-03T18:00', 'p1'),
+      log('2', '2026-11-10T18:00', 'p1'),
+      log('3', '2026-11-12T18:00', 'p2'), // no price
+      log('4', '2026-11-13T18:00', 'p3'), // not covered by a membership
+      log('5', '2026-10-30T18:00', 'p1'), // other month
+      log('6', '2026-11-14T18:00'), // no place
+      log('7', '2026-11-15T18:00', 'p1', { mergedIntoId: '1' }), // merged into another log
+      log('8', '2026-11-16T18:00', 'p1', { profileId: b }), // someone else
+    ];
+    expect(valueMeter(a, '2026-11', logs, places, memberships)).toEqual({
+      visits: 3,
+      priced: 2,
+      valueEur: 31,
+      shareEur: 25,
+    });
+    expect(valueMeter(b, '2026-11', logs, places, [])).toEqual({ visits: 0, priced: 0, valueEur: 0 });
   });
 });

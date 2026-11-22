@@ -221,6 +221,30 @@ for (const lang of ['de', 'en'] as const) {
       await expectNoHorizontalScroll(page);
       await shot(page, '7-places', project, lang);
 
+      // The Plus 1 shows the provider's monthly limit from 2027 (sourced, applied by the planner from then on).
+      await expect(page.locator('.people li').nth(1)).toContainText('10');
+      await expect(page.locator('.people li').nth(1)).toContainText('2027');
+
+      // Check-in tap (Alex): logs the visit on this device; the value meter shows what it was worth.
+      await page.getByRole('button', { name: t.checkIn.open.replace('{{name}}', 'Studio Nord') }).click();
+      await expect(
+        page.getByRole('heading', {
+          name: t.checkIn.title.replace('{{place}}', 'Studio Nord').replace('{{name}}', 'Alex'),
+        }),
+      ).toBeFocused();
+      await page.getByLabel(t.checkIn.duration).fill('45');
+      await expectAccessible(page);
+      await page.getByRole('button', { name: t.checkIn.save, exact: true }).click();
+      await expect(
+        page.getByRole('status').filter({ hasText: t.checkIn.done.replace('{{name}}', 'Studio Nord') }),
+      ).toBeVisible();
+      const meter = page.locator('.value-meter');
+      await expect(meter.locator('dd').first()).toHaveText('1');
+      await expect(meter).toContainText(lang === 'de' ? '15,50' : '15.50');
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '8-value', project, lang);
+
       await page.getByLabel(t.nav.person).selectOption({ label: 'Sam' });
       await page.getByRole('link', { name: t.nav.week }).click();
       await expect(page.locator('.day').nth(0)).not.toContainText('18:00');

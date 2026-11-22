@@ -1,4 +1,4 @@
-import type { ActivityType, Id, IsoDate, Profile } from '../model/types.ts';
+import type { ActivityType, Id, IsoDate, Membership, Place, Profile } from '../model/types.ts';
 import { DAY_MIN, type Interval, hhmmToMin, minuteOfWeek } from './time.ts';
 import type { Candidate, PlanInput } from './types.ts';
 
@@ -10,6 +10,8 @@ export interface Done {
   durationMin: number;
   travelMin: number;
   programmeId?: Id;
+  /** Where it happens or happened: visits count toward check-in limits. */
+  placeId?: Id;
 }
 
 /** One person's week as the planner sees it, in week minutes. */
@@ -22,6 +24,9 @@ export interface ProfileWeek {
   /** Logs before this week (recovery gaps, deload). */
   past: Done[];
   membershipIds: Set<Id>;
+  /** The person's own memberships (check-in limits). */
+  memberships: Membership[];
+  places: Map<Id, Place>;
   /** Sessions the person let go, missed or moved this week: never proposed again at the same time. */
   declined: { activityId: Id; start: number }[];
 }
@@ -68,6 +73,7 @@ export function buildWeek(profile: Profile, input: PlanInput): ProfileWeek {
     durationMin: s.durationMin,
     travelMin: s.placeId ? (travel.get(s.placeId) ?? 0) : 0,
     programmeId: s.programmeId,
+    placeId: s.placeId,
   }));
   // A log of a planned anchor is the same session; merged logs count through the session they were merged into.
   const logs: Done[] = input.logs
@@ -78,17 +84,20 @@ export function buildWeek(profile: Profile, input: PlanInput): ProfileWeek {
       start: minuteOfWeek(l.start, weekStart),
       durationMin: l.durationMin,
       travelMin: 0,
+      placeId: l.placeId,
     }));
   const inWeek = (d: Done) => d.start >= 0 && d.start < 7 * DAY_MIN;
   const done = [...fromAnchors, ...logs.filter(inWeek)].sort((a, b) => a.start - b.start);
   const past = logs.filter((d) => d.start < 0).sort((a, b) => a.start - b.start);
 
   // Coverage is explicit: a linked membership (e.g. Plus 1) covers only the places that list it.
-  const membershipIds = new Set(input.memberships.filter((m) => m.ownerProfileId === profile.id).map((m) => m.id));
+  const memberships = input.memberships.filter((m) => m.ownerProfileId === profile.id);
+  const membershipIds = new Set(memberships.map((m) => m.id));
   const declined = input.anchors
     .filter((s) => s.profileId === profile.id && !COUNTING.has(s.status))
     .map((s) => ({ activityId: s.activityTypeId, start: minuteOfWeek(s.start, weekStart) }));
-  return { profile, windows, busy, done, past, membershipIds, declined };
+  const places = new Map(input.places.map((p) => [p.id, p]));
+  return { profile, windows, busy, done, past, membershipIds, memberships, places, declined };
 }
 
 export function addPick(week: ProfileWeek, c: Candidate): void {
@@ -98,6 +107,7 @@ export function addPick(week: ProfileWeek, c: Candidate): void {
     durationMin: c.durationMin,
     travelMin: c.place?.travelMin ?? 0,
     programmeId: c.programme?.id,
+    placeId: c.place?.id,
   });
   week.done.sort((a, b) => a.start - b.start);
 }

@@ -139,6 +139,9 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     ownerProfileId: nonEmpty,
     linkedToMembershipId: opt(nonEmpty),
     monthlyCostShareEur: opt(num),
+    dailyCheckInLimit: opt(num),
+    monthlyCheckInLimit: opt(num),
+    monthlyCheckInLimitFrom: opt(isoDate),
   }),
   places: obj({
     id: nonEmpty,
@@ -152,6 +155,7 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     bookingUrl: opt(httpsUrl),
     singleVisitPriceEur: opt(num),
     travelMin: opt(num),
+    monthlyVisitLimit: opt(num),
   }),
   availability: obj({
     id: nonEmpty,
@@ -179,6 +183,7 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     durationMin: num,
     source: str,
     sourceRef: opt(str),
+    placeId: opt(nonEmpty),
     load: opt(num),
     plannedSessionId: opt(nonEmpty),
     mergedIntoId: opt(nonEmpty),

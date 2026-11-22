@@ -133,6 +133,11 @@ export interface Membership {
   /** e.g. Plus 1 linked to a main account. */
   linkedToMembershipId?: Id;
   monthlyCostShareEur?: number;
+  /** Check-ins the plan allows, as the person entered them (or as the provider states them, see the app). */
+  dailyCheckInLimit?: number;
+  monthlyCheckInLimit?: number;
+  /** First day the monthly limit applies; before it there is none. */
+  monthlyCheckInLimitFrom?: IsoDate;
 }
 
 export interface Place {
@@ -147,6 +152,8 @@ export interface Place {
   bookingUrl?: string;
   singleVisitPriceEur?: number;
   travelMin?: number;
+  /** Visits per calendar month the venue allows through a membership (e.g. Urban Sports Club venue limits). */
+  monthlyVisitLimit?: number;
 }
 
 export interface TimeWindow {
@@ -189,6 +196,8 @@ export interface LoggedActivity {
   /** "manual", "garmin", "checkin:wellpass", … */
   source: string;
   sourceRef?: string;
+  /** Where it happened (check-ins); counts toward check-in limits and the value meter. */
+  placeId?: Id;
   load?: number;
   plannedSessionId?: Id;
   /** Logs from several sources merged into one session before they count. */

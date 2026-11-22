@@ -1,9 +1,9 @@
 import { deloadOffered } from '../knowledge.ts';
 import type { ActivityCategory, I18nText, IsoDate, PlannedSession, Profile, WeeklyGoal } from '../model/types.ts';
 import { candidatesFor, optionsFor } from './candidates.ts';
-import { type ConstraintContext, recoveryContext, rejectionOf } from './constraints.ts';
+import { type ConstraintContext, monthlyLimit, recoveryContext, rejectionOf, usage } from './constraints.ts';
 import { type ScoreContext, counts, progress, scoreTerms, total, unmetGoals } from './score.ts';
-import { WEEK_MIN, isoAt, minuteOfWeek } from './time.ts';
+import { WEEK_MIN, dateOfDay, isoAt, minuteOfWeek } from './time.ts';
 import {
   type Candidate,
   DEFAULT_WEIGHTS,
@@ -179,6 +179,67 @@ function deloadOffers(week: ProfileWeek, input: PlanInput): DeloadOffer[] {
   });
 }
 
+const MONTHS: Record<'de' | 'en', string[]> = {
+  de: [
+    'Januar',
+    'Februar',
+    'März',
+    'April',
+    'Mai',
+    'Juni',
+    'Juli',
+    'August',
+    'September',
+    'Oktober',
+    'November',
+    'Dezember',
+  ],
+  en: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
+};
+
+/** Neutral notes for memberships whose monthly check-in limit is used up (visits done and planned) this week. */
+function limitNotes(week: ProfileWeek, weekStart: IsoDate): PlanNote[] {
+  const notes: PlanNote[] = [];
+  // The last day of the week in each month it touches (so a limit that starts inside the week applies).
+  const lastDays = new Map<string, IsoDate>();
+  for (let d = 0; d < 7; d++) {
+    const date = dateOfDay(weekStart, d);
+    lastDays.set(date.slice(0, 7), date);
+  }
+  for (const m of week.memberships) {
+    for (const [month, date] of lastDays) {
+      const limit = monthlyLimit(m, date);
+      if (limit === undefined) continue;
+      const used = usage(week, weekStart, m, date).month;
+      if (used < limit) continue;
+      const name = { de: MONTHS.de[Number(month.slice(5)) - 1], en: MONTHS.en[Number(month.slice(5)) - 1] };
+      notes.push({
+        kind: 'check-in-limit',
+        profileId: week.profile.id,
+        membershipId: m.id,
+        text: {
+          de: `${used} von ${limit} Check-ins im ${name.de} genutzt oder geplant. Weitere Besuche über diese Mitgliedschaft plant Weekbeat ab dem nächsten Monat.`,
+          en: `${used} of ${limit} check-ins in ${name.en} used or planned. Weekbeat plans further visits through this membership from next month.`,
+        },
+      });
+    }
+  }
+  return notes;
+}
+
 function planProfile(profile: Profile, input: PlanInput, plan: Plan): void {
   const weights = input.weights ?? DEFAULT_WEIGHTS;
   const week = buildWeek(profile, input);
@@ -230,6 +291,8 @@ function planProfile(profile: Profile, input: PlanInput, plan: Plan): void {
     plan.proposals.push({ session, score: best.score, terms: best.terms });
     addPick(week, best.c);
   }
+
+  plan.notes.push(...limitNotes(week, input.weekStart));
 
   if (stop === 'goal-short') {
     for (const g of unmetGoals(week)) plan.notes.push(shortNote(profile, g, progress(g, week.done)));
