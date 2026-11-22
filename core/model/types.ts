@@ -48,6 +48,8 @@ export interface Profile {
   limitations: { tag: string; note?: string }[];
   /** weeklyMaxSessions comes from the knowledge base (load rules), never a hard-coded number. */
   game: { enabled: boolean; weeklyMaxSessions?: number };
+  /** Usual session length in minutes, set by the person; the planner uses it where no programme sets one. */
+  preferredSessionMin?: number;
   /** Pause mode (illness, holidays, injury) freezes goals and streaks. */
   pausedUntil?: IsoDate;
 }
@@ -272,6 +274,17 @@ export interface DeloadData {
   reduce: 'volume';
 }
 
+/**
+ * Recovery gap: after a session at `afterIntensity` or higher (in `forCategories`, if given), the next such
+ * session waits at least `minHours`. No rule of this part ships until a source supports one; the planner's
+ * check is inactive without it.
+ */
+export interface RecoveryData {
+  afterIntensity: Exclude<Intensity, 'sedentary'>;
+  forCategories?: ActivityCategory[];
+  minHours: number;
+}
+
 interface RuleBase {
   id: Id;
   summary: I18nText;
@@ -289,4 +302,5 @@ export type KnowledgeRule =
   | (RuleBase & { part: 'impact'; data: ImpactData })
   | (RuleBase & { part: 'complement'; data: ComplementData })
   | (RuleBase & { part: 'deload'; data: DeloadData })
+  | (RuleBase & { part: 'recovery'; data: RecoveryData })
   | (RuleBase & { part: 'principle'; data: Record<string, never> });

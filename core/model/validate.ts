@@ -98,6 +98,7 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     hobbies: arr(nonEmpty),
     limitations: arr(obj({ tag: str, note: opt(str) })),
     game: obj({ enabled: bool, weeklyMaxSessions: opt(num) }),
+    preferredSessionMin: opt(num),
     pausedUntil: opt(isoDate),
   }),
   activityTypes: obj({
