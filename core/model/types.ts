@@ -17,7 +17,7 @@ export interface I18nText {
 
 export type GameMode = 'off' | 'solo' | 'cooperative' | 'competitive';
 export type Level = 'beginner' | 'intermediate' | 'advanced';
-export type Intensity = 'light' | 'moderate' | 'vigorous';
+export type Intensity = 'sedentary' | 'light' | 'moderate' | 'vigorous';
 export type Weekday = 1 | 2 | 3 | 4 | 5 | 6 | 7; // ISO: 1 = Monday
 
 export interface Household {
@@ -54,26 +54,53 @@ export interface Profile {
 
 /** Sport-type mapping so connectors never need their own vocabulary. */
 export interface ActivityMapping {
-  /** Health Connect ExerciseSessionRecord type, e.g. "EXERCISE_TYPE_BIKING". */
+  /** Health Connect ExerciseSessionRecord constant, e.g. "EXERCISE_TYPE_BIKING". */
   healthConnect?: string;
-  /** Apple HealthKit HKWorkoutActivityType, e.g. "cycling". */
+  /** Apple HealthKit HKWorkoutActivityType case, e.g. "cycling". */
   healthKit?: string;
-  /** Garmin FIT sport/sub_sport, e.g. "cycling/mountain". */
-  fit?: string;
+  /** Garmin FIT SDK profile enum names (camelCase, as in the SDK), e.g. { sport: "cycling", subSport: "mountain" }. */
+  fit?: { sport: string; subSport: string };
 }
 
+export interface Source {
+  title: string;
+  url: string;
+}
+
+/** Entry of the 2024 Adult Compendium of Physical Activities, quoted verbatim. */
+export interface CompendiumEntry {
+  code: string;
+  met: number;
+  description: string;
+}
+
+export type ActivityCategory = 'cycling' | 'strength' | 'hiit' | 'mobility' | 'endurance' | 'swimming';
+
+/**
+ * An activity the planner can schedule. Catalogue entries ship in knowledge/activities.json; users may add
+ * their own later. Intensity is not stored: it is derived from `met` with the WHO thresholds rule.
+ */
 export interface ActivityType {
   id: Id;
   name: I18nText;
-  category: string;
-  intensity: Intensity;
-  /** Metabolic equivalent from the Compendium of Physical Activities (knowledge base). */
-  met?: number;
-  muscleGroups: string[];
-  impact: 'low' | 'medium' | 'high';
+  category: ActivityCategory;
+  /** Metabolic equivalent (catalogue: from the Compendium). */
+  met: number;
+  compendium?: CompendiumEntry;
   setting: 'indoor' | 'outdoor' | 'both';
+  /** Filled by the complement rules (knowledge base v1, part 2). */
+  muscleGroups?: string[];
+  impact?: 'low' | 'medium' | 'high';
   mapping: ActivityMapping;
+  /** Open question about a mapping, to settle with real data. */
+  mappingNote?: string;
+  /** Catalogue entries only: where the values come from and when they were checked. */
+  sources?: Source[];
+  confidence?: Confidence;
+  lastReviewed?: IsoDate;
 }
+
+export type Confidence = 'low' | 'medium' | 'high';
 
 /** An external plan with typical sessions, e.g. Freeletics Coach (no API needed). */
 export interface Programme {
@@ -187,14 +214,42 @@ export interface XPEvent {
   reason: string;
 }
 
-/** A fitness rule with its source; the planner reads only these (knowledge/). */
-export interface KnowledgeRule {
+/** WHO intensity bands on the absolute (MET) scale. */
+export interface IntensityThresholdsData {
+  lightFromMet: number;
+  moderateFromMet: number;
+  vigorousFromMet: number;
+}
+
+/** Weekly activity targets for an age group (minutes per week unless stated). */
+export interface WeeklyTargetData {
+  ageFrom: number;
+  /** Inclusive; absent = no upper bound. */
+  ageTo?: number;
+  /** Adults: weekly ranges. */
+  moderateMinutes?: { min: number; max: number };
+  vigorousMinutes?: { min: number; max: number };
+  /** Children and adolescents: average per day. */
+  mvpaMinutesPerDayAverage?: number;
+  /** Days per week with muscle-strengthening activity (at least). */
+  strengthDaysMin?: number;
+  /** Children: days with vigorous + muscle/bone strengthening activity; older adults: multicomponent balance + strength. */
+  extraDaysMin?: number;
+  extraKind?: 'vigorous-muscle-bone' | 'multicomponent-balance-strength';
+}
+
+interface RuleBase {
   id: Id;
-  part: 'activity-catalogue' | 'weekly-targets' | 'complement' | 'load-recovery' | 'safety';
   summary: I18nText;
-  /** Rule payload; its shape depends on `part`. */
-  data: Record<string, unknown>;
-  source: { title: string; url: string };
-  confidence: 'low' | 'medium' | 'high';
+  source: Source;
+  /** Verbatim sentence(s) from the source the rule encodes. */
+  quote: string;
+  confidence: Confidence;
   lastReviewed: IsoDate;
 }
+
+/** A fitness rule with its source; the planner reads only these (knowledge/). */
+export type KnowledgeRule =
+  | (RuleBase & { part: 'intensity'; data: IntensityThresholdsData })
+  | (RuleBase & { part: 'weekly-targets'; data: WeeklyTargetData })
+  | (RuleBase & { part: 'principle'; data: Record<string, never> });
