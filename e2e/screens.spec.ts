@@ -25,6 +25,9 @@ async function expectNoHorizontalScroll(page: Page) {
 }
 
 async function shot(page: Page, name: string, project: string, lang: Lang) {
+  // The transient "works offline" notice hides content in full-page shots; it closes by itself after 6 s.
+  const close = page.locator('.toast').getByRole('button', { name: T[lang].pwa.close });
+  if (await close.isVisible()) await close.click();
   await page.screenshot({ path: `screenshots/${project}-${lang}-${name}.png`, fullPage: true });
 }
 
@@ -88,6 +91,26 @@ for (const lang of ['de', 'en'] as const) {
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
       await shot(page, '4-settings', project, lang);
+
+      // Export, then import the same file again (replaces data after confirmation)
+      const downloadP = page.waitForEvent('download');
+      await page.getByRole('button', { name: t.data.export }).click();
+      const download = await downloadP;
+      expect(download.suggestedFilename()).toBe('weekbeat-2026-11-18.json');
+      const file = await download.path();
+      await page.getByLabel(t.data.import).setInputFiles(file);
+      await expect(page.getByRole('alertdialog')).toContainText(t.data.confirmText);
+      await expectAccessible(page);
+      await shot(page, '5-import', project, lang);
+      await page.getByRole('button', { name: t.data.confirm }).click();
+      await expect(page.getByRole('status').filter({ hasText: t.data.imported })).toBeVisible();
+      await expect(page.locator('.people li')).toHaveCount(2);
+
+      // A wrong file is refused with a clear message
+      await page
+        .getByLabel(t.data.import)
+        .setInputFiles({ name: 'x.json', mimeType: 'application/json', buffer: Buffer.from('{"a":1}') });
+      await expect(page.getByRole('alert')).toHaveText(t.data.errors['not-weekbeat']);
 
       await page.getByLabel(t.nav.person).selectOption({ label: 'Sam' });
       await page.getByRole('link', { name: t.nav.week }).click();

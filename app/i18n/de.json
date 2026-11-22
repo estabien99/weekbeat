@@ -89,5 +89,22 @@
     "time": "Bitte eine gültige Zeit wählen.",
     "day": "Bitte einen Wochentag wählen.",
     "profile": "Diese Person gibt es nicht mehr."
+  },
+  "data": {
+    "title": "Deine Daten",
+    "explain": "Alles liegt nur auf diesem Gerät. Sichere es als Datei, um es auf ein anderes Gerät zu bringen oder aufzubewahren.",
+    "export": "Daten exportieren",
+    "import": "Daten importieren",
+    "exported": "Export gespeichert.",
+    "imported": "Daten importiert.",
+    "confirmTitle": "Export vom {{date}} importieren?",
+    "confirmText": "Das ersetzt alle Daten auf diesem Gerät.",
+    "confirm": "Ja, ersetzen",
+    "errors": {
+      "not-json": "Die Datei konnte nicht gelesen werden.",
+      "not-weekbeat": "Das ist keine Weekbeat-Exportdatei.",
+      "too-new": "Die Datei stammt aus einer neueren Weekbeat-Version. Bitte aktualisiere die App.",
+      "bad-table": "Die Datei ist beschädigt oder unvollständig."
+    }
   }
 }
