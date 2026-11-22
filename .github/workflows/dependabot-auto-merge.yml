@@ -1,0 +1,38 @@
+# Enables auto-merge (squash) for Dependabot patch and minor updates, security updates included.
+# Based on GitHub's official example (dependabot/fetch-metadata README, "Enabling auto-merge").
+# - pull_request_target: Dependabot-triggered pull_request runs only get a read-only token. This workflow never
+#   checks out or runs code from the PR; it only reads Dependabot's metadata and calls `gh pr merge --auto`.
+# - Major updates (version-update:semver-major) are never auto-merged.
+# - Auto-merge only completes when the ruleset on main is satisfied: CI and CodeQL green.
+name: Dependabot auto-merge
+
+on: pull_request_target
+
+permissions: {}
+
+jobs:
+  auto-merge:
+    name: Enable auto-merge for patch/minor
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'estabien99/weekbeat'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+      - name: Enable auto-merge (squash)
+        if: >-
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ github.token }}
+      - name: Major update, left for review
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: echo "::notice::Major update ($DEPS), not auto-merged."
+        env:
+          DEPS: ${{ steps.metadata.outputs.dependency-names }}

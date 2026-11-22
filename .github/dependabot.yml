@@ -1,3 +1,9 @@
+# Dependency updates (see CLAUDE.md → "Dependency security").
+# - Weekly; patch + minor version updates grouped into one PR per ecosystem.
+# - Cooldown: a new release is only proposed after 5 days, which protects against freshly published malicious
+#   versions. GitHub applies cooldown to version updates only; security updates are always opened at once.
+# - Patch/minor PRs are auto-merged by .github/workflows/dependabot-auto-merge.yml once all required checks pass.
+#   Major updates are never auto-merged: Claude reads the changelog and adapts the code.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -5,13 +11,13 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 5
     open-pull-requests-limit: 5
     groups:
-      dev-tooling:
-        dependency-type: development
-        update-types: [minor, patch]
-      runtime:
-        dependency-type: production
+      npm-minor-and-patch:
+        applies-to: version-updates
+        patterns: ['*']
         update-types: [minor, patch]
     ignore:
       # typescript-eslint supports TypeScript < 6.1 only; lift together.
@@ -25,7 +31,12 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: monthly
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 5
     groups:
-      actions:
+      actions-minor-and-patch:
+        applies-to: version-updates
         patterns: ['*']
+        update-types: [minor, patch]

@@ -57,3 +57,25 @@ jobs:
             screenshots/
             test-results/
           retention-days: 14
+
+  audit:
+    # Informational only: not a required check, never fails, so a new advisory doesn't block unrelated PRs.
+    # Findings show as a warning and in the job summary; CLAUDE.md says how to handle them.
+    name: npm audit (informational)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: npm audit --audit-level=high
+        run: |
+          set +e
+          npm audit --audit-level=high > audit.txt 2>&1
+          status=$?
+          { echo '### npm audit (high and critical)'; echo '```'; cat audit.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" -ne 0 ]; then
+            echo "::warning title=npm audit::High or critical advisories found; see the job summary."
+          fi
+          exit 0
