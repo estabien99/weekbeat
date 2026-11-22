@@ -139,6 +139,20 @@ next starts. No dates yet.
   like it needs a stronger model than the session runs on, say so instead of guessing.
 - Long sessions get expensive: when a topic is done, suggest a fresh session; this file + the doc make that cheap.
 
+## Switching to a new session
+
+When the user agrees to continue in a new session, the current session sets it up, so the auditor always finds it:
+
+1. Finish first: no open PR of this session left unwatched, pending check-ins cancelled, working tree on a fresh `main`.
+2. Create the session with `create_session` (same repo and environment): title **`Weekbeat – <topic> (#<issue>)`**,
+   tags `weekbeat` and `weekbeat:dev`. The auditor sends critical findings to the newest non-archived session whose
+   title starts with "Weekbeat" and is not "Weekbeat – Code-Audit", so the title prefix is required.
+3. The first prompt is a hand-over: state on `main`, the task, the user's decisions, open points and PRs it must
+   take over (subscribe to them), and "read CLAUDE.md and only the doc sections the task needs".
+4. Tell the auditor ("Weekbeat – Code-Audit", tag `weekbeat:audit`, found with `list_sessions`) the new session's
+   title and id in one short message.
+5. Tell the user the new session's title, then stop working in the old one. Don't archive it unless the user asks.
+
 ## Lessons learned (add one line whenever something went wrong or the user corrected you)
 
 - Multi-step flows that write early (setup step 1 creates the household) must hold their own "in progress" state:
