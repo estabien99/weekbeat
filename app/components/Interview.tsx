@@ -1,8 +1,12 @@
+import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ValidationError,
+  addMembership,
+  deleteMembership,
   savePreferences,
+  updateMembership,
   type ActivityCategory,
   type Lang,
   type Preferences,
@@ -10,13 +14,15 @@ import {
 } from '../../core/index.ts';
 import { activityCatalogue } from '../../knowledge/index.ts';
 import { db } from '../db.ts';
+import { draftOf, emptyDraft, optionalNumber, type MembershipDraft } from '../memberships.ts';
+import { MembershipFields } from './MembershipFields.tsx';
 
 const CATEGORIES: ActivityCategory[] = ['cycling', 'endurance', 'strength', 'hiit', 'mobility', 'swimming'];
-const STEPS = ['hobbies', 'length', 'auto'] as const;
+const STEPS = ['hobbies', 'length', 'membership', 'auto'] as const;
 
 /**
- * Optional planning interview: what the person likes to do, how long a session usually is, and whether Weekbeat
- * proposes the week by itself. Used in setup (skippable) and in settings (to change the answers).
+ * Optional planning interview: what the person likes to do, how long a session usually is, their membership (the
+ * first one; more are managed under "Orte") and whether Weekbeat proposes the week by itself. Used in setup (skippable) and in settings (to change the answers).
  */
 export function Interview({
   profile,
@@ -41,6 +47,13 @@ export function Interview({
     autoPlan: profile.autoPlan ?? false,
   });
   const [error, setError] = useState<string | null>(null);
+  const memberships = useLiveQuery(() => db.memberships.toArray(), []);
+  const profiles = useLiveQuery(() => db.profiles.toArray(), []);
+  const existing = memberships?.find((m) => m.ownerProfileId === profile.id);
+  // Until the person changes it, the answer is their current membership (or none).
+  const [edited, setMembership] = useState<MembershipDraft | null>(null);
+  const membership: MembershipDraft | null =
+    edited ?? (memberships ? (existing ? draftOf(existing) : emptyDraft) : null);
 
   // Move focus to the new question so screen reader and keyboard users start there.
   useEffect(() => heading.current?.focus(), [step]);
@@ -59,15 +72,41 @@ export function Interview({
         setError(t('errors.sessionMin'));
         return;
       }
+      if (STEPS[step] === 'membership' && membership && membership.provider !== '') {
+        const share = optionalNumber(membership.share);
+        if (share !== undefined && !(Number.isFinite(share) && share >= 0)) {
+          setError(t('errors.monthlyCostShareEur'));
+          return;
+        }
+      }
       setStep(step + 1);
       return;
     }
     try {
       await savePreferences(db, profile.id, prefs);
+      await saveMembership();
       onDone();
     } catch (err) {
       setError(err instanceof ValidationError ? t(`errors.${err.field}`, { defaultValue: err.message }) : String(err));
     }
+  };
+
+  /** Adds, changes or removes the person's (first) membership as answered. */
+  const saveMembership = async () => {
+    if (!membership) return;
+    if (membership.provider === '') {
+      if (existing) await deleteMembership(db, existing.id);
+      return;
+    }
+    const m = {
+      provider: membership.provider,
+      ownerProfileId: profile.id,
+      tier: membership.tier,
+      monthlyCostShareEur: optionalNumber(membership.share),
+      ...(membership.linkedTo ? { linkedToMembershipId: membership.linkedTo } : {}),
+    };
+    if (existing) await updateMembership(db, existing.id, m);
+    else await addMembership(db, m);
   };
 
   const current = STEPS[step]!;
@@ -126,6 +165,22 @@ export function Interview({
             }
           />
         </div>
+      )}
+
+      {current === 'membership' && membership && memberships && profiles && (
+        <MembershipFields
+          value={membership}
+          onChange={(v) => {
+            setMembership(v);
+            setError(null);
+          }}
+          ownerId={profile.id}
+          selfId={existing?.id}
+          memberships={memberships}
+          profiles={profiles}
+          noneLabel={t('interview.membership.none')}
+          describedBy={`${id}-hint`}
+        />
       )}
 
       {current === 'auto' && (

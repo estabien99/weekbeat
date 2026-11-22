@@ -4,15 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { getHousehold } from '../core/index.ts';
 import { db } from './db.ts';
 import { PwaPrompt } from './PwaPrompt.tsx';
+import { Places } from './pages/Places.tsx';
 import { Settings } from './pages/Settings.tsx';
 import { Setup } from './pages/Setup.tsx';
 import { WeekView } from './pages/WeekView.tsx';
 import { useActiveProfile } from './useActiveProfile.ts';
 
-type Page = 'week' | 'settings';
+type Page = 'week' | 'places' | 'settings';
 
 function pageFromHash(): Page {
-  return location.hash === '#/einstellungen' ? 'settings' : 'week';
+  if (location.hash === '#/einstellungen') return 'settings';
+  if (location.hash === '#/orte') return 'places';
+  return 'week';
 }
 
 export function App() {
@@ -58,6 +61,9 @@ export function App() {
           <a href="#/" aria-current={page === 'week' ? 'page' : undefined}>
             {t('nav.week')}
           </a>
+          <a href="#/orte" aria-current={page === 'places' ? 'page' : undefined}>
+            {t('nav.places')}
+          </a>
           <a href="#/einstellungen" aria-current={page === 'settings' ? 'page' : undefined}>
             {t('nav.settings')}
           </a>
@@ -75,6 +81,8 @@ export function App() {
           />
         ) : page === 'settings' ? (
           <Settings profiles={profiles} />
+        ) : page === 'places' && active ? (
+          <Places profiles={profiles} activeId={active.id} />
         ) : active ? (
           <WeekView profile={active} />
         ) : null}

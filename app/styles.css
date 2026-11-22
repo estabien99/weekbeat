@@ -290,7 +290,8 @@ select {
   font-weight: 600;
 }
 .windows,
-.people {
+.people,
+.places {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -298,7 +299,8 @@ select {
   gap: 8px;
 }
 .windows li,
-.people li {
+.people li,
+.places li {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -540,4 +542,58 @@ p[role='status']:empty {
   .session .replan {
     padding: 8px;
   }
+}
+
+/* Places and memberships (#8). */
+.places li > div:first-child {
+  flex: 1 1 240px;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.places p {
+  margin: 4px 0 0;
+}
+.with-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.provider-icon {
+  flex: none;
+  color: var(--accent-text);
+}
+/* A link that looks like a ghost button (e.g. "Bei … buchen"): same 44 px target. */
+a.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+}
+a.button:hover {
+  text-decoration: underline;
+}
+.confirm {
+  display: grid;
+  gap: 8px;
+  flex: 1 1 100%;
+}
+.confirm p {
+  margin: 0;
+  font-weight: 600;
+}
+.confirm p:focus {
+  outline: none;
+}
+.confirm p:focus-visible,
+.subcard h4:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.subcard h4:focus {
+  outline: none;
 }

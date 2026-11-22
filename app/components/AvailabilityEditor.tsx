@@ -5,19 +5,32 @@ import { weekdayNames } from '../format.ts';
 
 const DAYS: Weekday[] = [1, 2, 3, 4, 5, 6, 7];
 
-/** Edits weekly time windows; calls onSave with the normalized list. */
+/**
+ * Edits weekly time windows. With onSave it has its own save button; with onChange it is part of a larger form
+ * (e.g. a place's opening hours) and reports every change.
+ */
 export function AvailabilityEditor({
   initial,
   onSave,
+  onChange,
   saveLabel,
+  emptyText,
+  addLegend,
 }: {
   initial: TimeWindow[];
-  onSave: (w: TimeWindow[]) => Promise<void> | void;
-  saveLabel: string;
+  onSave?: (w: TimeWindow[]) => Promise<void> | void;
+  onChange?: (w: TimeWindow[]) => void;
+  saveLabel?: string;
+  emptyText?: string;
+  addLegend?: string;
 }) {
   const { t, i18n } = useTranslation();
   const names = weekdayNames(i18n.resolvedLanguage);
-  const [windows, setWindows] = useState<TimeWindow[]>(initial);
+  const [windows, setWindowsState] = useState<TimeWindow[]>(initial);
+  const setWindows = (w: TimeWindow[]) => {
+    setWindowsState(w);
+    onChange?.(w);
+  };
   const [draft, setDraft] = useState<TimeWindow>({ day: 1, from: '18:00', to: '19:30' });
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +46,7 @@ export function AvailabilityEditor({
   return (
     <div className="availability">
       {windows.length === 0 ? (
-        <p className="muted">{t('availability.none')}</p>
+        <p className="muted">{emptyText ?? t('availability.none')}</p>
       ) : (
         <ul className="windows">
           {windows.map((w, i) => (
@@ -54,7 +67,7 @@ export function AvailabilityEditor({
         </ul>
       )}
       <fieldset className="field">
-        <legend>{t('availability.add')}</legend>
+        <legend>{addLegend ?? t('availability.add')}</legend>
         <div className="row">
           <select
             aria-label={t('availability.day')}
@@ -89,9 +102,11 @@ export function AvailabilityEditor({
           </p>
         )}
       </fieldset>
-      <button type="button" onClick={() => void onSave(windows)}>
-        {saveLabel}
-      </button>
+      {onSave && (
+        <button type="button" onClick={() => void onSave(windows)}>
+          {saveLabel}
+        </button>
+      )}
     </div>
   );
 }

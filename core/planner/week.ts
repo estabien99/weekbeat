@@ -76,12 +76,8 @@ export function buildWeek(profile: Profile, input: PlanInput): ProfileWeek {
   const done = [...fromAnchors, ...logs.filter(inWeek)].sort((a, b) => a.start - b.start);
   const past = logs.filter((d) => d.start < 0).sort((a, b) => a.start - b.start);
 
-  // A linked membership (e.g. Plus 1) also covers the places of the membership it is linked to.
-  const membershipIds = new Set(
-    input.memberships
-      .filter((m) => m.ownerProfileId === profile.id)
-      .flatMap((m) => (m.linkedToMembershipId ? [m.id, m.linkedToMembershipId] : [m.id])),
-  );
+  // Coverage is explicit: a linked membership (e.g. Plus 1) covers only the places that list it.
+  const membershipIds = new Set(input.memberships.filter((m) => m.ownerProfileId === profile.id).map((m) => m.id));
   const declined = input.anchors
     .filter((s) => s.profileId === profile.id && !COUNTING.has(s.status))
     .map((s) => ({ activityId: s.activityTypeId, start: minuteOfWeek(s.start, weekStart) }));

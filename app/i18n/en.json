@@ -37,13 +37,20 @@
     "cancel": "Cancel",
     "add": "Add",
     "remove": "Remove",
-    "back": "Back"
+    "back": "Back",
+    "saved": "Saved.",
+    "removed": "“{{name}}” removed.",
+    "removeConfirm": "Yes, remove",
+    "editNamed": "Edit {{name}}",
+    "removeNamed": "Remove {{name}}",
+    "newTab": "(opens in a new tab)"
   },
   "nav": {
     "label": "Main navigation",
     "week": "Week",
     "settings": "Settings",
-    "person": "Person"
+    "person": "Person",
+    "places": "Places"
   },
   "setup": {
     "step": "Step {{n}} of {{of}}",
@@ -55,7 +62,7 @@
     "availabilityTitle": "When do you have time, {{name}}?",
     "availabilityHint": "Add the time windows when exercise usually fits. You can change them any time.",
     "prefsTitle": "Your preferences (optional)",
-    "prefsIntro": "Three short questions so Weekbeat can plan your week. You can skip them and answer later in the settings.",
+    "prefsIntro": "A few short questions so Weekbeat can plan your week. You can skip them and answer later in the settings.",
     "skip": "Skip"
   },
   "profile": {
@@ -98,7 +105,17 @@
     "time": "Please choose a valid time.",
     "day": "Please choose a weekday.",
     "profile": "This person no longer exists.",
-    "hobbies": "Please choose activities from the list."
+    "hobbies": "Please choose activities from the list.",
+    "provider": "Please choose a provider.",
+    "linkedTo": "This add-on membership does not fit: it needs a main membership of the same provider that is not an add-on itself.",
+    "membership": "This membership no longer exists.",
+    "monthlyCostShareEur": "The amount must be a number from 0.",
+    "singleVisitPriceEur": "The single-visit price must be a number from 0.",
+    "placeName": "Please enter a name for the place.",
+    "placeKind": "Please choose a kind.",
+    "travelMin": "Travel time must be a whole number of minutes.",
+    "bookingUrl": "Please enter a link that starts with https://.",
+    "place": "This place no longer exists."
   },
   "data": {
     "title": "Your data",
@@ -133,6 +150,11 @@
       "hint": "On Sunday, or as soon as a new week has no plan yet. You confirm every proposal yourself and can change this any time in the settings.",
       "yes": "Yes, propose every week automatically",
       "no": "No, I will start planning myself"
+    },
+    "membership": {
+      "title": "Do you have a membership, {{name}}?",
+      "hint": "For example Wellpass, Urban Sports Club, Wellhub or your own gym. You add its places afterwards under “Places”.",
+      "none": "No membership"
     }
   },
   "activityCategories": {
@@ -173,5 +195,62 @@
     "nothing": "There is no proposal for this week right now.",
     "sessions": "Sessions",
     "fallbackTitle": "Short alternative: {{day}}, {{from}}–{{to}}"
+  },
+  "membership": {
+    "title": "Memberships",
+    "works": "Weekbeat works only with what you enter. There is no connection to the provider, and nothing leaves this device.",
+    "none": "No membership yet.",
+    "add": "Add membership",
+    "owner": "Belongs to",
+    "provider": "Provider",
+    "choose": "Please choose",
+    "providers": {
+      "gym": "Own gym or club",
+      "other": "Other membership"
+    },
+    "addOnGeneric": "add-on",
+    "linkedTo": "Is this a {{addOn}} membership?",
+    "linkedNone": "No, an own membership",
+    "linkedSummary": "belongs to {{main}}",
+    "tier": "Plan (optional)",
+    "share": "Your share per month in € (optional)",
+    "shareHint": "What you pay yourself, for example after your employer’s subsidy. 0 is fine too.",
+    "shareSummary": "{{amount}} per month",
+    "confirmRemove": "Really remove {{label}}? The places stay; only their link to this membership goes."
+  },
+  "places": {
+    "title": "Places",
+    "intro": "Your own list: gyms, clubs, routes and home. Weekbeat plans only with places listed here.",
+    "listTitle": "Your places",
+    "none": "No places yet. Without places, Weekbeat plans sessions that work anywhere.",
+    "add": "Add place",
+    "name": "Name",
+    "kind": "Kind",
+    "kinds": {
+      "partner": "Partner of a membership",
+      "own": "Own gym or club",
+      "outdoor": "Outdoors",
+      "home": "At home"
+    },
+    "coveredBy": "Covered by these memberships",
+    "coveredHint": "Ticking a main membership also ticks its add-on (for example Plus 1). Untick it where it does not apply.",
+    "noMemberships": "No membership yet. You can add one above and link it here.",
+    "coveredSummary": "Covered by: {{list}}",
+    "categories": "What you can do there",
+    "equipment": "Equipment (optional, separated by commas)",
+    "equipmentHint": "For example: kettlebells, barbell, pull-up bar.",
+    "hours": "Opening hours (optional)",
+    "hoursNone": "No opening hours: Weekbeat assumes the place is always open.",
+    "hoursAdd": "Add opening hours",
+    "price": "Single-visit price in € (optional)",
+    "priceHint": "What a visit would cost without a membership. Your own figure; it later shows what your visits were worth.",
+    "priceSummary": "single visit {{amount}}",
+    "travel": "Travel time in minutes (optional)",
+    "travelSummary_one": "{{count}} minute away",
+    "travelSummary_other": "{{count}} minutes away",
+    "address": "Address (optional)",
+    "bookingUrl": "Booking link (optional)",
+    "book": "Book at {{name}}",
+    "confirmRemove": "Really remove {{name}}? Sessions you already accepted stay in the plan."
   }
 }
