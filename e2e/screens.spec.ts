@@ -85,6 +85,19 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.getByRole('heading', { name: t.interview.length.title })).toBeFocused();
       await page.getByLabel(t.profile.sessionMin).fill('45');
       await page.getByRole('button', { name: t.common.next, exact: true }).click();
+      // Membership question: provider list with names only; details appear once a provider is chosen.
+      await expect(
+        page.getByRole('heading', { name: t.interview.membership.title.replace('{{name}}', 'Alex') }),
+      ).toBeFocused();
+      await page.getByLabel(t.membership.provider).selectOption({ label: 'Wellpass' });
+      await page.getByLabel(t.membership.share).fill('-3');
+      await page.getByRole('button', { name: t.common.next, exact: true }).click();
+      await expect(page.getByRole('alert')).toHaveText(t.errors.monthlyCostShareEur);
+      await page.getByLabel(t.membership.share).fill('0');
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '3b-membership', project, lang);
+      await page.getByRole('button', { name: t.common.next, exact: true }).click();
       await page.getByRole('radio', { name: t.interview.auto.yes }).check();
       await expectAccessible(page);
       await page.getByRole('button', { name: t.interview.finish }).click();
@@ -165,6 +178,44 @@ for (const lang of ['de', 'en'] as const) {
         .getByLabel(t.data.import)
         .setInputFiles({ name: 'x.json', mimeType: 'application/json', buffer: Buffer.from('{"a":1}') });
       await expect(page.getByRole('alert')).toHaveText(t.data.errors['not-weekbeat']);
+
+      // Places: Sam gets a Plus 1 linked to Alex's Wellpass, then a partner place covered by both
+      await page.getByRole('link', { name: t.nav.places }).click();
+      await expect(page.getByRole('heading', { name: t.places.title, level: 2 })).toBeVisible();
+      await expect(page.locator('.people li')).toHaveCount(1);
+      await page.getByRole('button', { name: t.membership.add }).click();
+      await expect(page.getByRole('heading', { name: t.membership.add, level: 4 })).toBeFocused();
+      await page.getByLabel(t.membership.owner).selectOption({ label: 'Sam' });
+      await page.getByLabel(t.membership.provider).selectOption({ label: 'Wellpass' });
+      await page
+        .getByLabel(t.membership.linkedTo.replace('{{addOn}}', 'Plus 1'))
+        .selectOption({ label: 'Wellpass (Alex)' });
+      await page.getByLabel(t.membership.share).fill('25');
+      await page.getByRole('button', { name: t.common.save }).click();
+      await expect(page.getByRole('status').filter({ hasText: t.common.saved })).toBeVisible();
+      await expect(page.locator('.people li')).toHaveCount(2);
+      await expect(page.locator('.people li').nth(1)).toContainText('Wellpass Plus 1 (Sam)');
+
+      await page.getByRole('button', { name: t.places.add }).click();
+      await page.getByLabel(t.places.name, { exact: true }).fill('Studio Nord');
+      // Ticking the main membership also ticks its Plus 1 (explicit coverage, can be unticked).
+      await page.getByRole('checkbox', { name: 'Wellpass (Alex)' }).check();
+      await expect(page.getByRole('checkbox', { name: 'Wellpass Plus 1 (Sam)' })).toBeChecked();
+      await page.getByRole('checkbox', { name: t.activityCategories.strength }).check();
+      await page.getByLabel(t.places.equipment).fill('Kettlebells, Langhantel');
+      await page.getByLabel(t.places.price).fill('15,50');
+      await page.getByLabel(t.places.bookingUrl).fill('http://example.org');
+      await page.getByRole('button', { name: t.common.save }).click();
+      await expect(page.getByRole('alert')).toHaveText(t.errors.bookingUrl);
+      await page.getByLabel(t.places.bookingUrl).fill('https://example.org');
+      await expectAccessible(page);
+      await page.getByRole('button', { name: t.common.save }).click();
+      await expect(page.locator('.places li')).toHaveCount(1);
+      await expect(page.locator('.places li')).toContainText('Wellpass Plus 1 (Sam)');
+      await expect(page.locator('.places li')).toContainText(lang === 'de' ? '15,50' : '15.50');
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '7-places', project, lang);
 
       await page.getByLabel(t.nav.person).selectOption({ label: 'Sam' });
       await page.getByRole('link', { name: t.nav.week }).click();

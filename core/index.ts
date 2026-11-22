@@ -14,3 +14,4 @@ export * from './model/repo.ts';
 export * from './knowledge.ts';
 export * from './planner/index.ts';
 export * from './model/sessions.ts';
+export * from './model/memberships.ts';

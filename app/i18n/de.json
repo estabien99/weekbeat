@@ -37,13 +37,20 @@
     "cancel": "Abbrechen",
     "add": "Hinzufügen",
     "remove": "Entfernen",
-    "back": "Zurück"
+    "back": "Zurück",
+    "saved": "Gespeichert.",
+    "removed": "„{{name}}“ entfernt.",
+    "removeConfirm": "Ja, entfernen",
+    "editNamed": "{{name}} bearbeiten",
+    "removeNamed": "{{name}} entfernen",
+    "newTab": "(öffnet in neuem Tab)"
   },
   "nav": {
     "label": "Hauptnavigation",
     "week": "Woche",
     "settings": "Einstellungen",
-    "person": "Person"
+    "person": "Person",
+    "places": "Orte"
   },
   "setup": {
     "step": "Schritt {{n}} von {{of}}",
@@ -55,7 +62,7 @@
     "availabilityTitle": "Wann hast du Zeit, {{name}}?",
     "availabilityHint": "Trag die Zeitfenster ein, in denen Bewegung meistens passt. Du kannst sie jederzeit ändern.",
     "prefsTitle": "Deine Vorlieben (optional)",
-    "prefsIntro": "Drei kurze Fragen, damit Weekbeat deine Woche planen kann. Du kannst sie überspringen und später in den Einstellungen beantworten.",
+    "prefsIntro": "Ein paar kurze Fragen, damit Weekbeat deine Woche planen kann. Du kannst sie überspringen und später in den Einstellungen beantworten.",
     "skip": "Überspringen"
   },
   "profile": {
@@ -98,7 +105,17 @@
     "time": "Bitte eine gültige Zeit wählen.",
     "day": "Bitte einen Wochentag wählen.",
     "profile": "Diese Person gibt es nicht mehr.",
-    "hobbies": "Bitte nur Aktivitäten aus der Liste wählen."
+    "hobbies": "Bitte nur Aktivitäten aus der Liste wählen.",
+    "provider": "Bitte einen Anbieter wählen.",
+    "linkedTo": "Diese Zusatzmitgliedschaft passt nicht: Sie braucht eine Hauptmitgliedschaft desselben Anbieters, die selbst keine Zusatzmitgliedschaft ist.",
+    "membership": "Diese Mitgliedschaft gibt es nicht mehr.",
+    "monthlyCostShareEur": "Der Betrag muss eine Zahl ab 0 sein.",
+    "singleVisitPriceEur": "Der Einzelpreis muss eine Zahl ab 0 sein.",
+    "placeName": "Bitte einen Namen für den Ort eingeben.",
+    "placeKind": "Bitte eine Art wählen.",
+    "travelMin": "Die Anfahrt muss eine ganze Zahl in Minuten sein.",
+    "bookingUrl": "Bitte einen Link eingeben, der mit https:// beginnt.",
+    "place": "Diesen Ort gibt es nicht mehr."
   },
   "data": {
     "title": "Deine Daten",
@@ -133,6 +150,11 @@
       "hint": "Am Sonntag oder sobald eine neue Woche noch keinen Plan hat. Du bestätigst jeden Vorschlag selbst und kannst das jederzeit in den Einstellungen ändern.",
       "yes": "Ja, jede Woche automatisch vorschlagen",
       "no": "Nein, ich starte die Planung selbst"
+    },
+    "membership": {
+      "title": "Hast du eine Mitgliedschaft, {{name}}?",
+      "hint": "Zum Beispiel Wellpass, Urban Sports Club, Wellhub oder ein eigenes Studio. Die Orte dazu legst du danach unter „Orte“ an.",
+      "none": "Keine Mitgliedschaft"
     }
   },
   "activityCategories": {
@@ -173,5 +195,62 @@
     "nothing": "Für diese Woche gibt es gerade keinen Vorschlag.",
     "sessions": "Einheiten",
     "fallbackTitle": "Kurze Alternative: {{day}}, {{from}}–{{to}}"
+  },
+  "membership": {
+    "title": "Mitgliedschaften",
+    "works": "Weekbeat arbeitet nur mit euren eigenen Angaben. Es gibt keine Verbindung zum Anbieter, und nichts verlässt dieses Gerät.",
+    "none": "Noch keine Mitgliedschaft.",
+    "add": "Mitgliedschaft hinzufügen",
+    "owner": "Gehört zu",
+    "provider": "Anbieter",
+    "choose": "Bitte wählen",
+    "providers": {
+      "gym": "Eigenes Studio oder Verein",
+      "other": "Andere Mitgliedschaft"
+    },
+    "addOnGeneric": "Zusatzmitgliedschaft",
+    "linkedTo": "Ist das eine {{addOn}}-Mitgliedschaft?",
+    "linkedNone": "Nein, eigene Mitgliedschaft",
+    "linkedSummary": "gehört zu {{main}}",
+    "tier": "Tarif (optional)",
+    "share": "Dein Anteil pro Monat in € (optional)",
+    "shareHint": "Was du selbst zahlst, zum Beispiel nach dem Zuschuss deines Arbeitgebers. 0 ist auch möglich.",
+    "shareSummary": "{{amount}} pro Monat",
+    "confirmRemove": "{{label}} wirklich entfernen? Die Orte bleiben, nur die Zuordnung zu dieser Mitgliedschaft fällt weg."
+  },
+  "places": {
+    "title": "Orte",
+    "intro": "Eure eigene Liste: Studios, Vereine, Strecken und zu Hause. Weekbeat plant nur mit Orten, die hier stehen.",
+    "listTitle": "Eure Orte",
+    "none": "Noch keine Orte. Ohne Orte plant Weekbeat Einheiten, die überall gehen.",
+    "add": "Ort hinzufügen",
+    "name": "Name",
+    "kind": "Art",
+    "kinds": {
+      "partner": "Partner einer Mitgliedschaft",
+      "own": "Eigenes Studio oder Verein",
+      "outdoor": "Draußen",
+      "home": "Zu Hause"
+    },
+    "coveredBy": "Gilt für diese Mitgliedschaften",
+    "coveredHint": "Mit der Hauptmitgliedschaft ist ihre Zusatzmitgliedschaft (zum Beispiel Plus 1) mit angehakt. Entferne den Haken, wo sie nicht gilt.",
+    "noMemberships": "Noch keine Mitgliedschaft angelegt. Du kannst sie oben hinzufügen und hier zuordnen.",
+    "coveredSummary": "Gilt für: {{list}}",
+    "categories": "Was man dort machen kann",
+    "equipment": "Ausstattung (optional, mit Komma getrennt)",
+    "equipmentHint": "Zum Beispiel: Kettlebells, Langhantel, Klimmzugstange.",
+    "hours": "Öffnungszeiten (optional)",
+    "hoursNone": "Keine Öffnungszeiten eingetragen: Weekbeat nimmt an, dass der Ort immer offen ist.",
+    "hoursAdd": "Öffnungszeit hinzufügen",
+    "price": "Einzelpreis pro Besuch in € (optional)",
+    "priceHint": "Was ein Besuch ohne Mitgliedschaft kosten würde. Nur deine eigene Angabe; sie zeigt später, was eure Besuche wert waren.",
+    "priceSummary": "Einzelpreis {{amount}}",
+    "travel": "Anfahrt in Minuten (optional)",
+    "travelSummary_one": "{{count}} Minute Anfahrt",
+    "travelSummary_other": "{{count}} Minuten Anfahrt",
+    "address": "Adresse (optional)",
+    "bookingUrl": "Buchungslink (optional)",
+    "book": "Bei {{name}} buchen",
+    "confirmRemove": "{{name}} wirklich entfernen? Bereits übernommene Einheiten bleiben im Plan."
   }
 }

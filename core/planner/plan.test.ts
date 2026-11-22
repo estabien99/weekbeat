@@ -104,22 +104,28 @@ describe('planWeek', () => {
     expect(gymSession.terms.find((t) => t.term === 'membership')!.value).toBe(1);
   });
 
-  it('counts a Plus 1 membership for places of the main membership', () => {
-    const plan = planWeek(
-      input({
-        memberships: [
-          { id: 'm-main', provider: 'wellpass', ownerProfileId: 'someone-else' },
-          { id: 'm-plus1', provider: 'wellpass', ownerProfileId: 'p-a', linkedToMembershipId: 'm-wp' },
-        ],
-        programmes: [],
-        profiles: [
-          profile({ hobbies: ['weight-training'], goals: [{ kind: 'sessions', target: 1, categories: ['strength'] }] }),
-        ],
-        places: [gym],
-        anchors: [],
-      }),
-    );
-    expect(plan.proposals[0]!.terms.find((t) => t.term === 'membership')!.value).toBe(1);
+  it('counts a Plus 1 membership only for places that list it', () => {
+    const membershipTerm = (placeMemberships: string[]) =>
+      planWeek(
+        input({
+          memberships: [
+            { id: 'm-wp', provider: 'wellpass', ownerProfileId: 'someone-else' },
+            { id: 'm-plus1', provider: 'wellpass', ownerProfileId: 'p-a', linkedToMembershipId: 'm-wp' },
+          ],
+          programmes: [],
+          profiles: [
+            profile({
+              hobbies: ['weight-training'],
+              goals: [{ kind: 'sessions', target: 1, categories: ['strength'] }],
+            }),
+          ],
+          places: [{ ...gym, membershipIds: placeMemberships }],
+          anchors: [],
+        }),
+      ).proposals[0]!.terms.find((t) => t.term === 'membership')!.value;
+    expect(membershipTerm(['m-wp', 'm-plus1'])).toBe(1);
+    // The main membership alone does not cover the Plus 1 (explicit coverage, decided 22.11.2026).
+    expect(membershipTerm(['m-wp'])).toBe(0);
   });
 
   it('applies recovery gaps only from a recovery rule in the knowledge base', () => {

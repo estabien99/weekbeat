@@ -14,3 +14,15 @@ Rules:
 - Map sport types through `ActivityType.mapping` (Health Connect / HealthKit / FIT), no own vocabulary.
 - Provider names only descriptively ("works with Wellpass"), no logos without permission.
 - No copied studio or partner data in the repo: each user keeps their own catalogue.
+
+## Memberships (`membership/`)
+
+Wellpass, Urban Sports Club, Wellhub, a single gym or club, or any other membership share one manual module:
+`membership/providers.ts` lists the providers (names only, neutral icons, no logos), and the core keeps memberships
+and the household's own places (`core/model/memberships.ts`). No provider offers a member API, so there is no
+`sync`; check-ins are logged by hand (source `checkin:<provider>`).
+
+- Coverage is explicit: a place lists every membership that covers it. A linked add-on (Wellpass Plus 1) starts
+  ticked with its main membership and can be unticked per place.
+- Prices, plans and check-in limits differ by plan and country and are entered by the person. A provider fact goes
+  into `providers.ts` only with a primary source (the provider's own help pages).
