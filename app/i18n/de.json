@@ -1,0 +1,25 @@
+{
+  "app": {
+    "name": "Weekbeat",
+    "tagline": "Deine Woche für Bewegung und Wohlbefinden"
+  },
+  "week": {
+    "title": "KW {{week}}",
+    "range": "{{from}} – {{to}}",
+    "today": "Heute",
+    "empty": "Noch nichts geplant",
+    "hint": "Hier schlägt Weekbeat bald jeden Sonntag deine Woche vor – mit einem Satz, warum."
+  },
+  "settings": {
+    "language": "Sprache"
+  },
+  "pwa": {
+    "update": "Eine neue Version ist da.",
+    "reload": "Neu laden",
+    "offline": "Weekbeat funktioniert jetzt auch offline.",
+    "close": "Schließen"
+  },
+  "footer": {
+    "disclaimer": "Fitness und Wohlbefinden, keine medizinische Beratung. Deine Daten bleiben auf diesem Gerät."
+  }
+}

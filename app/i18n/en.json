@@ -1,0 +1,25 @@
+{
+  "app": {
+    "name": "Weekbeat",
+    "tagline": "Your week for movement and wellness"
+  },
+  "week": {
+    "title": "Week {{week}}",
+    "range": "{{from}} – {{to}}",
+    "today": "Today",
+    "empty": "Nothing planned yet",
+    "hint": "Soon Weekbeat will propose your week here every Sunday – with one line on why."
+  },
+  "settings": {
+    "language": "Language"
+  },
+  "pwa": {
+    "update": "A new version is available.",
+    "reload": "Reload",
+    "offline": "Weekbeat now works offline too.",
+    "close": "Close"
+  },
+  "footer": {
+    "disclaimer": "Fitness and wellness, not medical advice. Your data stays on this device."
+  }
+}
