@@ -54,11 +54,12 @@ export function replan(raw: PlanInput, req: ReplanRequest): ReplanOffer[] {
   const notBefore = minuteOfWeek(req.notBefore, input.weekStart);
   const shared = sharedFor(profile, input, []);
   const programme = input.programmes.find((p) => p.id === affected.programmeId);
-  const equipment = programme?.typicalSessions.find((t) => t.activityTypeId === activity.id)?.equipment ?? [];
+  const typical = programme?.typicalSessions.find((t) => t.activityTypeId === activity.id);
   const same: Option = {
     activity,
     durationMin: affected.durationMin,
-    equipment,
+    equipment: typical?.equipment ?? [],
+    ...(typical?.placeIds ? { placeIds: typical.placeIds } : {}),
     origin: programme ? 'programme' : 'hobby',
     programme,
   };
@@ -80,7 +81,8 @@ export function replan(raw: PlanInput, req: ReplanRequest): ReplanOffer[] {
   // Fallback: a short session at home without equipment, the same activity if it works there, else one of the
   // person's own options (programme, hobby, sourced complement).
   const homeOptions = [same, ...optionsFor(week, input).options]
-    .filter((o) => o.equipment.length === 0)
+    // Sessions tied to places (e.g. weights only at the gym) do not work at home.
+    .filter((o) => o.equipment.length === 0 && !o.placeIds)
     .map((o) => ({ ...o, durationMin: FALLBACK_MIN, equipment: [] }));
   const fallback = rank(candidatesFor(week, homeOptions, input.places).filter(atHome), cctx, sctx, weights)
     .filter(later)

@@ -120,7 +120,10 @@
     "monthlyCheckInLimit": "The monthly limit must be a whole number from 1, or stay empty.",
     "monthlyVisitLimit": "The visit limit must be a whole number from 1, or stay empty.",
     "activity": "Please choose an activity.",
-    "session": "This session no longer exists."
+    "session": "This session no longer exists.",
+    "daysPerWeek": "Training days must be a whole number from 1 to 7.",
+    "programmePlaces": "Please choose at least one place with weights – or “Bodyweight”.",
+    "programmeKind": "Please choose how you train."
   },
   "data": {
     "title": "Your data",
@@ -160,6 +163,10 @@
       "title": "Do you have a membership, {{name}}?",
       "hint": "For example Wellpass, Urban Sports Club, Wellhub or your own gym. You add its places afterwards under “Places”.",
       "none": "No membership"
+    },
+    "coach": {
+      "title": "Do you train with the Freeletics Coach, {{name}}?",
+      "hint": "Then Weekbeat plans your Coach days into the week and tells you what to set in the Coach. Nothing is sent to Freeletics."
     }
   },
   "activityCategories": {
@@ -293,5 +300,32 @@
     "worth_other": "Worth at single-visit prices ({{count}} visits with a price)",
     "share": "Your share this month",
     "hint": "Single-visit prices are your own entries under “Places”. Just for information."
+  },
+  "coach": {
+    "use": "Freeletics Coach",
+    "yes": "Yes, I follow a Coach plan",
+    "no": "No",
+    "daysPerWeek": "Training days per week",
+    "durationMin": "Session length (minutes)",
+    "kind": "How do you train?",
+    "kinds": {
+      "bodyweight": "Bodyweight",
+      "weighted": "With weights",
+      "both": "Both, taking turns"
+    },
+    "where": "Where do you have the weights?",
+    "whereHint": "Weekbeat plans sessions with weights only at these places.",
+    "noPlaces": "No places yet. Add them under “Places” and pick them here afterwards (Settings → Preferences).",
+    "weekdays": "Which days is the Coach set to now?",
+    "weekdaysHint": "Optional. Weekbeat keeps them where it can.",
+    "checklist": {
+      "title": "Set in the {{name}}",
+      "days": "Training days: {{days}}",
+      "daysChange": "Training days: {{days}} (now {{before}})",
+      "daysSame": "Training days: {{days}} – as now, nothing to change.",
+      "session": "{{day}}: {{place}} · {{kind}} · {{min}} min",
+      "noPlace": "no particular place",
+      "note": "Weekbeat sends nothing to Freeletics. Set the days and place (Space) in the Coach yourself."
+    }
   }
 }

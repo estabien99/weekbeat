@@ -26,6 +26,9 @@ Rules:
 - **Weights** (`DEFAULT_WEIGHTS`) are engine tuning, not fitness rules: they only rank options that passed every hard
   constraint.
 - **Determinism:** every input list is sorted by id first; equal scores fall back to start, origin, place, activity.
+- **Programmes** (e.g. the Freeletics Coach): sessions take turns in `typicalSessions` order, one per day; a session
+  with `placeIds` only goes to those places (and gets no home fallback); the programme's current `weekdays` score
+  full, other days half, so the plan keeps them unless another day fits clearly better.
 - **Replan never changes the plan.** `replan(input, { sessionId, notBefore })` returns offers; the app applies the
   one the person taps. The fallback length (20 min) is the concept doc's "20-minute home session".
 - **Household:** each person keeps their own goals; people are planned in id order, and a later person can join an

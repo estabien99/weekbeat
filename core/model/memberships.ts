@@ -200,7 +200,19 @@ export async function updatePlace(db: WeekbeatDB, id: Id, p: NewPlace): Promise<
 
 /** Accepted sessions keep their placeId; the week view shows them without a place name. */
 export async function deletePlace(db: WeekbeatDB, id: Id): Promise<void> {
-  await db.places.delete(id);
+  // Programme sessions tied to the place lose it too (an emptied list plans nothing there until the person
+  // picks another place).
+  await db.transaction('rw', db.places, db.programmes, async () => {
+    await db.places.delete(id);
+    for (const p of await db.programmes.toArray()) {
+      if (!p.typicalSessions.some((t) => t.placeIds?.includes(id))) continue;
+      await db.programmes.update(p.id, {
+        typicalSessions: p.typicalSessions.map((t) =>
+          t.placeIds ? { ...t, placeIds: t.placeIds.filter((x) => x !== id) } : t,
+        ),
+      });
+    }
+  });
 }
 
 /** The person's membership that covers a place (main memberships first), if any. */

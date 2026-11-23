@@ -130,7 +130,10 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     name: str,
     connectorId: opt(str),
     daysPerWeek: num,
-    typicalSessions: arr(obj({ activityTypeId: nonEmpty, durationMin: positive, equipment: arr(str) })),
+    typicalSessions: arr(
+      obj({ activityTypeId: nonEmpty, durationMin: positive, equipment: arr(str), placeIds: opt(arr(nonEmpty)) }),
+    ),
+    weekdays: opt(arr(weekday)),
   }),
   memberships: obj({
     id: nonEmpty,

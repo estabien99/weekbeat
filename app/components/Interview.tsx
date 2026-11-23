@@ -5,6 +5,8 @@ import {
   ValidationError,
   addMembership,
   deleteMembership,
+  deleteProgramme,
+  saveProgramme,
   savePreferences,
   updateMembership,
   type ActivityCategory,
@@ -15,14 +17,18 @@ import {
 import { activityCatalogue } from '../../knowledge/index.ts';
 import { db } from '../db.ts';
 import { draftOf, emptyDraft, membershipOf, optionalNumber, type MembershipDraft } from '../memberships.ts';
+import { COACH_ID, coachProgramme } from '../../connectors/freeletics-coach/coach.ts';
+import { coachDraftError, coachDraftOf, type CoachDraft } from '../coach.ts';
+import { CoachFields } from './CoachFields.tsx';
 import { MembershipFields } from './MembershipFields.tsx';
 
 const CATEGORIES: ActivityCategory[] = ['cycling', 'endurance', 'strength', 'hiit', 'mobility', 'swimming'];
-const STEPS = ['hobbies', 'length', 'membership', 'auto'] as const;
+const STEPS = ['hobbies', 'length', 'membership', 'coach', 'auto'] as const;
 
 /**
  * Optional planning interview: what the person likes to do, how long a session usually is, their membership (the
- * first one; more are managed under "Orte") and whether Weekbeat proposes the week by itself. Used in setup (skippable) and in settings (to change the answers).
+ * first one; more are managed under "Orte"), their Freeletics Coach plan and whether Weekbeat proposes the week by
+ * itself. Used in setup (skippable) and in settings (to change the answers).
  */
 export function Interview({
   profile,
@@ -54,6 +60,12 @@ export function Interview({
   const [edited, setMembership] = useState<MembershipDraft | null>(null);
   const membership: MembershipDraft | null =
     edited ?? (memberships ? (existing ? draftOf(existing) : emptyDraft) : null);
+  const places = useLiveQuery(() => db.places.toArray(), []);
+  const programmes = useLiveQuery(() => db.programmes.where('profileId').equals(profile.id).toArray(), [profile.id]);
+  const existingCoach = programmes?.find((p) => p.connectorId === COACH_ID);
+  const [editedCoach, setCoach] = useState<CoachDraft | null>(null);
+  const coach: CoachDraft | null = editedCoach ?? (programmes ? coachDraftOf(existingCoach, prefs.sessionMin) : null);
+  const [invalid, setInvalid] = useState<string | undefined>();
 
   // Move focus to the new question so screen reader and keyboard users start there.
   useEffect(() => heading.current?.focus(), [step]);
@@ -72,6 +84,14 @@ export function Interview({
         setError(t('errors.sessionMin'));
         return;
       }
+      if (STEPS[step] === 'coach' && coach) {
+        const field = coachDraftError(coach);
+        setInvalid(field);
+        if (field) {
+          setError(t(`errors.${field}`));
+          return;
+        }
+      }
       if (STEPS[step] === 'membership' && membership && membership.provider !== '') {
         const share = optionalNumber(membership.share);
         if (share !== undefined && !(Number.isFinite(share) && share >= 0)) {
@@ -85,6 +105,7 @@ export function Interview({
     try {
       await savePreferences(db, profile.id, prefs);
       await saveMembership();
+      await saveCoach();
       onDone();
     } catch (err) {
       setError(err instanceof ValidationError ? t(`errors.${err.field}`, { defaultValue: err.message }) : String(err));
@@ -106,6 +127,27 @@ export function Interview({
     };
     if (existing) await updateMembership(db, existing.id, m);
     else await addMembership(db, m);
+  };
+
+  /** Saves, changes or removes the person's Coach plan as answered. */
+  const saveCoach = async () => {
+    if (!coach) return;
+    if (!coach.use) {
+      if (existingCoach) await deleteProgramme(db, existingCoach.id);
+      return;
+    }
+    await saveProgramme(
+      db,
+      coachProgramme(profile.id, {
+        daysPerWeek: Number(coach.daysPerWeek),
+        durationMin: Number(coach.durationMin),
+        kind: coach.kind,
+        // Only places that still exist (one may have been deleted under "Orte" meanwhile).
+        weightPlaceIds:
+          coach.kind === 'bodyweight' ? [] : coach.weightPlaceIds.filter((id) => places?.some((p) => p.id === id)),
+        weekdays: coach.weekdays,
+      }),
+    );
   };
 
   const current = STEPS[step]!;
@@ -180,6 +222,21 @@ export function Interview({
           noneLabel={t('interview.membership.none')}
           describedBy={`${id}-hint`}
           showLimits={false}
+        />
+      )}
+
+      {current === 'coach' && coach && places && (
+        <CoachFields
+          value={coach}
+          onChange={(v) => {
+            setCoach(v);
+            setError(null);
+            setInvalid(undefined);
+          }}
+          places={places}
+          idPrefix={`${id}-coach`}
+          describedBy={`${id}-hint`}
+          invalid={invalid}
         />
       )}
 

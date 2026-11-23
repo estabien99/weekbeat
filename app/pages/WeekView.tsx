@@ -17,9 +17,10 @@ import {
   type Profile,
   type ReplanOffer,
 } from '../../core/index.ts';
+import { COACH_ACTIVITY, COACH_ID, COACH_NAME, coachChecklist } from '../../connectors/freeletics-coach/coach.ts';
 import { activityCatalogue } from '../../knowledge/index.ts';
 import { db } from '../db.ts';
-import { localeOf } from '../format.ts';
+import { localeOf, weekdayNames } from '../format.ts';
 import { membershipLabel } from '../memberships.ts';
 import { loadPlanInput } from '../planInput.ts';
 
@@ -68,6 +69,12 @@ export function WeekView({ profile }: { profile: Profile }) {
   const places = useLiveQuery(() => db.places.toArray(), []);
   const memberships = useLiveQuery(() => db.memberships.toArray(), []);
   const people = useLiveQuery(() => db.profiles.toArray(), []);
+  const coach = useLiveQuery(
+    async () =>
+      (await db.programmes.where('profileId').equals(profile.id).toArray()).find((p) => p.connectorId === COACH_ID) ??
+      null,
+    [profile.id],
+  );
   const [replanning, setReplanning] = useState<Replanning | null>(null);
   const [message, setMessage] = useState('');
   // Which week the proposal is shown for. Automatic (interview setting) when the week has nothing planned yet;
@@ -102,6 +109,10 @@ export function WeekView({ profile }: { profile: Profile }) {
   );
   const notes = (plan?.notes ?? []).filter((n) => n.profileId === profile.id);
   const offers = (plan?.offers ?? []).filter((o) => o.profileId === profile.id);
+  // What to set in the Coach: the week's saved Coach sessions plus the ones proposed right now.
+  const checklist = coach
+    ? coachChecklist(coach, [...(sessions ?? []), ...proposals.map((p) => p.session)])
+    : undefined;
 
   const showPlan = () => {
     setShownFor(key);
@@ -171,6 +182,8 @@ export function WeekView({ profile }: { profile: Profile }) {
           </ul>
         </div>
       )}
+
+      {coach && checklist && <CoachCard checklist={checklist} now={coach.weekdays ?? []} placeName={placeName} />}
 
       <ol className="week">
         {days.map((d) => {
@@ -310,6 +323,50 @@ function SessionText({ s, name, place, lang }: { s: PlannedSession; name: string
       </p>
       <p className="why">{s.why[lang]}</p>
     </>
+  );
+}
+
+/** What to set in the Freeletics Coach for this week. Weekbeat sends nothing to Freeletics. */
+function CoachCard({
+  checklist,
+  now,
+  placeName,
+}: {
+  checklist: NonNullable<ReturnType<typeof coachChecklist>>;
+  now: readonly number[];
+  placeName: (id?: string) => string | undefined;
+}) {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.resolvedLanguage;
+  const long = weekdayNames(lang);
+  const short = weekdayNames(lang, 'short');
+  const list = (days: readonly number[]) => days.map((d) => short[d - 1]).join(', ');
+  const kind = (activityTypeId: string) =>
+    t(activityTypeId === COACH_ACTIVITY.weighted ? 'coach.kinds.weighted' : 'coach.kinds.bodyweight');
+  return (
+    <section className="card coach" aria-labelledby="coach-title">
+      <h3 id="coach-title">{t('coach.checklist.title', { name: COACH_NAME })}</h3>
+      <p>
+        {checklist.change
+          ? now.length > 0
+            ? t('coach.checklist.daysChange', { days: list(checklist.days), before: list(now) })
+            : t('coach.checklist.days', { days: list(checklist.days) })
+          : t('coach.checklist.daysSame', { days: list(checklist.days) })}
+      </p>
+      <ul>
+        {checklist.sessions.map((s) => (
+          <li key={`${s.day}-${s.activityTypeId}-${s.placeId ?? ''}`}>
+            {t('coach.checklist.session', {
+              day: long[s.day - 1],
+              place: placeName(s.placeId) ?? t('coach.checklist.noPlace'),
+              kind: kind(s.activityTypeId),
+              min: s.durationMin,
+            })}
+          </li>
+        ))}
+      </ul>
+      <p className="muted small">{t('coach.checklist.note')}</p>
+    </section>
   );
 }
 
