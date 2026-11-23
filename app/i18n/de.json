@@ -206,7 +206,8 @@
     "notesTitle": "Hinweise zur Woche",
     "nothing": "Für diese Woche gibt es gerade keinen Vorschlag.",
     "sessions": "Einheiten",
-    "fallbackTitle": "Kurze Alternative: {{day}}, {{from}}–{{to}}"
+    "fallbackTitle": "Kurze Alternative: {{day}}, {{from}}–{{to}}",
+    "combo": "Kombi: Besuch und Workout in einer Einheit"
   },
   "membership": {
     "title": "Mitgliedschaften",

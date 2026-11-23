@@ -27,8 +27,11 @@ the Coach days in the week, and the week view says what to set in the Coach. Not
 | Data export file         | –       | –                                                                                                       | No download is offered in the app (checked by the user, 23.11.2026)                                        |
 | Screenshot reading       | later   | On-device text recognition of the Coach week                                                            | Needs a new dependency: ask first                                                                          |
 
-Logs from several sources (check-in + Freeletics + Garmin) are merged into one session before they count (PR B,
-combo sessions).
+Logs from several sources (check-in + Freeletics + Garmin) are merged into one session before they count
+(`core/model/merge.ts`): logs of the same person that overlap in time, not at two different places, become one
+session that counts once, through the visit if there is one. A session with a visit and a Coach workout (a planned
+programme session, or a workout recorded by a device or app) is a **combo** (`mergedSessions`), derived for the
+game, never stored. Imports in 0.2 and 0.4 save their logs with `addLog`, so they merge the same way.
 
 ## Provider facts
 

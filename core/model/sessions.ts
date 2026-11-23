@@ -1,5 +1,6 @@
 import type { WeekbeatDB } from './db.ts';
 import { checkIn } from './memberships.ts';
+import { addLog } from './merge.ts';
 import { ValidationError } from './repo.ts';
 import type { Id, PlannedSession } from './types.ts';
 
@@ -39,7 +40,7 @@ export async function completeSession(db: WeekbeatDB, id: Id): Promise<void> {
   if (!s.placeId || !(await db.places.get(s.placeId))) {
     await db.transaction('rw', db.plannedSessions, db.loggedActivities, async () => {
       await db.plannedSessions.update(id, { status: 'done' });
-      await db.loggedActivities.add({
+      await addLog(db, {
         id: newId(),
         profileId: s.profileId,
         activityTypeId: s.activityTypeId,

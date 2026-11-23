@@ -1,4 +1,5 @@
 import type { WeekbeatDB } from './db.ts';
+import { addLog } from './merge.ts';
 import { ValidationError, normalizeWindows } from './repo.ts';
 import type { ActivityCategory, Id, IsoDateTime, LoggedActivity, Membership, Place, TimeWindow } from './types.ts';
 
@@ -273,8 +274,7 @@ export async function checkIn(db: WeekbeatDB, c: NewCheckIn): Promise<LoggedActi
         placeId: place.id,
         ...(c.plannedSessionId ? { plannedSessionId: c.plannedSessionId } : {}),
       };
-      await db.loggedActivities.add(log);
-      return log;
+      return addLog(db, log);
     },
   );
 }
