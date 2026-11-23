@@ -328,5 +328,19 @@
       "noPlace": "kein bestimmter Ort",
       "note": "Weekbeat sendet nichts an Freeletics. Stelle Tage und Ort (Space) im Coach selbst ein."
     }
+  },
+  "game": {
+    "title": "Fortschritt ({{name}})",
+    "goalSessions": "Einheiten diese Woche",
+    "goalMinutes": "Minuten diese Woche",
+    "ofTarget": "{{done}} von {{target}}",
+    "streak": "Wochen in Folge",
+    "level": "Level",
+    "met": "Wochenziel erreicht. Weitere Einheiten bringen keine Extrapunkte, Erholung gehört dazu.",
+    "paused": "Pause: Ziele und Serie ruhen.",
+    "xp": "{{xp}} XP, noch {{left}} bis Level {{next}}",
+    "best_one": "beste Serie: {{count}} Woche",
+    "best_other": "beste Serie: {{count}} Wochen",
+    "hint": "Punkte gibt es für Regelmäßigkeit, Abwechslung und gemeinsames Training. Verloren geht nichts."
   }
 }

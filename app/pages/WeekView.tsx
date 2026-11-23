@@ -21,6 +21,7 @@ import {
 } from '../../core/index.ts';
 import { COACH_ACTIVITY, COACH_ID, COACH_NAME, coachChecklist } from '../../connectors/freeletics-coach/coach.ts';
 import { activityCatalogue } from '../../knowledge/index.ts';
+import { GameCard } from '../components/GameCard.tsx';
 import { db } from '../db.ts';
 import { localeOf, weekdayNames } from '../format.ts';
 import { membershipLabel } from '../memberships.ts';
@@ -319,6 +320,8 @@ export function WeekView({ profile }: { profile: Profile }) {
           );
         })}
       </ol>
+      {offset === 0 && <GameCard profile={profile} today={today} />}
+
       <p className="hint">{t('week.hint')}</p>
     </section>
   );

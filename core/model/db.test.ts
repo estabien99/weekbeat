@@ -95,6 +95,14 @@ describe('parseExportFile', () => {
     expect(parseExportFile(withProfile({ preferredSessionMin: 45 })).tables.profiles).toHaveLength(1);
   });
 
+  it('accepts pause periods and rejects malformed ones', () => {
+    const pauses = [{ from: '2026-11-09', to: '2026-11-12' }];
+    expect(parseExportFile(withProfile({ pauses })).tables.profiles).toHaveLength(1);
+    expect(() => parseExportFile(withProfile({ pauses: [{ from: '9.11.2026', to: '2026-11-12' }] }))).toThrow(
+      ImportError,
+    );
+  });
+
   it('accepts https links', () => {
     expect(parseExportFile(withPlace('https://example.org/book')).tables.places).toHaveLength(1);
   });
