@@ -62,6 +62,22 @@ export interface Profile {
    * the pause UI (issue #4) adds one whenever it sets `pausedUntil`.
    */
   pauses?: { from: IsoDate; to: IsoDate }[];
+  /**
+   * Result of the health self-check (issue #4). Only the outcome is stored, never the answers. While `flagged`
+   * and not `clearedOn`, the plan rests and the game treats the days from `checkedOn` as paused.
+   */
+  health?: HealthCheck;
+  /** Planned rest days (YYYY-MM-DD): the planner keeps them free; the game gives a recovery bonus. */
+  restDays?: IsoDate[];
+}
+
+export interface HealthCheck {
+  /** Day the self-check was answered. */
+  checkedOn: IsoDate;
+  /** At least one answer was yes: talk to a doctor before training. */
+  flagged: boolean;
+  /** Day the person confirmed that a doctor said they may train. */
+  clearedOn?: IsoDate;
 }
 
 /** Sport-type mapping so connectors never need their own vocabulary. */
@@ -253,6 +269,15 @@ export interface XPEvent {
   reason: string;
 }
 
+/**
+ * Self-check question (issue #4), our own wording based on a published screening criterion. `history`: a known
+ * condition; `symptom`: a sign or symptom. Any yes pauses the plan until a doctor says the person may train.
+ */
+export interface ScreeningData {
+  kind: 'history' | 'symptom';
+  question: I18nText;
+}
+
 /** WHO intensity bands on the absolute (MET) scale. */
 export interface IntensityThresholdsData {
   lightFromMet: number;
@@ -336,4 +361,5 @@ export type KnowledgeRule =
   | (RuleBase & { part: 'complement'; data: ComplementData })
   | (RuleBase & { part: 'deload'; data: DeloadData })
   | (RuleBase & { part: 'recovery'; data: RecoveryData })
+  | (RuleBase & { part: 'screening'; data: ScreeningData })
   | (RuleBase & { part: 'principle'; data: Record<string, never> });

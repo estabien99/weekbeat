@@ -1,4 +1,5 @@
 import { intensityOf, intensityThresholds, matchesSuggestion } from '../knowledge.ts';
+import { healthHold } from '../model/health.ts';
 import { type MergedSession, mergedSessions } from '../model/merge.ts';
 import type {
   ActivityType,
@@ -80,10 +81,14 @@ const addDays = (d: IsoDate, n: number): IsoDate => {
   return toIsoDate(new Date(x.getFullYear(), x.getMonth(), x.getDate() + n));
 };
 
-/** Pause periods (inclusive dates): recorded pauses plus the current one up to `pausedUntil`. */
+/**
+ * Pause periods (inclusive dates): recorded pauses, the current one up to `pausedUntil`, and an open health hold
+ * from the day of the check on (nothing counts for training through red flags).
+ */
 function pausePeriods(profile: Profile, today: IsoDate): { from: IsoDate; to: IsoDate }[] {
   const periods = [...(profile.pauses ?? [])];
   if (profile.pausedUntil && profile.pausedUntil >= today) periods.push({ from: today, to: profile.pausedUntil });
+  if (healthHold(profile)) periods.push({ from: profile.health!.checkedOn, to: '9999-12-31' });
   return periods;
 }
 
@@ -134,7 +139,12 @@ export function gameState(input: GameInput): GameState | null {
     !g.categories?.length || g.categories.includes(activityOf(s)?.category ?? '');
 
   const thisWeek = mondayOf(today);
-  const firstWeek = [...byWeek.keys(), ...pauses.map((p) => mondayOf(p.from)), thisWeek].sort()[0]!;
+  const firstWeek = [
+    ...byWeek.keys(),
+    ...pauses.map((p) => mondayOf(p.from)),
+    ...(profile.restDays ?? []).map(mondayOf),
+    thisWeek,
+  ].sort()[0]!;
 
   const weeks: GameWeek[] = [];
   const events: XPEvent[] = [];
@@ -180,6 +190,23 @@ export function gameState(input: GameInput): GameState | null {
       )
         add('complement', GAME_TUNING.bonus.complement);
     });
+
+    // Planned rest: one recovery bonus per week for a rest day that has passed with no training and no pause.
+    // It never counts toward the goal or the streak.
+    const trained = new Set((byWeek.get(w) ?? []).map((s) => day(s.primary.start)));
+    const rested = (profile.restDays ?? []).find(
+      (d) => mondayOf(d) === w && d < today && !trained.has(d) && !pausedDay(d),
+    );
+    if (rested) {
+      events.push({
+        id: `rest:${rested}`,
+        profileId: profile.id,
+        at: `${rested}T00:00`,
+        xp: GAME_TUNING.restDayXp,
+        reason: 'recovery',
+      });
+      weekXp += GAME_TUNING.restDayXp;
+    }
 
     const goals = profile.goals.map((goal) => {
       const matching = counted.filter((s) => matchesGoal(goal, s));

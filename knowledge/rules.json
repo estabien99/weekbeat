@@ -281,5 +281,131 @@
     "quote": "Despite high rates of RRIs, current evidence does not consistently link RRIs with specific training parameters or recent changes in training parameters. Therefore, caution should be taken when recommending optimal parameters or progressions.",
     "confidence": "medium",
     "lastReviewed": "2026-11-22"
+  },
+  {
+    "id": "screening-known-disease",
+    "part": "screening",
+    "summary": {
+      "de": "Bekannte Herz-Kreislauf-, Stoffwechsel- (Diabetes) oder Nierenerkrankung: vor dem Start ärztlich abklären.",
+      "en": "Known cardiovascular, metabolic (diabetes) or renal disease: get medical clearance before starting."
+    },
+    "data": {
+      "kind": "history",
+      "question": {
+        "de": "Hast du eine bekannte Erkrankung von Herz oder Blutgefäßen (auch nach Schlaganfall oder bei Durchblutungsstörungen der Beine), Diabetes (Typ 1 oder 2) oder eine Nierenerkrankung?",
+        "en": "Do you have a known disease of the heart or blood vessels (including after a stroke or with poor circulation in the legs), diabetes (type 1 or 2) or kidney disease?"
+      }
+    },
+    "source": {
+      "title": "Whitfield GP, Riebe D, Magal M, Liguori G. Applying the ACSM Preparticipation Screening Algorithm to U.S. Adults: National Health and Nutrition Examination Survey 2001–2004. Med Sci Sports Exerc 2017;49(10):2056–2063 (describes the algorithm of Riebe D et al., Med Sci Sports Exerc 2015;47(11):2473–2479)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7059860/"
+    },
+    "quote": "relies on current exercise participation; history and symptoms of cardiovascular, metabolic or renal disease […] Cardiac, peripheral vascular, or cerebrovascular disease. […] Type 1 and 2 diabetes mellitus.",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-23"
+  },
+  {
+    "id": "screening-chest-discomfort",
+    "part": "screening",
+    "summary": {
+      "de": "Schmerzen oder Beschwerden in Brust, Hals, Kiefer oder Armen (in Ruhe oder bei Belastung): ärztlich abklären.",
+      "en": "Pain or discomfort in the chest, neck, jaw or arms (at rest or during activity): get medical clearance."
+    },
+    "data": {
+      "kind": "symptom",
+      "question": {
+        "de": "Hast du in Ruhe oder bei Belastung Schmerzen, Druck oder ein Engegefühl in Brust, Hals, Kiefer oder Armen?",
+        "en": "Do you have pain, pressure or tightness in your chest, neck, jaw or arms, at rest or during activity?"
+      }
+    },
+    "source": {
+      "title": "Whitfield GP, Riebe D, Magal M, Liguori G. Applying the ACSM Preparticipation Screening Algorithm to U.S. Adults: National Health and Nutrition Examination Survey 2001–2004. Med Sci Sports Exerc 2017;49(10):2056–2063 (describes the algorithm of Riebe D et al., Med Sci Sports Exerc 2015;47(11):2473–2479)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7059860/"
+    },
+    "quote": "At rest or during activity; includes pain, discomfort in the chest, neck, jaw, arms, or other areas that may result from ischemia;",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-23"
+  },
+  {
+    "id": "screening-dizziness",
+    "part": "screening",
+    "summary": {
+      "de": "Schwindel oder Ohnmacht: ärztlich abklären.",
+      "en": "Dizziness or fainting: get medical clearance."
+    },
+    "data": {
+      "kind": "symptom",
+      "question": {
+        "de": "Hast du Schwindelanfälle oder bist du in letzter Zeit ohnmächtig geworden?",
+        "en": "Do you have dizzy spells, or have you fainted recently?"
+      }
+    },
+    "source": {
+      "title": "Whitfield GP, Riebe D, Magal M, Liguori G. Applying the ACSM Preparticipation Screening Algorithm to U.S. Adults: National Health and Nutrition Examination Survey 2001–2004. Med Sci Sports Exerc 2017;49(10):2056–2063 (describes the algorithm of Riebe D et al., Med Sci Sports Exerc 2015;47(11):2473–2479)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7059860/"
+    },
+    "quote": "dizziness or syncope; orthopnea or paroxysmal nocturnal dyspnea; ankle edema; palpitations or tachycardia;",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-23"
+  },
+  {
+    "id": "screening-breathlessness",
+    "part": "screening",
+    "summary": {
+      "de": "Atemnot in Ruhe oder bei leichter Anstrengung, nächtliche Atemnot oder geschwollene Knöchel: ärztlich abklären.",
+      "en": "Shortness of breath at rest or with mild exertion, breathlessness at night or swollen ankles: get medical clearance."
+    },
+    "data": {
+      "kind": "symptom",
+      "question": {
+        "de": "Bist du schon in Ruhe oder bei leichter Anstrengung ungewöhnlich kurzatmig, wachst du nachts mit Atemnot auf oder sind deine Knöchel geschwollen?",
+        "en": "Are you unusually short of breath at rest or with light effort, do you wake up at night short of breath, or are your ankles swollen?"
+      }
+    },
+    "source": {
+      "title": "Whitfield GP, Riebe D, Magal M, Liguori G. Applying the ACSM Preparticipation Screening Algorithm to U.S. Adults: National Health and Nutrition Examination Survey 2001–2004. Med Sci Sports Exerc 2017;49(10):2056–2063 (describes the algorithm of Riebe D et al., Med Sci Sports Exerc 2015;47(11):2473–2479)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7059860/"
+    },
+    "quote": "orthopnea or paroxysmal nocturnal dyspnea; ankle edema; […] shortness of breath at rest or with mild exertion",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-23"
+  },
+  {
+    "id": "screening-palpitations",
+    "part": "screening",
+    "summary": {
+      "de": "Herzrasen oder Herzstolpern: ärztlich abklären.",
+      "en": "Palpitations or a racing heart: get medical clearance."
+    },
+    "data": {
+      "kind": "symptom",
+      "question": {
+        "de": "Hast du Herzrasen oder spürst du einen unregelmäßigen Herzschlag?",
+        "en": "Do you have a racing heart or feel an irregular heartbeat?"
+      }
+    },
+    "source": {
+      "title": "Whitfield GP, Riebe D, Magal M, Liguori G. Applying the ACSM Preparticipation Screening Algorithm to U.S. Adults: National Health and Nutrition Examination Survey 2001–2004. Med Sci Sports Exerc 2017;49(10):2056–2063 (describes the algorithm of Riebe D et al., Med Sci Sports Exerc 2015;47(11):2473–2479)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7059860/"
+    },
+    "quote": "dizziness or syncope; orthopnea or paroxysmal nocturnal dyspnea; ankle edema; palpitations or tachycardia;",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-23"
+  },
+  {
+    "id": "screening-medical-clearance",
+    "part": "principle",
+    "summary": {
+      "de": "Wer Beschwerden hat oder (ohne regelmäßiges Training) eine bekannte Herz-Kreislauf-, Stoffwechsel- oder Nierenerkrankung, soll vor dem Training jeder Intensität ärztlich abklären lassen, ob er trainieren darf. Weekbeat wendet das auf jedes Ja an (strenger als die Quelle) und pausiert den Plan bis dahin.",
+      "en": "People with signs or symptoms, or (when not exercising regularly) a known cardiovascular, metabolic or renal disease, should get medical clearance before exercise of any intensity. Weekbeat applies this to every yes (stricter than the source) and pauses the plan until then."
+    },
+    "data": {},
+    "source": {
+      "title": "Whitfield GP, Riebe D, Magal M, Liguori G. Applying the ACSM Preparticipation Screening Algorithm to U.S. Adults: National Health and Nutrition Examination Survey 2001–2004. Med Sci Sports Exerc 2017;49(10):2056–2063 (describes the algorithm of Riebe D et al., Med Sci Sports Exerc 2015;47(11):2473–2479)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7059860/"
+    },
+    "quote": "Symptomatic respondents, regardless of history, are recommended to seek medical clearance before beginning exercise of any intensity […] Asymptomatic respondents with a positive history of the specified diseases are recommended to seek medical clearance before beginning exercise of any intensity […] Approval from a healthcare professional to engage in exercise.",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-23"
   }
 ]

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { matchesSuggestion } from '../core/knowledge.ts';
+import { matchesSuggestion, screeningQuestions } from '../core/knowledge.ts';
 import { validateRows } from '../core/model/validate.ts';
 import { activityCatalogue, knowledgeRules } from './index.ts';
 
-const PARTS = ['intensity', 'weekly-targets', 'impact', 'complement', 'deload', 'recovery', 'principle'];
+const PARTS = ['intensity', 'weekly-targets', 'impact', 'complement', 'deload', 'recovery', 'principle', 'screening'];
 const today = Date.now();
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -84,6 +84,17 @@ describe('knowledge rules', () => {
     for (const [i, a] of ranges.entries()) {
       for (const b of ranges.slice(i + 1)) expect(a[1]! < b[0]! || b[1]! < a[0]!).toBe(true);
     }
+  });
+
+  it('have self-check questions for known conditions and for symptoms, in both languages', () => {
+    const qs = screeningQuestions(knowledgeRules);
+    expect(qs.some((q) => q.kind === 'history')).toBe(true);
+    expect(qs.some((q) => q.kind === 'symptom')).toBe(true);
+    for (const q of qs) {
+      expect(q.question.de).toMatch(/\?$/);
+      expect(q.question.en).toMatch(/\?$/);
+    }
+    expect(knowledgeRules.some((r) => r.id === 'screening-medical-clearance')).toBe(true);
   });
 });
 

@@ -3,17 +3,17 @@
 Deterministic rule engine with scoring (concept doc → "Weekly planner"): same inputs, same plan. Pure TypeScript:
 no clock, no storage, no randomness. Entry point: `planWeek(input)`.
 
-| Step             | File             | What it does                                                                                          |
-| ---------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
-| Collect inputs   | `week.ts`        | One person's week in week minutes: windows, busy blocks, anchors, logs, memberships                   |
-|                  | `candidates.ts`  | Options (programme days, hobbies, sourced complements) × places × free stretches                      |
-| Hard constraints | `constraints.ts` | Pause, setting, equipment, window, overlap (travel included), opening hours, programme days, recovery |
-| Score candidates | `score.ts`       | Goal fit, programme, together, complement, variety, membership, spread, distance (0…1 each)           |
-| Pick and explain | `plan.ts`        | Greedy pick up to the goal and the weekly maximum, fixed tie-break order                              |
-|                  | `why.ts`         | One line per session, de + en, from the two strongest terms                                           |
-| Offers and notes | `plan.ts`        | Deload offers (never applied) and neutral notes when the week falls short                             |
-| Household        | `candidates.ts`  | Also tries the start of a household member's same session; `together` term                            |
-| Replan           | `replan.ts`      | Offers only: new slots (same place, one per day), 20-min home fallback, let go                        |
+| Step             | File             | What it does                                                                                                                          |
+| ---------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Collect inputs   | `week.ts`        | One person's week in week minutes: windows, busy blocks, anchors, logs, memberships                                                   |
+|                  | `candidates.ts`  | Options (programme days, hobbies, sourced complements) × places × free stretches                                                      |
+| Hard constraints | `constraints.ts` | Health hold, pause, planned rest days, setting, equipment, window, overlap (travel included), opening hours, programme days, recovery |
+| Score candidates | `score.ts`       | Goal fit, programme, together, complement, variety, membership, spread, distance (0…1 each)                                           |
+| Pick and explain | `plan.ts`        | Greedy pick up to the goal and the weekly maximum, fixed tie-break order                                                              |
+|                  | `why.ts`         | One line per session, de + en, from the two strongest terms                                                                           |
+| Offers and notes | `plan.ts`        | Deload offers (never applied) and neutral notes when the week falls short                                                             |
+| Household        | `candidates.ts`  | Also tries the start of a household member's same session; `together` term                                                            |
+| Replan           | `replan.ts`      | Offers only: new slots (same place, one per day), 20-min home fallback, let go                                                        |
 
 Rules:
 

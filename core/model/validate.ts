@@ -105,6 +105,8 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     autoPlan: opt(bool),
     pausedUntil: opt(isoDate),
     pauses: opt(arr(obj({ from: isoDate, to: isoDate }))),
+    health: opt(obj({ checkedOn: isoDate, flagged: bool, clearedOn: opt(isoDate) })),
+    restDays: opt(arr(isoDate)),
   }),
   activityTypes: obj({
     id: nonEmpty,

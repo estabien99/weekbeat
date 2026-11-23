@@ -691,3 +691,41 @@ label.inline input {
 .card > .choices + .choices {
   margin-top: 16px;
 }
+
+/* Health self-check and pause mode (issue #4). */
+.yes-no {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.health-result h3:focus {
+  outline: none;
+}
+.health-result h3:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.health-people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.health-person {
+  display: grid;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.health-person h4,
+.health-person p {
+  margin: 0;
+}
+.pause-banner {
+  border-left: 4px solid var(--accent);
+  margin: 0;
+}
+.rest-day {
+  font-size: 0.875rem;
+  margin: 4px 0;
+}
+.day > button.ghost {
+  margin-top: 6px;
+}

@@ -17,4 +17,5 @@ export * from './model/sessions.ts';
 export * from './model/memberships.ts';
 export * from './model/programmes.ts';
 export * from './model/merge.ts';
+export * from './model/health.ts';
 export * from './game/index.ts';

@@ -1,4 +1,5 @@
 import { intensityOf } from '../knowledge.ts';
+import { healthHold } from '../model/health.ts';
 import type {
   ActivityType,
   Intensity,
@@ -53,8 +54,15 @@ export function notDeclined(c: Candidate, ctx: ConstraintContext): boolean {
 }
 
 export function notPaused(c: Candidate, ctx: ConstraintContext): boolean {
+  if (healthHold(ctx.week.profile)) return false;
   const through = pausedThroughDay(ctx.week.profile, ctx.weekStart);
   return through === undefined || dayIndexOf(c.start) > through;
+}
+
+/** Planned rest days stay free. */
+export function notRestDay(c: Candidate, ctx: ConstraintContext): boolean {
+  const rest = ctx.week.profile.restDays;
+  return !rest?.length || !rest.includes(dateOfDay(ctx.weekStart, dayIndexOf(c.start)));
 }
 
 /** The session, travel included, lies inside one availability window. */
@@ -184,6 +192,7 @@ const CHECKS: [Rejection, (c: Candidate, ctx: ConstraintContext) => boolean][] =
   ['past', notPast],
   ['declined', notDeclined],
   ['paused', notPaused],
+  ['rest-day', notRestDay],
   ['setting', settingFits],
   ['equipment', hasEquipment],
   ['outside-window', insideWindow],

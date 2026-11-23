@@ -54,7 +54,9 @@
     "removeConfirm": "Yes, remove",
     "editNamed": "Edit {{name}}",
     "removeNamed": "Remove {{name}}",
-    "newTab": "(opens in a new tab)"
+    "newTab": "(opens in a new tab)",
+    "yes": "Yes",
+    "no": "No"
   },
   "nav": {
     "label": "Main navigation",
@@ -134,7 +136,10 @@
     "session": "This session no longer exists.",
     "daysPerWeek": "Training days must be a whole number from 1 to 7.",
     "programmePlaces": "Please choose at least one place with weights – or “Bodyweight”.",
-    "programmeKind": "Please choose how you train."
+    "programmeKind": "Please choose how you train.",
+    "pausedUntil": "Please choose an end date from today on.",
+    "health": "Please do the health check first.",
+    "restDays": "Please choose a valid date."
   },
   "data": {
     "title": "Your data",
@@ -378,5 +383,47 @@
     "household": "Household: {{met}} of {{active}} reached their weekly goal",
     "householdStreak_one": "{{count}} shared week in a row",
     "householdStreak_other": "{{count}} shared weeks in a row"
+  },
+  "health": {
+    "title": "Health and pause",
+    "intro": "Before you start, a short health check for {{name}}. Only the result is saved, not your answers.",
+    "answerAll": "Please answer every question with yes or no.",
+    "privacy": "These questions are a short selection in our own words, not a full questionnaire. The official PAR-Q+ goes further:",
+    "parq": "PAR-Q+ (eparmedx.com)",
+    "disclaimer": "Weekbeat is for fitness and wellness. It does not replace medical advice, diagnosis or treatment.",
+    "submit": "Finish the check",
+    "flaggedTitle": "Please check with a doctor first",
+    "flagged": "At least one answer was yes. Please talk to a doctor before you train, {{name}}. This is not a diagnosis: these questions only show when talking to a doctor before you start is recommended.",
+    "flaggedNext": "Until then your plan rests, and goals and streak are frozen. When your doctor says you may train, confirm it under Settings → Health and pause.",
+    "none": "No health check yet.",
+    "held": "Health check of {{date}}: at least one yes. The plan rests.",
+    "clear": "Health check of {{date}}: all no.",
+    "cleared": "Doctor's OK confirmed on {{date}}.",
+    "clearedNow": "OK saved. Weekbeat plans again.",
+    "doctorOk": "My doctor says I may train",
+    "start": "Health check for {{name}}",
+    "again": "Repeat the check ({{name}})",
+    "pausedUntil": "Paused up to and including {{date}}: goals and streak rest.",
+    "notPaused": "No pause.",
+    "pauseUntil": "Pause up to and including",
+    "pauseHint": "For example when ill, injured or on holiday. You can change the end at any time.",
+    "pauseStart": "Start pause",
+    "pauseChange": "Change end",
+    "pauseEnd": "End pause now",
+    "pauseStarted": "Pause started.",
+    "pauseChanged": "Pause end changed.",
+    "pauseEnded": "Pause ended. From today everything counts again.",
+    "banner": {
+      "held": "Your plan rests until you confirm that your doctor allows training.",
+      "paused": "Pause up to and including {{date}}: goals and streak rest."
+    }
+  },
+  "rest": {
+    "plan": "Plan a rest day",
+    "planLabel": "Plan a rest day: {{day}}",
+    "remove": "Remove rest day",
+    "removeLabel": "Remove rest day: {{day}}",
+    "is": "Rest day",
+    "hint": "Planned recovery: Weekbeat plans nothing on this day."
   }
 }

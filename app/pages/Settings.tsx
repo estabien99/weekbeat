@@ -16,6 +16,8 @@ import {
   type Profile,
 } from '../../core/index.ts';
 import { DataCard } from '../components/DataCard.tsx';
+import { HealthCheck } from '../components/HealthCheck.tsx';
+import { HealthPauseCard } from '../components/HealthPauseCard.tsx';
 import { Interview } from '../components/Interview.tsx';
 import { AvailabilityEditor } from '../components/AvailabilityEditor.tsx';
 import { ProfileFields } from '../components/ProfileFields.tsx';
@@ -26,6 +28,7 @@ import { LANGS, setLang } from '../i18n/index.ts';
 type Editing =
   | { kind: 'new' }
   | { kind: 'edit'; id: Id }
+  | { kind: 'health'; id: Id }
   | { kind: 'times'; id: Id; next?: 'prefs' }
   | { kind: 'prefs'; id: Id }
   | null;
@@ -112,12 +115,19 @@ export function Settings({ profiles }: { profiles: Profile[] }) {
             onCancel={() => setEditing(null)}
             onSubmit={async (v) => {
               const p = await addProfile(db, v);
-              setEditing({ kind: 'times', id: p.id, next: 'prefs' });
+              setEditing({ kind: 'health', id: p.id });
             }}
           />
         )}
         {editing?.kind === 'edit' && (
           <PersonEdit id={editing.id} profiles={profiles} onClose={() => setEditing(null)} />
+        )}
+        {editing?.kind === 'health' && (
+          <NewPersonHealth
+            id={editing.id}
+            profiles={profiles}
+            onDone={() => setEditing({ kind: 'times', id: editing.id, next: 'prefs' })}
+          />
         )}
         {editing?.kind === 'times' && (
           <TimesEdit
@@ -130,6 +140,8 @@ export function Settings({ profiles }: { profiles: Profile[] }) {
           <PrefsEdit id={editing.id} profiles={profiles} onClose={() => setEditing(null)} />
         )}
       </div>
+
+      <HealthPauseCard profiles={profiles} />
 
       {household && <GameSettings mode={household.gameMode} profiles={profiles} />}
 
@@ -211,6 +223,19 @@ function PersonEdit({ id, profiles, onClose }: { id: Id; profiles: Profile[]; on
         onClose();
       }}
     />
+  );
+}
+
+/** A new person answers the health self-check before their times and preferences. */
+function NewPersonHealth({ id, profiles, onDone }: { id: Id; profiles: Profile[]; onDone: () => void }) {
+  const { t } = useTranslation();
+  const p = profiles.find((x) => x.id === id);
+  if (!p) return null;
+  return (
+    <div className="subcard">
+      <h4>{t('health.start', { name: p.name })}</h4>
+      <HealthCheck profile={p} onDone={onDone} />
+    </div>
   );
 }
 
