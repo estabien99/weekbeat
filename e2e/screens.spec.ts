@@ -425,6 +425,48 @@ for (const lang of ['de', 'en'] as const) {
   });
 }
 
+for (const lang of ['de', 'en'] as const) {
+  const t = T[lang];
+
+  test.describe(`${lang} Sunday review`, () => {
+    test.use({ locale: lang === 'de' ? 'de-DE' : 'en-GB' });
+
+    test(`shows the look back on Sundays (${lang})`, async ({ page }, info) => {
+      test.setTimeout(60_000);
+      // Sunday 22 Nov 2026, 10:00 local: the last day of the week.
+      await page.clock.setFixedTime(new Date(2026, 10, 22, 10, 0));
+      await page.addInitScript((l) => localStorage.setItem('weekbeat.lang', l), lang);
+      await page.goto('/');
+      await page.getByLabel(t.setup.household).fill('Unser Nest');
+      await page.getByLabel(t.profile.name).fill('Alex');
+      await page.getByRole('button', { name: t.common.next }).click();
+      await expect(page.locator('.yes-no')).toHaveCount(5); // wait for the step before answering
+      await answerHealth(page, lang, 'no');
+      await expect(
+        page.getByRole('heading', { name: t.setup.availabilityTitle.replace('{{name}}', 'Alex') }),
+      ).toBeVisible();
+      await page.getByRole('button', { name: t.common.next, exact: true }).click(); // no times
+      await page.getByRole('button', { name: t.setup.skip }).click(); // interview later
+      await expect(page.locator('.day')).toHaveCount(7);
+
+      // Nothing done yet: the review says so plainly, without blame.
+      const review = page.getByRole('region', { name: t.review.title });
+      await expect(review).toContainText(t.review.done_other.replace('{{count}}', '0'));
+      await expectAccessible(page);
+
+      // An unplanned activity counts and is named as unplanned.
+      await page.getByRole('button', { name: t.manualLog.open }).click();
+      await page.getByLabel(t.manualLog.duration).fill('40');
+      await page.getByRole('button', { name: t.manualLog.save }).click();
+      await expect(review).toContainText(t.review.done_one.replace('{{count}}', '1'));
+      await expect(review).toContainText(t.review.unplanned_one.replace('{{count}}', '1'));
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '4d-review', info.project.name, lang);
+    });
+  });
+}
+
 test('has a Content-Security-Policy and no violations', async ({ page }) => {
   const violations: string[] = [];
   page.on('console', (m) => {
