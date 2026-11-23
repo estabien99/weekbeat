@@ -57,6 +57,11 @@ export interface Profile {
   autoPlan?: boolean;
   /** Pause mode (illness, holidays, injury) freezes goals and streaks. */
   pausedUntil?: IsoDate;
+  /**
+   * Pause periods so far (inclusive dates). The game skips paused weeks, so past pauses must stay recorded;
+   * the pause UI (issue #4) adds one whenever it sets `pausedUntil`.
+   */
+  pauses?: { from: IsoDate; to: IsoDate }[];
 }
 
 /** Sport-type mapping so connectors never need their own vocabulary. */

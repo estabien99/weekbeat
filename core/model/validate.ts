@@ -104,6 +104,7 @@ export const TABLE_SCHEMAS: Record<string, Check> = {
     preferredSessionMin: opt(positive),
     autoPlan: opt(bool),
     pausedUntil: opt(isoDate),
+    pauses: opt(arr(obj({ from: isoDate, to: isoDate }))),
   }),
   activityTypes: obj({
     id: nonEmpty,

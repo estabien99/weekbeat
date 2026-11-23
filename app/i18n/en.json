@@ -328,5 +328,19 @@
       "noPlace": "no particular place",
       "note": "Weekbeat sends nothing to Freeletics. Set the days and place (Space) in the Coach yourself."
     }
+  },
+  "game": {
+    "title": "Progress ({{name}})",
+    "goalSessions": "Sessions this week",
+    "goalMinutes": "Minutes this week",
+    "ofTarget": "{{done}} of {{target}}",
+    "streak": "Weeks in a row",
+    "level": "Level",
+    "met": "Weekly goal reached. More sessions earn no extra points; rest is part of it.",
+    "paused": "Paused: goals and streak are resting.",
+    "xp": "{{xp}} XP, {{left}} to level {{next}}",
+    "best_one": "best streak: {{count}} week",
+    "best_other": "best streak: {{count}} weeks",
+    "hint": "Points come from consistency, variety and training together. Nothing is ever lost."
   }
 }

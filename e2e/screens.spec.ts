@@ -287,6 +287,16 @@ for (const lang of ['de', 'en'] as const) {
       await expectNoHorizontalScroll(page);
       await shot(page, '9-coach', project, lang);
 
+      // Game card (this week): Alex's check-in counts toward the weekly goal; level and streak start quietly.
+      await page.getByRole('button', { name: t.plan.thisWeek }).click();
+      const game = page.locator('.card.game');
+      await expect(game.getByRole('heading', { name: t.game.title.replace('{{name}}', 'Alex') })).toBeVisible();
+      await expect(game).toContainText(t.game.ofTarget.replace('{{done}}', '1').replace('{{target}}', '3'));
+      await game.scrollIntoViewIfNeeded();
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '10-game', project, lang);
+
       await page.getByLabel(t.nav.person).selectOption({ label: 'Sam' });
       await page.getByRole('link', { name: t.nav.week }).click();
       await expect(page.locator('.day').nth(0)).not.toContainText('18:00');
