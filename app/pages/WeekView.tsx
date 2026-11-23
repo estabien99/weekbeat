@@ -6,6 +6,7 @@ import {
   applyReplan,
   completeSession,
   getAvailability,
+  healthHold,
   isoWeek,
   isoWeekday,
   mergedSessions,
@@ -13,6 +14,7 @@ import {
   planWeek,
   replan,
   toIsoDate,
+  toggleRestDay,
   weekOf,
   type Lang,
   type PlannedSession,
@@ -22,6 +24,7 @@ import {
 import { COACH_ACTIVITY, COACH_ID, COACH_NAME, coachChecklist } from '../../connectors/freeletics-coach/coach.ts';
 import { activityCatalogue } from '../../knowledge/index.ts';
 import { GameCard } from '../components/GameCard.tsx';
+import { useDateText } from '../useDateText.ts';
 import { db } from '../db.ts';
 import { localeOf, weekdayNames } from '../format.ts';
 import { membershipLabel } from '../memberships.ts';
@@ -102,6 +105,10 @@ export function WeekView({ profile }: { profile: Profile }) {
     [shown, weekStart, nowIso],
   );
 
+  const dateText = useDateText();
+  const held = healthHold(profile);
+  const pausedUntil = profile.pausedUntil && profile.pausedUntil >= today ? profile.pausedUntil : undefined;
+  const restDays = new Set(profile.restDays ?? []);
   const dayFmt = new Intl.DateTimeFormat(locale, { weekday: 'long' });
   const dateFmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' });
   const dayName = (iso: string) => dayFmt.format(new Date(`${iso.slice(0, 10)}T12:00`));
@@ -171,6 +178,12 @@ export function WeekView({ profile }: { profile: Profile }) {
         )}
       </div>
 
+      {(held || pausedUntil) && (
+        <p className="card pause-banner">
+          {held ? t('health.banner.held') : t('health.banner.paused', { date: dateText(pausedUntil!) })}
+        </p>
+      )}
+
       <p role="status" className="ok">
         {message}
       </p>
@@ -216,8 +229,23 @@ export function WeekView({ profile }: { profile: Profile }) {
                   ))}
                 </ul>
               )}
+              {restDays.has(iso) && (
+                <p className="rest-day">
+                  <strong>{t('rest.is')}</strong> <span className="muted">{t('rest.hint')}</span>
+                </p>
+              )}
+              {iso >= today && daySessions.length === 0 && (
+                <button
+                  type="button"
+                  className="ghost"
+                  aria-label={t(restDays.has(iso) ? 'rest.removeLabel' : 'rest.planLabel', { day: dayFmt.format(d) })}
+                  onClick={() => void toggleRestDay(db, profile.id, iso)}
+                >
+                  {t(restDays.has(iso) ? 'rest.remove' : 'rest.plan')}
+                </button>
+              )}
               {daySessions.length + dayProposals.length === 0 ? (
-                <p className="muted empty">{t('week.empty')}</p>
+                !restDays.has(iso) && <p className="muted empty">{t('week.empty')}</p>
               ) : (
                 <ul className="sessions" aria-label={t('plan.sessions')}>
                   {daySessions.map((s) => {

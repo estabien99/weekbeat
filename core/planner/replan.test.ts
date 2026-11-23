@@ -74,6 +74,11 @@ describe('replan', () => {
       notBefore: '2026-11-24T08:00',
     });
     expect(paused.map((o) => o.kind)).toEqual(['skip']);
+    const held = replan(week({ profiles: [profile({ health: { checkedOn: '2026-11-20', flagged: true } })] }), {
+      sessionId: 's-mon',
+      notBefore: '2026-11-24T08:00',
+    });
+    expect(held.map((o) => o.kind)).toEqual(['skip']);
     const unknown = replan(week({ anchors: [{ ...monday, activityTypeId: 'not-in-catalogue' }] }), {
       sessionId: 's-mon',
       notBefore: '2026-11-24T08:00',

@@ -3,18 +3,22 @@ import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ValidationError, createHousehold, setWindows, type Id, type Lang, type NewProfile } from '../../core/index.ts';
 import { AvailabilityEditor } from '../components/AvailabilityEditor.tsx';
+import { HealthCheck } from '../components/HealthCheck.tsx';
 import { Interview } from '../components/Interview.tsx';
 import { ProfileFields } from '../components/ProfileFields.tsx';
 import { emptyProfile } from '../profileDefaults.ts';
 import { db } from '../db.ts';
 
-/** First run: household + first person, their weekly time windows, then the optional planning interview. */
+/**
+ * First run: household + first person, the health self-check, their weekly time windows, then the optional
+ * planning interview.
+ */
 export function Setup({ onStart, onDone }: { onStart: () => void; onDone: (profileId: Id) => void }) {
   const { t, i18n } = useTranslation();
   const [household, setHousehold] = useState('');
   const [person, setPerson] = useState<NewProfile>(() => emptyProfile((i18n.resolvedLanguage ?? 'de') as Lang));
   const [profileId, setProfileId] = useState<Id | null>(null);
-  const [step, setStep] = useState<'availability' | 'interview'>('availability');
+  const [step, setStep] = useState<'health' | 'availability' | 'interview'>('health');
   const profile = useLiveQuery(() => (profileId ? db.profiles.get(profileId) : undefined), [profileId]);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,7 +38,7 @@ export function Setup({ onStart, onDone }: { onStart: () => void; onDone: (profi
     if (!profile) return null;
     return (
       <section className="card" aria-labelledby="setup-prefs">
-        <p className="step">{t('setup.step', { n: 3, of: 3 })}</p>
+        <p className="step">{t('setup.step', { n: 4, of: 4 })}</p>
         <h2 id="setup-prefs">{t('setup.prefsTitle')}</h2>
         <p className="muted">{t('setup.prefsIntro')}</p>
         <Interview
@@ -47,10 +51,21 @@ export function Setup({ onStart, onDone }: { onStart: () => void; onDone: (profi
     );
   }
 
+  if (profileId && step === 'health') {
+    if (!profile) return null;
+    return (
+      <section className="card" aria-labelledby="setup-health">
+        <p className="step">{t('setup.step', { n: 2, of: 4 })}</p>
+        <h2 id="setup-health">{t('health.title')}</h2>
+        <HealthCheck profile={profile} onDone={() => setStep('availability')} />
+      </section>
+    );
+  }
+
   if (profileId) {
     return (
       <section className="card" aria-labelledby="setup-avail">
-        <p className="step">{t('setup.step', { n: 2, of: 3 })}</p>
+        <p className="step">{t('setup.step', { n: 3, of: 4 })}</p>
         <h2 id="setup-avail">{t('setup.availabilityTitle', { name: person.name.trim() })}</h2>
         <p className="muted">{t('setup.availabilityHint')}</p>
         <AvailabilityEditor
@@ -67,7 +82,7 @@ export function Setup({ onStart, onDone }: { onStart: () => void; onDone: (profi
 
   return (
     <form className="card" onSubmit={(e) => void submit(e)} aria-labelledby="setup-title" noValidate>
-      <p className="step">{t('setup.step', { n: 1, of: 3 })}</p>
+      <p className="step">{t('setup.step', { n: 1, of: 4 })}</p>
       <h2 id="setup-title">{t('setup.title')}</h2>
       <p className="muted">{t('setup.intro')}</p>
       <div className="field">
@@ -88,7 +103,7 @@ export function Setup({ onStart, onDone }: { onStart: () => void; onDone: (profi
         </p>
       )}
       <button type="submit">{t('common.next')}</button>
-      <p className="muted small">{t('footer.disclaimer')}</p>
+      <p className="muted small">{t('health.disclaimer')}</p>
     </form>
   );
 }

@@ -54,7 +54,9 @@
     "removeConfirm": "Ja, entfernen",
     "editNamed": "{{name}} bearbeiten",
     "removeNamed": "{{name}} entfernen",
-    "newTab": "(öffnet in neuem Tab)"
+    "newTab": "(öffnet in neuem Tab)",
+    "yes": "Ja",
+    "no": "Nein"
   },
   "nav": {
     "label": "Hauptnavigation",
@@ -134,7 +136,10 @@
     "session": "Diese Einheit gibt es nicht mehr.",
     "daysPerWeek": "Die Trainingstage müssen eine ganze Zahl von 1 bis 7 sein.",
     "programmePlaces": "Bitte mindestens einen Ort mit Gewichten wählen – oder „Mit Körpergewicht“.",
-    "programmeKind": "Bitte wählen, wie du trainierst."
+    "programmeKind": "Bitte wählen, wie du trainierst.",
+    "pausedUntil": "Bitte ein Enddatum ab heute wählen.",
+    "health": "Bitte zuerst den Gesundheits-Check machen.",
+    "restDays": "Bitte ein gültiges Datum wählen."
   },
   "data": {
     "title": "Deine Daten",
@@ -378,5 +383,47 @@
     "household": "Haushalt: {{met}} von {{active}} haben ihr Wochenziel erreicht",
     "householdStreak_one": "{{count}} gemeinsame Woche in Folge",
     "householdStreak_other": "{{count}} gemeinsame Wochen in Folge"
+  },
+  "health": {
+    "title": "Gesundheit und Pause",
+    "intro": "Bevor es losgeht, ein kurzer Gesundheits-Check für {{name}}. Gespeichert wird nur das Ergebnis, nicht deine Antworten.",
+    "answerAll": "Bitte beantworte jede Frage mit Ja oder Nein.",
+    "privacy": "Die Fragen sind eine kurze Auswahl in eigenen Worten, kein vollständiger Fragebogen. Ausführlicher ist der offizielle PAR-Q+:",
+    "parq": "PAR-Q+ (englisch, eparmedx.com)",
+    "disclaimer": "Weekbeat ist für Fitness und Wohlbefinden gedacht und ersetzt keine medizinische Beratung, Diagnose oder Behandlung.",
+    "submit": "Check abschließen",
+    "flaggedTitle": "Bitte erst ärztlich abklären",
+    "flagged": "Mindestens eine Antwort war Ja. Bitte sprich mit einer Ärztin oder einem Arzt, bevor du trainierst, {{name}}. Das ist keine Diagnose: Diese Fragen zeigen nur, wann eine Rücksprache vor dem Start empfohlen wird.",
+    "flaggedNext": "Bis dahin ruht dein Plan, Ziele und Serie sind eingefroren. Wenn deine Ärztin oder dein Arzt sagt, dass du trainieren darfst, bestätige das unter Einstellungen → Gesundheit und Pause.",
+    "none": "Noch kein Gesundheits-Check.",
+    "held": "Gesundheits-Check vom {{date}}: mindestens ein Ja. Der Plan ruht.",
+    "clear": "Gesundheits-Check vom {{date}}: alles Nein.",
+    "cleared": "Ärztliche Freigabe bestätigt am {{date}}.",
+    "clearedNow": "Freigabe gespeichert. Weekbeat plant wieder.",
+    "doctorOk": "Meine Ärztin oder mein Arzt sagt: Ich darf trainieren",
+    "start": "Gesundheits-Check für {{name}}",
+    "again": "Check wiederholen ({{name}})",
+    "pausedUntil": "Pausiert bis einschließlich {{date}}: Ziele und Serie ruhen.",
+    "notPaused": "Keine Pause.",
+    "pauseUntil": "Pause bis einschließlich",
+    "pauseHint": "Zum Beispiel bei Krankheit, Verletzung oder Urlaub. Du kannst das Ende jederzeit ändern.",
+    "pauseStart": "Pause starten",
+    "pauseChange": "Ende ändern",
+    "pauseEnd": "Pause jetzt beenden",
+    "pauseStarted": "Pause gestartet.",
+    "pauseChanged": "Pausenende geändert.",
+    "pauseEnded": "Pause beendet. Ab heute zählt wieder alles.",
+    "banner": {
+      "held": "Dein Plan ruht, bis du bestätigst, dass deine Ärztin oder dein Arzt das Training erlaubt.",
+      "paused": "Pause bis einschließlich {{date}}: Ziele und Serie ruhen."
+    }
+  },
+  "rest": {
+    "plan": "Ruhetag planen",
+    "planLabel": "Ruhetag planen: {{day}}",
+    "remove": "Ruhetag entfernen",
+    "removeLabel": "Ruhetag entfernen: {{day}}",
+    "is": "Ruhetag",
+    "hint": "Geplante Erholung: Weekbeat plant an diesem Tag nichts."
   }
 }

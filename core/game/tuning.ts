@@ -10,6 +10,8 @@ export const GAME_TUNING = {
   xpPerMinute: { sedentary: 1, light: 1, moderate: 2, vigorous: 3 } satisfies Record<Intensity, number>,
   /** Bonus XP per counted session, once per reason. */
   bonus: { combo: 20, together: 20, variety: 20, complement: 20 },
+  /** Recovery bonus for a planned rest day kept free, at most once a week (user decision 23.11.2026, #4). */
+  restDayXp: 20,
   /** Level n + 1 is reached at levelStep × n(n+1)/2 total XP: 500, 1500, 3000, … */
   levelStep: 500,
   /** Badges: total counted sessions, weeks in a row, categories in one week. */

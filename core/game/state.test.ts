@@ -189,4 +189,49 @@ describe('levels', () => {
     expect([1, 2, 3, 4].map((l) => xpForLevel(l))).toEqual([0, 500, 1500, 3000]);
     expect([0, 499, 500, 1499, 1500, 3000].map((x) => levelOf(x))).toEqual([1, 1, 2, 2, 3, 4]);
   });
+
+  it('gives nothing for training through an open health check, and goes on once cleared', () => {
+    const logs = [log('2026-11-17T18:00'), log('2026-11-18T18:00'), log('2026-11-23T18:00')];
+    const held = gameState(input({ logs, profile: profile({ health: { checkedOn: '2026-11-18', flagged: true } }) }))!;
+    expect(held.events.map((e) => e.loggedActivityId)).toEqual([logs[0]!.id]);
+    expect(week(held, '2026-11-16').status).toBe('paused');
+    expect(week(held, '2026-11-23').status).toBe('paused');
+
+    // Cleared on 23.11.: the hold is recorded as a pause up to the day before, Monday's session counts.
+    const cleared = gameState(
+      input({
+        logs,
+        profile: profile({
+          health: { checkedOn: '2026-11-18', flagged: true, clearedOn: '2026-11-23' },
+          pauses: [{ from: '2026-11-18', to: '2026-11-22' }],
+        }),
+      }),
+    )!;
+    expect(cleared.events.filter((e) => e.reason === 'base').map((e) => e.loggedActivityId)).toEqual([
+      logs[0]!.id,
+      logs[2]!.id,
+    ]);
+  });
+
+  it('gives a recovery bonus once a week for a passed rest day without training, never toward the goal', () => {
+    const s = gameState(
+      input({
+        logs: [log('2026-11-17T18:00')],
+        profile: profile({ restDays: ['2026-11-18', '2026-11-19', '2026-11-17', '2026-11-24', '2026-11-26'] }),
+      }),
+    )!;
+    const recovery = s.events.filter((e) => e.reason === 'recovery');
+    // 17.11. had training; 18.11. is the week's one bonus; 24.11. has passed; 26.11. has not.
+    expect(recovery.map((e) => e.id)).toEqual(['rest:2026-11-18', 'rest:2026-11-24']);
+    expect(recovery.every((e) => e.xp === 20)).toBe(true);
+    expect(week(s, '2026-11-16').goals[0]).toMatchObject({ done: 1, reached: false });
+    expect(week(s, '2026-11-16').status).toBe('missed');
+  });
+
+  it('gives no recovery bonus on paused days', () => {
+    const s = gameState(
+      input({ profile: profile({ restDays: ['2026-11-18'], pauses: [{ from: '2026-11-16', to: '2026-11-20' }] }) }),
+    )!;
+    expect(s.events).toEqual([]);
+  });
 });

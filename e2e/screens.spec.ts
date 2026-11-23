@@ -31,6 +31,21 @@ async function shot(page: Page, name: string, project: string, lang: Lang) {
   await page.screenshot({ path: `screenshots/${project}-${lang}-${name}.png`, fullPage: true });
 }
 
+const sunday = { de: 'Sonntag', en: 'Sunday' } as const;
+
+/** Answers every self-check question; `yesAt` answers that question (0-based) with yes. */
+async function answerHealth(page: Page, lang: Lang, answer: 'no', yesAt?: number) {
+  const t = T[lang];
+  const groups = page.locator('.yes-no');
+  const n = await groups.count();
+  for (let i = 0; i < n; i++)
+    await groups
+      .nth(i)
+      .getByRole('radio', { name: i === yesAt ? t.common.yes : t.common[answer], exact: true })
+      .check();
+  await page.getByRole('button', { name: t.health.submit }).click();
+}
+
 for (const lang of ['de', 'en'] as const) {
   const t = T[lang];
 
@@ -38,6 +53,8 @@ for (const lang of ['de', 'en'] as const) {
     test.use({ locale: lang === 'de' ? 'de-DE' : 'en-GB' });
 
     test(`setup, week and settings (${lang})`, async ({ page }, info) => {
+      // One long walk through the whole app; it outgrew the default 30 s under parallel load.
+      test.setTimeout(90_000);
       const project = info.project.name;
       await page.addInitScript((l) => localStorage.setItem('weekbeat.lang', l), lang);
       await page.goto('/');
@@ -56,7 +73,17 @@ for (const lang of ['de', 'en'] as const) {
       await page.getByLabel(t.profile.name).fill('Alex');
       await page.getByRole('button', { name: t.common.next }).click();
 
-      // Step 2: availability
+      // Step 2: health self-check (own wording, only the outcome is stored); every question needs an answer
+      await expect(page.getByRole('heading', { name: t.health.title })).toBeVisible();
+      await expect(page.locator('.yes-no')).toHaveCount(5);
+      await page.getByRole('button', { name: t.health.submit }).click();
+      await expect(page.getByRole('alert')).toHaveText(t.health.answerAll);
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '1b-health', project, lang);
+      await answerHealth(page, lang, 'no');
+
+      // Step 3: availability
       await expect(
         page.getByRole('heading', { name: t.setup.availabilityTitle.replace('{{name}}', 'Alex') }),
       ).toBeVisible();
@@ -71,7 +98,7 @@ for (const lang of ['de', 'en'] as const) {
       await shot(page, '2-availability', project, lang);
       await page.getByRole('button', { name: t.common.next, exact: true }).click();
 
-      // Step 3: optional interview (hobbies, session length, automatic proposal)
+      // Step 4: optional interview (hobbies, session length, automatic proposal)
       await expect(page.getByRole('heading', { name: t.setup.prefsTitle })).toBeVisible();
       const q1 = t.interview.hobbies.title.replace('{{name}}', 'Alex');
       await expect(page.getByRole('heading', { name: q1 })).toBeFocused();
@@ -129,6 +156,13 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.locator('.day').nth(5).locator('.session.proposed')).toHaveCount(2);
       await expect(proposed.first().locator('.why')).not.toBeEmpty();
       await expect(page.locator('.notes')).toContainText(lang === 'de' ? '2 von 3' : '2 of 3');
+      // Planned rest on Sunday (no time window there, so the proposal stays the same)
+      await page.getByRole('button', { name: t.rest.planLabel.replace('{{day}}', sunday[lang]) }).click();
+      await expect(page.locator('.day').nth(6).locator('.rest-day')).toContainText(t.rest.is);
+      await expect(
+        page.getByRole('button', { name: t.rest.removeLabel.replace('{{day}}', sunday[lang]) }),
+      ).toBeVisible();
+      await expect(proposed).toHaveCount(2);
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
       await shot(page, '4-week', project, lang);
@@ -159,6 +193,9 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.getByRole('alert')).toHaveText(t.errors.sessionMin);
       await page.getByLabel(t.profile.sessionMin).fill('45');
       await page.getByRole('button', { name: t.common.save }).click();
+      // A new person answers the health check first.
+      await expect(page.getByRole('heading', { name: t.health.start.replace('{{name}}', 'Sam') })).toBeVisible();
+      await answerHealth(page, lang, 'no');
       await page.getByRole('button', { name: t.common.save }).click(); // times step, none added
       // A new person is offered the interview too; Sam leaves it for later.
       await expect(
@@ -311,6 +348,43 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.locator('.card.game')).toContainText(
         t.game.household.replace('{{met}}', '0').replace('{{active}}', '2'),
       );
+
+      // Settings → health and pause: Sam repeats the check with a yes, the plan rests until a doctor's OK.
+      await page.getByRole('link', { name: t.nav.settings }).click();
+      await page.getByRole('button', { name: t.health.again.replace('{{name}}', 'Sam') }).click();
+      await answerHealth(page, lang, 'no', 1);
+      await expect(page.getByRole('heading', { name: t.health.flaggedTitle })).toBeFocused();
+      await expectAccessible(page);
+      await shot(page, '12-health-flagged', project, lang);
+      await page.getByRole('button', { name: t.common.next, exact: true }).click();
+      const sam = page.locator('.health-person').filter({ hasText: 'Sam' });
+      await expect(sam).toContainText(t.health.held.split('{{date}}')[0]!);
+      await sam.getByRole('button', { name: t.health.doctorOk }).click();
+      await expect(sam.getByRole('status')).toHaveText(t.health.clearedNow);
+      // Alex pauses until Sunday, moves the end, then ends the pause early.
+      const alex = page.locator('.health-person').filter({ hasText: 'Alex' });
+      await alex.getByLabel(t.health.pauseUntil).fill('2026-11-17');
+      await alex.getByRole('button', { name: t.health.pauseStart }).click();
+      await expect(alex.getByRole('alert')).toHaveText(t.errors.pausedUntil);
+      await alex.getByLabel(t.health.pauseUntil).fill('2026-11-22');
+      await alex.getByRole('button', { name: t.health.pauseStart }).click();
+      await expect(alex.getByRole('status')).toHaveText(t.health.pauseStarted);
+      await alex.getByLabel(t.health.pauseUntil).fill('2026-11-29');
+      await alex.getByRole('button', { name: t.health.pauseChange }).click();
+      await expect(alex.getByRole('status')).toHaveText(t.health.pauseChanged);
+      await alex.scrollIntoViewIfNeeded();
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '13-pause', project, lang);
+      await page.getByRole('link', { name: t.nav.week }).click();
+      await expect(page.locator('.pause-banner')).toBeVisible();
+      await shot(page, '14-week-paused', project, lang);
+      await page.getByRole('link', { name: t.nav.settings }).click();
+      await alex.getByRole('button', { name: t.health.pauseEnd }).click();
+      await expect(alex.getByRole('status')).toHaveText(t.health.pauseEnded);
+      await page.getByRole('link', { name: t.nav.week }).click();
+      await expect(page.locator('.day')).toHaveCount(7);
+      await expect(page.locator('.pause-banner')).toHaveCount(0);
 
       await page.getByLabel(t.nav.person).selectOption({ label: 'Sam' });
       await page.getByRole('link', { name: t.nav.week }).click();

@@ -91,6 +91,24 @@ describe('planWeek', () => {
     expect(part.proposals).toHaveLength(2);
   });
 
+  it('plans nothing while the health check is open, and again once a doctor said yes', () => {
+    const held = planWeek(input({ profiles: [profile({ health: { checkedOn: '2026-11-20', flagged: true } })] }));
+    expect(held.proposals).toEqual([]);
+    expect(held.notes).toMatchObject([{ kind: 'health' }]);
+    const cleared = planWeek(
+      input({ profiles: [profile({ health: { checkedOn: '2026-11-20', flagged: true, clearedOn: '2026-11-22' } })] }),
+    );
+    expect(cleared.proposals).toHaveLength(2);
+  });
+
+  it('keeps planned rest days free', () => {
+    const free = planWeek(input());
+    const days = free.proposals.map((p) => p.session.start.slice(0, 10));
+    const plan = planWeek(input({ profiles: [profile({ restDays: [days[0]!] })] }));
+    expect(plan.proposals.some((p) => p.session.start.startsWith(days[0]!))).toBe(false);
+    expect(plan.proposals).toHaveLength(free.proposals.length);
+  });
+
   it('takes equipment sessions to a place that has it, with travel and membership', () => {
     const plan = planWeek(
       input({

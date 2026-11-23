@@ -97,6 +97,7 @@ export type Rejection =
   | 'past'
   | 'declined'
   | 'paused'
+  | 'rest-day'
   | 'outside-window'
   | 'overlap'
   | 'closed'
@@ -131,7 +132,7 @@ export interface DeloadOffer {
   text: I18nText;
 }
 
-export type NoteKind = 'paused' | 'goal-short' | 'no-duration' | 'no-activity' | 'check-in-limit';
+export type NoteKind = 'paused' | 'health' | 'goal-short' | 'no-duration' | 'no-activity' | 'check-in-limit';
 
 /** Neutral information for the person: why the plan has fewer sessions than the goal. Never a reproach. */
 export interface PlanNote {

@@ -1,4 +1,5 @@
 import { deloadOffered } from '../knowledge.ts';
+import { healthHold } from '../model/health.ts';
 import type { ActivityCategory, I18nText, IsoDate, PlannedSession, Profile, WeeklyGoal } from '../model/types.ts';
 import { candidatesFor, optionsFor } from './candidates.ts';
 import { type ConstraintContext, monthlyLimit, recoveryContext, rejectionOf, usage } from './constraints.ts';
@@ -242,6 +243,17 @@ function limitNotes(week: ProfileWeek, weekStart: IsoDate): PlanNote[] {
 
 function planProfile(profile: Profile, input: PlanInput, plan: Plan): void {
   const weights = input.weights ?? DEFAULT_WEIGHTS;
+  if (healthHold(profile)) {
+    plan.notes.push({
+      kind: 'health',
+      profileId: profile.id,
+      text: {
+        de: 'Der Gesundheits-Check hatte ein Ja: Bitte sprich vor dem Training mit einer Ärztin oder einem Arzt. Bis du bestätigst, dass du trainieren darfst, plant Weekbeat nichts.',
+        en: 'The health check had a yes: please talk to a doctor before training. Weekbeat plans nothing until you confirm that you may train.',
+      },
+    });
+    return;
+  }
   const week = buildWeek(profile, input);
   const paused = pausedThroughDay(profile, input.weekStart);
   if (paused !== undefined && paused >= 0) {

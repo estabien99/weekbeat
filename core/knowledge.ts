@@ -3,6 +3,7 @@ import type {
   ActivityType,
   BodyArea,
   ComplementData,
+  I18nText,
   DeloadData,
   Id,
   Impact,
@@ -128,4 +129,12 @@ export function deloadRuleFor(
  */
 export function deloadOffered(trainingWeeks: number, rule: Pick<DeloadData, 'everyWeeks'>): boolean {
   return trainingWeeks >= rule.everyWeeks.min;
+}
+
+/** The self-check questions (issue #4): history first, then symptoms, in knowledge-base order. */
+export function screeningQuestions(
+  rules: KnowledgeRule[],
+): { id: string; kind: 'history' | 'symptom'; question: I18nText }[] {
+  const qs = rules.flatMap((r) => (r.part === 'screening' ? [{ id: r.id, ...r.data }] : []));
+  return [...qs.filter((q) => q.kind === 'history'), ...qs.filter((q) => q.kind === 'symptom')];
 }
