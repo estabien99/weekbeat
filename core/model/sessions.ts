@@ -2,7 +2,7 @@ import type { WeekbeatDB } from './db.ts';
 import { checkIn } from './memberships.ts';
 import { addLog } from './merge.ts';
 import { ValidationError } from './repo.ts';
-import type { Id, PlannedSession } from './types.ts';
+import type { Id, LoggedActivity, PlannedSession } from './types.ts';
 
 const newId = (): Id => crypto.randomUUID();
 
@@ -78,5 +78,30 @@ export async function applyReplan(
     const status = offer.session ? reason : reason === 'missed' ? 'missed' : 'skipped';
     await db.plannedSessions.update(original.id, { status });
     if (offer.session) await db.plannedSessions.put({ ...offer.session, status: 'accepted' });
+  });
+}
+
+export interface NewManualLog {
+  profileId: Id;
+  activityTypeId: Id;
+  start: string;
+  durationMin: number;
+}
+
+const LOCAL_DATE_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
+
+/**
+ * Logs an activity that was not planned and has no place (a walk, a bike ride to work). It is a `manual` log, so it
+ * merges with a log of the same session from another source and counts like any other.
+ */
+export async function logActivity(db: WeekbeatDB, l: NewManualLog): Promise<LoggedActivity> {
+  if (!LOCAL_DATE_TIME.test(l.start)) throw new ValidationError('time', 'Start must be YYYY-MM-DDTHH:mm');
+  if (!Number.isInteger(l.durationMin) || l.durationMin < 1) {
+    throw new ValidationError('sessionMin', 'Duration must be a positive whole number of minutes');
+  }
+  if (!l.activityTypeId.trim()) throw new ValidationError('activity', 'Choose an activity');
+  return db.transaction('rw', db.profiles, db.loggedActivities, async () => {
+    if (!(await db.profiles.get(l.profileId))) throw new ValidationError('profile', 'Unknown profile');
+    return addLog(db, { id: newId(), source: 'manual', ...l });
   });
 }

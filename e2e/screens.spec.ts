@@ -184,6 +184,18 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.getByRole('status').filter({ hasText: t.plan.saved })).toBeVisible();
       await expect(page.locator('.session.accepted')).toHaveCount(1);
 
+      // Log something unplanned: it shows up in the week's counts and the form closes with a confirmation.
+      await page.getByRole('button', { name: t.manualLog.open }).click();
+      await expect(page.getByRole('heading', { name: t.manualLog.title.replace('{{name}}', 'Alex') })).toBeFocused();
+      await page.getByLabel(t.manualLog.duration).fill('0');
+      await page.getByRole('button', { name: t.manualLog.save }).click();
+      await expect(page.getByRole('alert')).toHaveText(t.errors.sessionMin);
+      await expectAccessible(page);
+      await shot(page, '4c-log', project, lang);
+      await page.getByLabel(t.manualLog.duration).fill('40');
+      await page.getByRole('button', { name: t.manualLog.save }).click();
+      await expect(page.getByRole('status').filter({ hasText: t.manualLog.done })).toBeVisible();
+
       // Settings: add a second person, switch to them
       await page.getByRole('link', { name: t.nav.settings }).click();
       await page.getByRole('button', { name: t.settings.addPerson }).click();
@@ -210,6 +222,16 @@ for (const lang of ['de', 'en'] as const) {
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
       await shot(page, '5-settings', project, lang);
+
+      // Two people now: the household view lists everyone's sessions, read-only.
+      await page.getByRole('link', { name: t.nav.week }).click();
+      await expect(page.locator('.day')).toHaveCount(7);
+      await page.getByRole('button', { name: t.household.all }).click();
+      await expect(page.getByRole('list', { name: t.household.title })).toBeVisible();
+      await expect(page.locator('.household .session')).toHaveCount(1);
+      await expectAccessible(page);
+      await shot(page, '5b-household', project, lang);
+      await page.getByRole('link', { name: t.nav.settings }).click();
 
       // Export, then import the same file again (replaces data after confirmation)
       const downloadP = page.waitForEvent('download');
