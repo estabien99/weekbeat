@@ -1,5 +1,5 @@
 import type { WeekbeatDB } from './db.ts';
-import type { Availability, Household, Id, Lang, Level, Profile, TimeWindow, WeeklyGoal } from './types.ts';
+import type { Availability, GameMode, Household, Id, Lang, Level, Profile, TimeWindow, WeeklyGoal } from './types.ts';
 
 /**
  * Household, profile and availability operations. All writes go through here so that
@@ -144,6 +144,20 @@ export async function updateProfile(db: WeekbeatDB, id: Id, p: NewProfile): Prom
     goals,
     preferredSessionMin: p.sessionMin,
   });
+}
+
+/** Household game mode: off, solo or cooperative (competitive comes later). */
+export async function setGameMode(db: WeekbeatDB, mode: Exclude<GameMode, 'competitive'>): Promise<void> {
+  const household = await getHousehold(db);
+  if (!household) throw new ValidationError('household', 'Create the household first');
+  await db.households.update(household.id, { gameMode: mode });
+}
+
+/** A person's own game switch; the game state is derived, so switching back on shows everything again. */
+export async function setGameEnabled(db: WeekbeatDB, id: Id, enabled: boolean): Promise<void> {
+  const existing = await db.profiles.get(id);
+  if (!existing) throw new ValidationError('profile', 'Unknown profile');
+  await db.profiles.update(id, { game: { ...existing.game, enabled } });
 }
 
 export async function getAvailability(db: WeekbeatDB, profileId: Id): Promise<Availability | undefined> {

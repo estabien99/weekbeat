@@ -9,6 +9,8 @@ import {
   getHousehold,
   normalizeWindows,
   savePreferences,
+  setGameEnabled,
+  setGameMode,
   setWindows,
   updateProfile,
   type NewProfile,
@@ -104,6 +106,19 @@ describe('preferences (interview)', () => {
     );
     await expect(savePreferences(db, profile.id, { hobbies: [' '], autoPlan: false })).rejects.toThrow(/Hobbies/);
     await expect(savePreferences(db, 'nope', { hobbies: [], autoPlan: false })).rejects.toThrow(/Unknown/);
+  });
+});
+
+describe('game switches', () => {
+  it("sets the household mode and a person's own switch, keeping the game maximum", async () => {
+    await expect(setGameMode(db, 'off')).rejects.toThrow(ValidationError);
+    const { profile } = await createHousehold(db, 'Wir', anna);
+    await setGameMode(db, 'cooperative');
+    expect((await getHousehold(db))?.gameMode).toBe('cooperative');
+    await db.profiles.update(profile.id, { game: { enabled: true, weeklyMaxSessions: 4 } });
+    await setGameEnabled(db, profile.id, false);
+    expect((await db.profiles.get(profile.id))?.game).toEqual({ enabled: false, weeklyMaxSessions: 4 });
+    await expect(setGameEnabled(db, 'nope', true)).rejects.toThrow(/Unknown/);
   });
 });
 

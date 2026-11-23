@@ -12,6 +12,25 @@ export const GAME_TUNING = {
   bonus: { combo: 20, together: 20, variety: 20, complement: 20 },
   /** Level n + 1 is reached at levelStep × n(n+1)/2 total XP: 500, 1500, 3000, … */
   levelStep: 500,
+  /** Badges: total counted sessions, weeks in a row, categories in one week. */
+  badgeSessions: [10, 50, 100],
+  badgeStreaks: [4, 12, 26],
+  badgeVarietyWeek: 3,
+  /** Rule quests (monthly): weeks with the strength rule's days met; sessions that fit a complement rule. */
+  questStrengthWeeks: 3,
+  questComplementSessions: 4,
 } as const;
+
+/**
+ * Seasonal quests (monthly, by local calendar month): game ideas chosen by the user on 23.11.2026, no fitness
+ * claim. `indoor`/`outdoor` count activities whose setting allows it; `swimming` counts the category;
+ * `categories` counts different categories.
+ */
+export const SEASONAL_QUESTS = [
+  { key: 'winter-indoor', months: [12, 1, 2], kind: 'indoor', target: 4 },
+  { key: 'spring-outdoor', months: [3, 4, 5], kind: 'outdoor', target: 4 },
+  { key: 'summer-water', months: [6, 7, 8], kind: 'swimming', target: 2 },
+  { key: 'autumn-mix', months: [9, 10, 11], kind: 'categories', target: 3 },
+] as const;
 
 export type BonusReason = keyof typeof GAME_TUNING.bonus;

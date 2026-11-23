@@ -6,6 +6,8 @@ import {
   addProfile,
   getAvailability,
   getHousehold,
+  setGameEnabled,
+  setGameMode,
   setWindows,
   updateProfile,
   type Id,
@@ -129,8 +131,62 @@ export function Settings({ profiles }: { profiles: Profile[] }) {
         )}
       </div>
 
+      {household && <GameSettings mode={household.gameMode} profiles={profiles} />}
+
       <DataCard />
     </section>
+  );
+}
+
+const MODES = ['solo', 'cooperative', 'off'] as const;
+
+/** Game on or off (household and per person) and solo or cooperative (issue #7). Saves at once. */
+function GameSettings({ mode, profiles }: { mode: string; profiles: Profile[] }) {
+  const { t } = useTranslation();
+  // Shown at once; the saved value follows through the live query (the controls are controlled).
+  const [chosen, setChosen] = useState<string | null>(null);
+  const [enabled, setEnabled] = useState<Record<string, boolean>>({});
+  const current = chosen ?? mode;
+  return (
+    <div className="card">
+      <h3 id="game-settings">{t('settings.game.title')}</h3>
+      <fieldset className="choices">
+        <legend>{t('settings.game.mode')}</legend>
+        {MODES.map((m) => (
+          <label key={m} className="choice">
+            <input
+              type="radio"
+              name="game-mode"
+              checked={current === m}
+              onChange={() => {
+                setChosen(m);
+                void setGameMode(db, m);
+              }}
+            />
+            <span>{t(`settings.game.modes.${m}`)}</span>
+          </label>
+        ))}
+      </fieldset>
+      {current !== 'off' && (
+        <fieldset className="choices">
+          <legend>{t('settings.game.people')}</legend>
+          {profiles.map((p) => (
+            <label key={p.id} className="choice">
+              <input
+                type="checkbox"
+                checked={enabled[p.id] ?? p.game.enabled}
+                onChange={(e) => {
+                  setEnabled({ ...enabled, [p.id]: e.target.checked });
+                  void setGameEnabled(db, p.id, e.target.checked);
+                }}
+              />
+              <span>{p.name}</span>
+            </label>
+          ))}
+        </fieldset>
+      )}
+      <p className="muted small">{t('settings.game.hint')}</p>
+    </div>
   );
 }
 

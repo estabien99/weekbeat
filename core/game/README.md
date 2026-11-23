@@ -18,4 +18,7 @@ off (`profile.game.enabled` false or household `gameMode` `'off'`).
 Numbers (`tuning.ts`) are **game tuning, not fitness rules**: chosen by the user on 23.11.2026, free to change,
 no health claim. Intensity bands and complements come from `knowledge/` rules.
 
-Later (second PR): badges, quests, cooperative mode (household goal), planned rest (needs a rest-day record).
+Profiles have no age, so the strength quest is offered only while every adult weekly-targets rule (18–64, 65+)
+agrees on the number of strength days. Seasonal quests (`SEASONAL_QUESTS`) are game ideas, not fitness rules.
+Planned rest moved to issue #4 (it needs a rest-day record and belongs with pause and recovery).
+Competitive mode comes later.
