@@ -646,3 +646,48 @@ label.inline input {
   font-size: 1.375rem;
   font-weight: 600;
 }
+/* Game card: quests with a progress bar, badges as a plain list with a neutral mark. */
+.game h4 {
+  margin: 16px 0 8px;
+}
+.quests,
+.badges {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.quests li {
+  display: grid;
+  gap: 4px;
+}
+.quest-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.quest-progress progress {
+  flex: 1;
+  min-width: 0;
+  height: 10px;
+  accent-color: var(--accent);
+}
+.badges li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 8px;
+}
+.badge-mark {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--accent-soft);
+  flex: none;
+  align-self: center;
+}
+.card > .choices + .choices {
+  margin-top: 16px;
+}

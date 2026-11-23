@@ -20,7 +20,18 @@
     "addPerson": "Add person",
     "editPerson": "Edit {{name}}",
     "editTimes": "Times of {{name}}",
-    "editPrefs": "Preferences of {{name}}"
+    "editPrefs": "Preferences of {{name}}",
+    "game": {
+      "title": "Game",
+      "mode": "How do you play?",
+      "modes": {
+        "solo": "Everyone on their own",
+        "cooperative": "Together as a household",
+        "off": "Off"
+      },
+      "people": "Show the game for",
+      "hint": "Points, badges and quests are worked out from your sessions. Switching off deletes nothing."
+    }
   },
   "pwa": {
     "update": "A new version is available.",
@@ -341,6 +352,31 @@
     "xp": "{{xp}} XP, {{left}} to level {{next}}",
     "best_one": "best streak: {{count}} week",
     "best_other": "best streak: {{count}} weeks",
-    "hint": "Points come from consistency, variety and training together. Nothing is ever lost."
+    "hint": "Points come from consistency, variety and training together. Nothing is ever lost.",
+    "badgesTitle": "Badges",
+    "badges": {
+      "first-session": "First session",
+      "first-combo": "First combo (visit and workout)",
+      "first-together": "First session together",
+      "first-category": "First time: {{category}}",
+      "sessions": "{{count}} sessions",
+      "streak": "{{count}} weeks in a row",
+      "variety-week": "{{count}} kinds in one week"
+    },
+    "questsTitle": "Quests in {{month}}",
+    "quests": {
+      "strength": "Strength on {{perWeek}} days a week, in {{target}} weeks",
+      "complement-bone-loading": "Balance with impact: {{target}} sessions",
+      "complement-overuse-prevention": "Balance for your hobby: {{target}} fitting sessions",
+      "winter-indoor": "Stay active indoors: {{target}} indoor sessions",
+      "spring-outdoor": "Spring outside: {{target}} outdoor sessions",
+      "summer-water": "Summer in the water: {{target}} swims",
+      "autumn-mix": "Autumn mix: {{target}} different kinds"
+    },
+    "questDone": "Done",
+    "questOptional": "Optional. Ends with the month; nothing is lost.",
+    "household": "Household: {{met}} of {{active}} reached their weekly goal",
+    "householdStreak_one": "{{count}} shared week in a row",
+    "householdStreak_other": "{{count}} shared weeks in a row"
   }
 }

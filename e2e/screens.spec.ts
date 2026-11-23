@@ -295,7 +295,22 @@ for (const lang of ['de', 'en'] as const) {
       await game.scrollIntoViewIfNeeded();
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
+      await expect(game.locator('.badges')).toContainText(t.game.badges['first-session']);
+      await expect(game.locator('.quests progress').first()).toBeVisible();
       await shot(page, '10-game', project, lang);
+
+      // Settings: the household plays together; the week view then shows the shared line.
+      await page.getByRole('link', { name: t.nav.settings }).click();
+      await page.getByRole('radio', { name: t.settings.game.modes.cooperative }).check();
+      await expect(page.getByRole('checkbox', { name: 'Sam' })).toBeChecked();
+      await page.getByRole('heading', { name: t.settings.game.title }).scrollIntoViewIfNeeded();
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '11-game-settings', project, lang);
+      await page.getByRole('link', { name: t.nav.week }).click();
+      await expect(page.locator('.card.game')).toContainText(
+        t.game.household.replace('{{met}}', '0').replace('{{active}}', '2'),
+      );
 
       await page.getByLabel(t.nav.person).selectOption({ label: 'Sam' });
       await page.getByRole('link', { name: t.nav.week }).click();

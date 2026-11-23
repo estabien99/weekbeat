@@ -2,6 +2,7 @@ import { intensityOf, intensityThresholds, matchesSuggestion } from '../knowledg
 import { type MergedSession, mergedSessions } from '../model/merge.ts';
 import type {
   ActivityType,
+  Badge,
   GameMode,
   IsoDate,
   KnowledgeRule,
@@ -12,6 +13,7 @@ import type {
   XPEvent,
 } from '../model/types.ts';
 import { toIsoDate, weekOf } from '../week.ts';
+import { type QuestProgress, badgesOf, questsOf } from './extras.ts';
 import { levelOf, xpForLevel } from './level.ts';
 import { type BonusReason, GAME_TUNING } from './tuning.ts';
 
@@ -65,6 +67,10 @@ export interface GameState {
   /** Total XP at which the next level starts. */
   nextLevelXp: number;
   events: XPEvent[];
+  /** Firsts and milestones, oldest first; never taken away. */
+  badges: Badge[];
+  /** This month's quests. */
+  quests: QuestProgress[];
 }
 
 const day = (iso: string): IsoDate => iso.slice(0, 10);
@@ -201,5 +207,16 @@ export function gameState(input: GameInput): GameState | null {
 
   const xp = events.reduce((n, e) => n + e.xp, 0);
   const level = levelOf(xp);
-  return { weeks, streak, bestStreak, xp, level, nextLevelXp: xpForLevel(level + 1), events };
+  const ctx = { profile, weeks, events, activities, rules: input.rules, today };
+  return {
+    weeks,
+    streak,
+    bestStreak,
+    xp,
+    level,
+    nextLevelXp: xpForLevel(level + 1),
+    events,
+    badges: badgesOf(ctx),
+    quests: questsOf(ctx),
+  };
 }
