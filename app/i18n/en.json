@@ -206,7 +206,8 @@
     "notesTitle": "Notes on this week",
     "nothing": "There is no proposal for this week right now.",
     "sessions": "Sessions",
-    "fallbackTitle": "Short alternative: {{day}}, {{from}}–{{to}}"
+    "fallbackTitle": "Short alternative: {{day}}, {{from}}–{{to}}",
+    "combo": "Combo: visit and workout in one session"
   },
   "membership": {
     "title": "Memberships",

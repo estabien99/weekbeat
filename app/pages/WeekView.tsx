@@ -8,6 +8,8 @@ import {
   getAvailability,
   isoWeek,
   isoWeekday,
+  mergedSessions,
+  sessionOfPlanned,
   planWeek,
   replan,
   toIsoDate,
@@ -67,6 +69,13 @@ export function WeekView({ profile }: { profile: Profile }) {
     [profile.id, weekStart, weekEnd],
   );
   const places = useLiveQuery(() => db.places.toArray(), []);
+  const logs = useLiveQuery(
+    () =>
+      db.loggedActivities.where('[profileId+start]').between([profile.id, weekStart], [profile.id, weekEnd]).toArray(),
+    [profile.id, weekStart, weekEnd],
+  );
+  // Logs merged into sessions (check-in + workout = combo), derived for display only.
+  const logged = mergedSessions(logs ?? [], sessions ?? []);
   const memberships = useLiveQuery(() => db.memberships.toArray(), []);
   const people = useLiveQuery(() => db.profiles.toArray(), []);
   const coach = useLiveQuery(
@@ -216,7 +225,12 @@ export function WeekView({ profile }: { profile: Profile }) {
                     return (
                       <li key={s.id} className={`session ${s.status}`}>
                         <SessionText s={s} name={label.activity} place={placeName(s.placeId)} lang={lang} />
-                        {s.status === 'done' && <p className="ok">{t('plan.statusDone')}</p>}
+                        {s.status === 'done' && (
+                          <p className="ok">
+                            {t('plan.statusDone')}
+                            {sessionOfPlanned(logged, s.id)?.combo && ` · ${t('plan.combo')}`}
+                          </p>
+                        )}
                         {s.status === 'missed' && <p className="muted">{t('plan.statusMissed')}</p>}
                         {s.status === 'accepted' && (
                           <div className="actions">

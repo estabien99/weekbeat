@@ -21,7 +21,8 @@ Wellpass, Urban Sports Club, Wellhub, a single gym or club, or any other members
 `membership/providers.ts` lists the providers (names only, neutral icons, no logos), and the core keeps memberships
 and the household's own places (`core/model/memberships.ts`). No provider offers a member API, so there is no
 `sync`; check-ins are logged by hand (source `checkin:<provider>`, `sourceRef` = membership id, `placeId`).
-Marking a planned session at a place as done logs the visit too.
+Marking a planned session at a place as done logs the visit too; a check-in and a "done" for the same session merge
+into one visit (`core/model/merge.ts`).
 
 - Check-in limits: per day and per month on the membership, per month on a venue, as the person enters them.
   Where the monthly limit is left empty, the app applies a limit the provider states (`providers.ts` → `limits`,
