@@ -233,7 +233,7 @@ describe('check-in and value meter', () => {
     expect(await checkIn(db, base)).toMatchObject({ source: 'checkin', placeId: place.id });
   });
 
-  it('marks a session at a place done once and logs the visit once', async () => {
+  it('marks a session done once and logs it once (a visit at a place)', async () => {
     const place = await addPlace(db, studio([]));
     const s = {
       id: 's2',
@@ -250,9 +250,14 @@ describe('check-in and value meter', () => {
     await completeSession(db, 's2');
     expect(await db.loggedActivities.where('plannedSessionId').equals('s2').count()).toBe(1);
     await db.plannedSessions.add({ ...s, id: 's3', placeId: undefined });
+    // A session without a place (e.g. a Coach workout at no particular place) is logged as manual, once.
+    await completeSession(db, 's3');
     await completeSession(db, 's3');
     expect((await db.plannedSessions.get('s3'))?.status).toBe('done');
-    expect(await db.loggedActivities.where('plannedSessionId').equals('s3').count()).toBe(0);
+    const logs = await db.loggedActivities.where('plannedSessionId').equals('s3').toArray();
+    expect(logs).toHaveLength(1);
+    expect(logs[0]).toMatchObject({ source: 'manual', activityTypeId: 'yoga', start: '2026-11-24T18:00' });
+    expect(logs[0]?.placeId).toBeUndefined();
     await expect(completeSession(db, 'missing')).rejects.toThrow(ValidationError);
   });
 

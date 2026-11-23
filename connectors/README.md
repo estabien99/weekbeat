@@ -37,3 +37,9 @@ Marking a planned session at a place as done logs the visit too.
   the form shows it as a hint with its source. Checked 22.11.2026: Wellpass (help centre, incl. the Plus 1 limit of
   10 check-ins per month from 1 Jan 2027), Urban Sports Club (prices page), Wellhub (partner academy only: the
   member help centre blocks automated reads).
+
+## Freeletics Coach (`freeletics-coach/`)
+
+No API: Weekbeat steers the Coach (Coach plan in the interview, Coach days planned like other programme sessions,
+a checklist of days and places to set in the Coach) and never reads it. Import paths (Health Connect in 0.4,
+Garmin in 0.2) and the open checks are in `freeletics-coach/README.md`.

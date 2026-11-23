@@ -1,5 +1,5 @@
 import { openComplements, type OpenComplement } from '../knowledge.ts';
-import type { ActivityType, KnowledgeRule, WeeklyGoal } from '../model/types.ts';
+import type { ActivityType, KnowledgeRule, Weekday, WeeklyGoal } from '../model/types.ts';
 import { dayIndexOf } from './time.ts';
 import { type Candidate, type ScoreTerm, type ScoringWeights, TERMS, type Term } from './types.ts';
 import type { Done, ProfileWeek } from './week.ts';
@@ -42,8 +42,15 @@ const TERM_FNS: Record<Term, (c: Candidate, ctx: ScoreContext) => number> = {
   },
   /** Same activity, place and start as a household member: train together. */
   together: (c) => (c.withProfileIds?.length ? 1 : 0),
-  /** A session of the person's own programme (e.g. a Coach day). */
-  programme: (c) => (c.origin === 'programme' ? 1 : 0),
+  /**
+   * A session of the person's own programme (e.g. a Coach day); half as much off the days the programme is set to
+   * now, so keeping them wins unless another day fits clearly better.
+   */
+  programme: (c) => {
+    if (c.origin !== 'programme') return 0;
+    const days = c.programme?.weekdays;
+    return !days?.length || days.includes((dayIndexOf(c.start) + 1) as Weekday) ? 1 : 0.5;
+  },
   /** Covers a complement need from the knowledge base (e.g. strength next to MTB). */
   complement: (c, ctx) => (openNeeds(ctx).some((n) => n.candidates.some((a) => a.id === c.activity.id)) ? 1 : 0),
   /** A category the week does not have yet. */

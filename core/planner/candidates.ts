@@ -11,6 +11,8 @@ export interface Option {
   activity: ActivityType;
   durationMin: number;
   equipment: string[];
+  /** Only at these places (programme sessions the person tied to places). */
+  placeIds?: string[];
   origin: Candidate['origin'];
   programme?: Programme;
 }
@@ -53,6 +55,7 @@ export function optionsFor(week: ProfileWeek, input: PlanInput): Options {
       activity,
       durationMin: typical.durationMin,
       equipment: typical.equipment,
+      ...(typical.placeIds ? { placeIds: typical.placeIds } : {}),
       origin: 'programme',
       programme,
     });
@@ -102,8 +105,11 @@ export function candidatesFor(
   const others = shared.filter((s) => s.profileId !== week.profile.id);
   const out: Candidate[] = [];
   for (const option of options) {
-    const at: (Place | undefined)[] = places.filter((p) => placeFits(option.activity, p));
-    if (option.equipment.length === 0 && placeFits(option.activity, undefined)) at.push(undefined);
+    const allowed = option.placeIds;
+    const at: (Place | undefined)[] = places.filter(
+      (p) => placeFits(option.activity, p) && (!allowed || allowed.includes(p.id)),
+    );
+    if (!allowed && option.equipment.length === 0 && placeFits(option.activity, undefined)) at.push(undefined);
     for (const place of at) {
       const joinable = others.filter((s) => s.activityId === option.activity.id && s.placeId === place?.id);
       for (const f of free) {

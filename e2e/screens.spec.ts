@@ -98,6 +98,21 @@ for (const lang of ['de', 'en'] as const) {
       await expectNoHorizontalScroll(page);
       await shot(page, '3b-membership', project, lang);
       await page.getByRole('button', { name: t.common.next, exact: true }).click();
+      // Freeletics Coach: weights need a place; there is none yet, so Alex answers "no" for now.
+      await expect(
+        page.getByRole('heading', { name: t.interview.coach.title.replace('{{name}}', 'Alex') }),
+      ).toBeFocused();
+      await page.getByRole('radio', { name: t.coach.yes }).check();
+      await page.getByLabel(t.coach.daysPerWeek).fill('2');
+      await page.getByRole('radio', { name: t.coach.kinds.weighted }).check();
+      await expect(page.getByText(t.coach.noPlaces)).toBeVisible();
+      await page.getByRole('button', { name: t.common.next, exact: true }).click();
+      await expect(page.getByRole('alert')).toHaveText(t.errors.programmePlaces);
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '3c-coach', project, lang);
+      await page.getByRole('radio', { name: t.coach.no }).check();
+      await page.getByRole('button', { name: t.common.next, exact: true }).click();
       await page.getByRole('radio', { name: t.interview.auto.yes }).check();
       await expectAccessible(page);
       await page.getByRole('button', { name: t.interview.finish }).click();
@@ -244,6 +259,33 @@ for (const lang of ['de', 'en'] as const) {
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
       await shot(page, '8-value', project, lang);
+
+      // Alex adds the Coach plan in Settings: weights at Studio Nord, Coach set to Monday and Thursday.
+      await page.getByRole('link', { name: t.nav.settings }).click();
+      await page.getByRole('button', { name: t.settings.editPrefs.replace('{{name}}', 'Alex') }).click();
+      for (let i = 0; i < 3; i++) await page.getByRole('button', { name: t.common.next, exact: true }).click();
+      await page.getByRole('radio', { name: t.coach.yes }).check();
+      await expect(page.getByLabel(t.coach.durationMin)).toHaveValue('45');
+      await page.getByLabel(t.coach.daysPerWeek).fill('2');
+      await page.getByRole('radio', { name: t.coach.kinds.weighted }).check();
+      await page.getByRole('checkbox', { name: 'Studio Nord' }).check();
+      const [mon, , , thu] = lang === 'de' ? ['Montag', '', '', 'Donnerstag'] : ['Monday', '', '', 'Thursday'];
+      await page.getByRole('checkbox', { name: mon, exact: true }).check();
+      await page.getByRole('checkbox', { name: thu, exact: true }).check();
+      await expectAccessible(page);
+      await page.getByRole('button', { name: t.common.next, exact: true }).click();
+      await page.getByRole('button', { name: t.interview.finish }).click();
+
+      // Next week: the Coach sessions go to Studio Nord, and the card says what to set in the Coach.
+      await page.getByRole('link', { name: t.nav.week }).click();
+      await page.getByRole('button', { name: t.plan.nextWeek }).click();
+      await page.getByRole('button', { name: t.plan.make }).click();
+      const coachCard = page.locator('.card.coach');
+      await expect(coachCard).toContainText('Studio Nord');
+      await expect(coachCard.locator('li')).toHaveCount(2);
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '9-coach', project, lang);
 
       await page.getByLabel(t.nav.person).selectOption({ label: 'Sam' });
       await page.getByRole('link', { name: t.nav.week }).click();

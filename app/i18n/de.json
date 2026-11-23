@@ -120,7 +120,10 @@
     "monthlyCheckInLimit": "Das Monatslimit muss eine ganze Zahl ab 1 sein – oder leer bleiben.",
     "monthlyVisitLimit": "Das Besuchslimit muss eine ganze Zahl ab 1 sein – oder leer bleiben.",
     "activity": "Bitte eine Aktivität wählen.",
-    "session": "Diese Einheit gibt es nicht mehr."
+    "session": "Diese Einheit gibt es nicht mehr.",
+    "daysPerWeek": "Die Trainingstage müssen eine ganze Zahl von 1 bis 7 sein.",
+    "programmePlaces": "Bitte mindestens einen Ort mit Gewichten wählen – oder „Mit Körpergewicht“.",
+    "programmeKind": "Bitte wählen, wie du trainierst."
   },
   "data": {
     "title": "Deine Daten",
@@ -160,6 +163,10 @@
       "title": "Hast du eine Mitgliedschaft, {{name}}?",
       "hint": "Zum Beispiel Wellpass, Urban Sports Club, Wellhub oder ein eigenes Studio. Die Orte dazu legst du danach unter „Orte“ an.",
       "none": "Keine Mitgliedschaft"
+    },
+    "coach": {
+      "title": "Trainierst du mit dem Freeletics Coach, {{name}}?",
+      "hint": "Dann plant Weekbeat deine Coach-Tage in die Woche und sagt dir, was du im Coach einstellen kannst. An Freeletics wird nichts gesendet."
     }
   },
   "activityCategories": {
@@ -293,5 +300,32 @@
     "worth_other": "Wert zu Einzelpreisen ({{count}} Besuche mit Preis)",
     "share": "Dein Anteil diesen Monat",
     "hint": "Einzelpreise sind eure eigenen Angaben unter „Orte“. Nur zur Information."
+  },
+  "coach": {
+    "use": "Freeletics Coach",
+    "yes": "Ja, ich folge einem Coach-Plan",
+    "no": "Nein",
+    "daysPerWeek": "Trainingstage pro Woche",
+    "durationMin": "Dauer einer Einheit (Minuten)",
+    "kind": "Wie trainierst du?",
+    "kinds": {
+      "bodyweight": "Mit Körpergewicht",
+      "weighted": "Mit Gewichten",
+      "both": "Beides, im Wechsel"
+    },
+    "where": "Wo hast du die Gewichte?",
+    "whereHint": "Einheiten mit Gewichten plant Weekbeat nur an diesen Orten.",
+    "noPlaces": "Noch keine Orte. Lege sie unter „Orte“ an und wähle sie danach hier (Einstellungen → Vorlieben).",
+    "weekdays": "Welche Tage sind im Coach gerade eingestellt?",
+    "weekdaysHint": "Optional. Weekbeat behält sie möglichst bei.",
+    "checklist": {
+      "title": "Im {{name}} einstellen",
+      "days": "Trainingstage: {{days}}",
+      "daysChange": "Trainingstage: {{days}} (bisher {{before}})",
+      "daysSame": "Trainingstage: {{days}} – wie bisher, nichts zu ändern.",
+      "session": "{{day}}: {{place}} · {{kind}} · {{min}} Min.",
+      "noPlace": "kein bestimmter Ort",
+      "note": "Weekbeat sendet nichts an Freeletics. Stelle Tage und Ort (Space) im Coach selbst ein."
+    }
   }
 }

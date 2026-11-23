@@ -3,6 +3,8 @@ import { checkIn } from './memberships.ts';
 import { ValidationError } from './repo.ts';
 import type { Id, PlannedSession } from './types.ts';
 
+const newId = (): Id => crypto.randomUUID();
+
 /**
  * Planned-session operations behind the week view. The planner only proposes; these run when the person taps.
  */
@@ -22,15 +24,31 @@ export async function setSessionStatus(
 }
 
 /**
- * Marks a session done. A session at a place is also logged as a visit (a check-in), so it counts toward check-in
- * limits and the value meter in later weeks too; marking it done twice logs it once.
+ * Marks a session done and logs it, so the game and later weeks can count it (game state is derived from logs). A
+ * session at a place is logged as a visit (a check-in), so it counts toward check-in limits and the value meter
+ * too; other sessions are logged as `manual`. Marking it done twice logs it once.
  */
 export async function completeSession(db: WeekbeatDB, id: Id): Promise<void> {
   const s = await db.plannedSessions.get(id);
   if (!s) throw new ValidationError('session', 'Unknown session');
   const logged = await db.loggedActivities.where('plannedSessionId').equals(id).count();
-  if (!s.placeId || logged > 0 || !(await db.places.get(s.placeId))) {
+  if (logged > 0) {
     await setSessionStatus(db, id, 'done');
+    return;
+  }
+  if (!s.placeId || !(await db.places.get(s.placeId))) {
+    await db.transaction('rw', db.plannedSessions, db.loggedActivities, async () => {
+      await db.plannedSessions.update(id, { status: 'done' });
+      await db.loggedActivities.add({
+        id: newId(),
+        profileId: s.profileId,
+        activityTypeId: s.activityTypeId,
+        start: s.start.slice(0, 16),
+        durationMin: s.durationMin,
+        source: 'manual',
+        plannedSessionId: s.id,
+      });
+    });
     return;
   }
   await checkIn(db, {

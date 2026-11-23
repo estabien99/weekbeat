@@ -121,7 +121,21 @@ export interface Programme {
   /** Connector id that steers it, e.g. "freeletics-coach". */
   connectorId?: string;
   daysPerWeek: number;
-  typicalSessions: { activityTypeId: Id; durationMin: number; equipment: string[] }[];
+  /** Sessions in the order the programme repeats them; each kind may be limited to the person's chosen places. */
+  typicalSessions: ProgrammeSession[];
+  /**
+   * Weekdays the programme is set to now (e.g. the days chosen in the Freeletics Coach). The planner prefers
+   * them, so the plan only asks for a settings change when another day fits clearly better.
+   */
+  weekdays?: Weekday[];
+}
+
+export interface ProgrammeSession {
+  activityTypeId: Id;
+  durationMin: number;
+  equipment: string[];
+  /** Only at these places (e.g. where the person has the weights); absent = wherever the activity fits. */
+  placeIds?: Id[];
 }
 
 export interface Membership {
