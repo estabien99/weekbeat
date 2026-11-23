@@ -139,7 +139,8 @@
     "programmeKind": "Bitte wählen, wie du trainierst.",
     "pausedUntil": "Bitte ein Enddatum ab heute wählen.",
     "health": "Bitte zuerst den Gesundheits-Check machen.",
-    "restDays": "Bitte ein gültiges Datum wählen."
+    "restDays": "Bitte ein gültiges Datum wählen.",
+    "future": "Das liegt in der Zukunft. Bitte wähle einen Zeitpunkt bis jetzt."
   },
   "data": {
     "title": "Deine Daten",
@@ -425,5 +426,34 @@
     "removeLabel": "Ruhetag entfernen: {{day}}",
     "is": "Ruhetag",
     "hint": "Geplante Erholung: Weekbeat plant an diesem Tag nichts."
+  },
+  "manualLog": {
+    "open": "Aktivität eintragen",
+    "title": "Aktivität eintragen ({{name}})",
+    "activity": "Was hast du gemacht?",
+    "day": "Tag",
+    "time": "Uhrzeit",
+    "duration": "Dauer in Minuten",
+    "save": "Eintragen",
+    "hint": "Nur auf diesem Gerät gespeichert. Ungeplantes zählt wie Geplantes.",
+    "done": "Aktivität eingetragen."
+  },
+  "household": {
+    "toggle": "Ansicht",
+    "me": "Ich",
+    "all": "Haushalt",
+    "title": "Woche des Haushalts",
+    "empty": "Nichts geplant",
+    "together": "zusammen mit {{names}}"
+  },
+  "review": {
+    "title": "Rückblick auf diese Woche",
+    "paused": "Diese Woche war pausiert.",
+    "done_one": "{{count}} Einheit gemacht.",
+    "done_other": "{{count}} Einheiten gemacht.",
+    "unplanned_one": "{{count}} davon war ungeplant.",
+    "unplanned_other": "{{count}} davon waren ungeplant.",
+    "notDone": "Geplant, aber nicht gemacht: {{list}}.",
+    "hint": "Nur zum Rückblick. Morgen geht es einfach mit der nächsten Woche weiter."
   }
 }

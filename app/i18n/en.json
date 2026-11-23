@@ -139,7 +139,8 @@
     "programmeKind": "Please choose how you train.",
     "pausedUntil": "Please choose an end date from today on.",
     "health": "Please do the health check first.",
-    "restDays": "Please choose a valid date."
+    "restDays": "Please choose a valid date.",
+    "future": "That is in the future. Please choose a time up to now."
   },
   "data": {
     "title": "Your data",
@@ -425,5 +426,34 @@
     "removeLabel": "Remove rest day: {{day}}",
     "is": "Rest day",
     "hint": "Planned recovery: Weekbeat plans nothing on this day."
+  },
+  "manualLog": {
+    "open": "Log an activity",
+    "title": "Log an activity ({{name}})",
+    "activity": "What did you do?",
+    "day": "Day",
+    "time": "Time",
+    "duration": "Duration in minutes",
+    "save": "Log it",
+    "hint": "Saved on this device only. Unplanned counts like planned.",
+    "done": "Activity logged."
+  },
+  "household": {
+    "toggle": "View",
+    "me": "Me",
+    "all": "Household",
+    "title": "Household week",
+    "empty": "Nothing planned",
+    "together": "together with {{names}}"
+  },
+  "review": {
+    "title": "Looking back at this week",
+    "paused": "This week was paused.",
+    "done_one": "{{count}} session done.",
+    "done_other": "{{count}} sessions done.",
+    "unplanned_one": "{{count}} of them was unplanned.",
+    "unplanned_other": "{{count}} of them were unplanned.",
+    "notDone": "Planned but not done: {{list}}.",
+    "hint": "Just a look back. Tomorrow simply continues with the next week."
   }
 }

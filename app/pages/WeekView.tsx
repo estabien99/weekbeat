@@ -24,6 +24,9 @@ import {
 import { COACH_ACTIVITY, COACH_ID, COACH_NAME, coachChecklist } from '../../connectors/freeletics-coach/coach.ts';
 import { activityCatalogue } from '../../knowledge/index.ts';
 import { GameCard } from '../components/GameCard.tsx';
+import { HouseholdWeek } from '../components/HouseholdWeek.tsx';
+import { ManualLogForm } from '../components/ManualLogForm.tsx';
+import { WeekReview } from '../components/WeekReview.tsx';
 import { useDateText } from '../useDateText.ts';
 import { db } from '../db.ts';
 import { localeOf, weekdayNames } from '../format.ts';
@@ -89,6 +92,8 @@ export function WeekView({ profile }: { profile: Profile }) {
     [profile.id],
   );
   const [replanning, setReplanning] = useState<Replanning | null>(null);
+  const [logging, setLogging] = useState(false);
+  const [view, setView] = useState<'me' | 'household'>('me');
   const [message, setMessage] = useState('');
   // Which week the proposal is shown for. Automatic (interview setting) when the week has nothing planned yet;
   // set while rendering, React's pattern for state derived from props (no effect, no extra render pass).
@@ -178,6 +183,35 @@ export function WeekView({ profile }: { profile: Profile }) {
         )}
       </div>
 
+      <div className="plan-bar">
+        {(people?.filter((p) => p.householdId === profile.householdId).length ?? 0) > 1 && (
+          <div role="group" aria-label={t('household.toggle')} className="segmented">
+            {(['me', 'household'] as const).map((v) => (
+              <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
+                {t(v === 'me' ? 'household.me' : 'household.all')}
+              </button>
+            ))}
+          </div>
+        )}
+        {!logging && (
+          <button type="button" className="ghost" onClick={() => setLogging(true)}>
+            {t('manualLog.open')}
+          </button>
+        )}
+      </div>
+      {logging && (
+        <ManualLogForm
+          profile={profile}
+          onCancel={() => setLogging(false)}
+          onDone={(text) => {
+            setLogging(false);
+            setMessage(text);
+          }}
+        />
+      )}
+
+      {isoWeekday(now) === 7 && <WeekReview profile={profile} now={now} paused={Boolean(held || pausedUntil)} />}
+
       {(held || pausedUntil) && (
         <p className="card pause-banner">
           {held ? t('health.banner.held') : t('health.banner.paused', { date: dateText(pausedUntil!) })}
@@ -208,146 +242,150 @@ export function WeekView({ profile }: { profile: Profile }) {
 
       {coach && checklist && <CoachCard checklist={checklist} now={coach.weekdays ?? []} placeName={placeName} />}
 
-      <ol className="week">
-        {days.map((d) => {
-          const iso = toIsoDate(d);
-          const isToday = iso === today;
-          const windows = availability?.windows.filter((w) => w.day === isoWeekday(d)) ?? [];
-          const daySessions = (sessions ?? []).filter((s) => s.start.startsWith(iso) && !HIDDEN.has(s.status));
-          const dayProposals = proposals.filter((p) => p.session.start.startsWith(iso));
-          return (
-            <li key={iso} className={isToday ? 'day today' : 'day'} aria-current={isToday ? 'date' : undefined}>
-              <div className="day-head">
-                <span className="day-name">{dayFmt.format(d)}</span>
-                <span className="muted">{dateFmt.format(d)}</span>
-                {isToday && <span className="badge">{t('week.today')}</span>}
-              </div>
-              {windows.length > 0 && (
-                <ul className="free" aria-label={t('week.freeTime')}>
-                  {windows.map((w) => (
-                    <li key={w.from}>{t('week.free', { from: w.from, to: w.to })}</li>
-                  ))}
-                </ul>
-              )}
-              {restDays.has(iso) && (
-                <p className="rest-day">
-                  <strong>{t('rest.is')}</strong> <span className="muted">{t('rest.hint')}</span>
-                </p>
-              )}
-              {iso >= today && daySessions.length === 0 && (
-                <button
-                  type="button"
-                  className="ghost"
-                  aria-label={t(restDays.has(iso) ? 'rest.removeLabel' : 'rest.planLabel', { day: dayFmt.format(d) })}
-                  onClick={() => void toggleRestDay(db, profile.id, iso)}
-                >
-                  {t(restDays.has(iso) ? 'rest.remove' : 'rest.plan')}
-                </button>
-              )}
-              {daySessions.length + dayProposals.length === 0 ? (
-                !restDays.has(iso) && <p className="muted empty">{t('week.empty')}</p>
-              ) : (
-                <ul className="sessions" aria-label={t('plan.sessions')}>
-                  {daySessions.map((s) => {
-                    const label = { activity: activityName(s.activityTypeId), day: dayName(s.start) };
-                    const due = s.start <= nowIso;
-                    return (
-                      <li key={s.id} className={`session ${s.status}`}>
-                        <SessionText s={s} name={label.activity} place={placeName(s.placeId)} lang={lang} />
-                        {s.status === 'done' && (
-                          <p className="ok">
-                            {t('plan.statusDone')}
-                            {sessionOfPlanned(logged, s.id)?.combo && ` · ${t('plan.combo')}`}
-                          </p>
-                        )}
-                        {s.status === 'missed' && <p className="muted">{t('plan.statusMissed')}</p>}
-                        {s.status === 'accepted' && (
-                          <div className="actions">
-                            {due ? (
-                              <>
-                                <button
-                                  type="button"
-                                  aria-label={t('plan.doneLabel', label)}
-                                  onClick={() => void completeSession(db, s.id)}
-                                >
-                                  {t('plan.done')}
-                                </button>
+      {view === 'household' ? (
+        <HouseholdWeek profile={profile} days={days} today={today} />
+      ) : (
+        <ol className="week">
+          {days.map((d) => {
+            const iso = toIsoDate(d);
+            const isToday = iso === today;
+            const windows = availability?.windows.filter((w) => w.day === isoWeekday(d)) ?? [];
+            const daySessions = (sessions ?? []).filter((s) => s.start.startsWith(iso) && !HIDDEN.has(s.status));
+            const dayProposals = proposals.filter((p) => p.session.start.startsWith(iso));
+            return (
+              <li key={iso} className={isToday ? 'day today' : 'day'} aria-current={isToday ? 'date' : undefined}>
+                <div className="day-head">
+                  <span className="day-name">{dayFmt.format(d)}</span>
+                  <span className="muted">{dateFmt.format(d)}</span>
+                  {isToday && <span className="badge">{t('week.today')}</span>}
+                </div>
+                {windows.length > 0 && (
+                  <ul className="free" aria-label={t('week.freeTime')}>
+                    {windows.map((w) => (
+                      <li key={w.from}>{t('week.free', { from: w.from, to: w.to })}</li>
+                    ))}
+                  </ul>
+                )}
+                {restDays.has(iso) && (
+                  <p className="rest-day">
+                    <strong>{t('rest.is')}</strong> <span className="muted">{t('rest.hint')}</span>
+                  </p>
+                )}
+                {iso >= today && daySessions.length === 0 && (
+                  <button
+                    type="button"
+                    className="ghost"
+                    aria-label={t(restDays.has(iso) ? 'rest.removeLabel' : 'rest.planLabel', { day: dayFmt.format(d) })}
+                    onClick={() => void toggleRestDay(db, profile.id, iso)}
+                  >
+                    {t(restDays.has(iso) ? 'rest.remove' : 'rest.plan')}
+                  </button>
+                )}
+                {daySessions.length + dayProposals.length === 0 ? (
+                  !restDays.has(iso) && <p className="muted empty">{t('week.empty')}</p>
+                ) : (
+                  <ul className="sessions" aria-label={t('plan.sessions')}>
+                    {daySessions.map((s) => {
+                      const label = { activity: activityName(s.activityTypeId), day: dayName(s.start) };
+                      const due = s.start <= nowIso;
+                      return (
+                        <li key={s.id} className={`session ${s.status}`}>
+                          <SessionText s={s} name={label.activity} place={placeName(s.placeId)} lang={lang} />
+                          {s.status === 'done' && (
+                            <p className="ok">
+                              {t('plan.statusDone')}
+                              {sessionOfPlanned(logged, s.id)?.combo && ` · ${t('plan.combo')}`}
+                            </p>
+                          )}
+                          {s.status === 'missed' && <p className="muted">{t('plan.statusMissed')}</p>}
+                          {s.status === 'accepted' && (
+                            <div className="actions">
+                              {due ? (
+                                <>
+                                  <button
+                                    type="button"
+                                    aria-label={t('plan.doneLabel', label)}
+                                    onClick={() => void completeSession(db, s.id)}
+                                  >
+                                    {t('plan.done')}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="ghost"
+                                    aria-label={t('plan.missedLabel', label)}
+                                    onClick={() => void openReplan(s, 'missed')}
+                                  >
+                                    {t('plan.missed')}
+                                  </button>
+                                </>
+                              ) : (
                                 <button
                                   type="button"
                                   className="ghost"
-                                  aria-label={t('plan.missedLabel', label)}
-                                  onClick={() => void openReplan(s, 'missed')}
+                                  aria-label={t('plan.moveLabel', label)}
+                                  onClick={() => void openReplan(s, 'moved')}
                                 >
-                                  {t('plan.missed')}
+                                  {t('plan.move')}
                                 </button>
-                              </>
-                            ) : (
-                              <button
-                                type="button"
-                                className="ghost"
-                                aria-label={t('plan.moveLabel', label)}
-                                onClick={() => void openReplan(s, 'moved')}
-                              >
-                                {t('plan.move')}
-                              </button>
-                            )}
+                              )}
+                            </div>
+                          )}
+                          {replanning?.session.id === s.id && (
+                            <ReplanPanel
+                              offers={replanning.offers}
+                              describe={(o) => {
+                                if (o.kind === 'skip') return { title: o.text[lang] };
+                                const when = {
+                                  day: dayName(o.session.start),
+                                  from: o.session.start.slice(11, 16),
+                                  to: endOf(o.session),
+                                };
+                                return {
+                                  title: t(o.kind === 'new-slot' ? 'plan.newSlot' : 'plan.fallbackTitle', when),
+                                  // The fallback's why line says the same as its title.
+                                  detail: o.kind === 'new-slot' ? o.session.why[lang] : undefined,
+                                };
+                              }}
+                              onChoose={(o) => void choose(o)}
+                              onCancel={() => setReplanning(null)}
+                            />
+                          )}
+                        </li>
+                      );
+                    })}
+                    {dayProposals.map(({ session: s }) => {
+                      const label = { activity: activityName(s.activityTypeId), day: dayName(s.start) };
+                      return (
+                        <li key={s.id} className="session proposed">
+                          <p className="step">{t('plan.proposed')}</p>
+                          <SessionText s={s} name={label.activity} place={placeName(s.placeId)} lang={lang} />
+                          <div className="actions">
+                            <button
+                              type="button"
+                              aria-label={t('plan.acceptLabel', label)}
+                              onClick={() => void accept([s])}
+                            >
+                              {t('plan.accept')}
+                            </button>
+                            <button
+                              type="button"
+                              className="ghost"
+                              aria-label={t('plan.dismissLabel', label)}
+                              onClick={() => dismiss(s.id)}
+                            >
+                              {t('plan.dismiss')}
+                            </button>
                           </div>
-                        )}
-                        {replanning?.session.id === s.id && (
-                          <ReplanPanel
-                            offers={replanning.offers}
-                            describe={(o) => {
-                              if (o.kind === 'skip') return { title: o.text[lang] };
-                              const when = {
-                                day: dayName(o.session.start),
-                                from: o.session.start.slice(11, 16),
-                                to: endOf(o.session),
-                              };
-                              return {
-                                title: t(o.kind === 'new-slot' ? 'plan.newSlot' : 'plan.fallbackTitle', when),
-                                // The fallback's why line says the same as its title.
-                                detail: o.kind === 'new-slot' ? o.session.why[lang] : undefined,
-                              };
-                            }}
-                            onChoose={(o) => void choose(o)}
-                            onCancel={() => setReplanning(null)}
-                          />
-                        )}
-                      </li>
-                    );
-                  })}
-                  {dayProposals.map(({ session: s }) => {
-                    const label = { activity: activityName(s.activityTypeId), day: dayName(s.start) };
-                    return (
-                      <li key={s.id} className="session proposed">
-                        <p className="step">{t('plan.proposed')}</p>
-                        <SessionText s={s} name={label.activity} place={placeName(s.placeId)} lang={lang} />
-                        <div className="actions">
-                          <button
-                            type="button"
-                            aria-label={t('plan.acceptLabel', label)}
-                            onClick={() => void accept([s])}
-                          >
-                            {t('plan.accept')}
-                          </button>
-                          <button
-                            type="button"
-                            className="ghost"
-                            aria-label={t('plan.dismissLabel', label)}
-                            onClick={() => dismiss(s.id)}
-                          >
-                            {t('plan.dismiss')}
-                          </button>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </li>
-          );
-        })}
-      </ol>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      )}
       {offset === 0 && <GameCard profile={profile} today={today} />}
 
       <p className="hint">{t('week.hint')}</p>
