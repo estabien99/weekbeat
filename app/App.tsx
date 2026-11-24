@@ -5,16 +5,18 @@ import { getHousehold } from '../core/index.ts';
 import { db } from './db.ts';
 import { PwaPrompt } from './PwaPrompt.tsx';
 import { Places } from './pages/Places.tsx';
+import { Privacy } from './pages/Privacy.tsx';
 import { Settings } from './pages/Settings.tsx';
 import { Setup } from './pages/Setup.tsx';
 import { WeekView } from './pages/WeekView.tsx';
 import { useActiveProfile } from './useActiveProfile.ts';
 
-type Page = 'week' | 'places' | 'settings';
+type Page = 'week' | 'places' | 'settings' | 'privacy';
 
 function pageFromHash(): Page {
   if (location.hash === '#/einstellungen') return 'settings';
   if (location.hash === '#/orte') return 'places';
+  if (location.hash === '#/datenschutz') return 'privacy';
   return 'week';
 }
 
@@ -71,7 +73,10 @@ export function App() {
       )}
 
       <main>
-        {!ready ? null : household === null || setupActive ? (
+        {page === 'privacy' ? (
+          // Readable before setup too: people should see it before they enter anything.
+          <Privacy />
+        ) : !ready ? null : household === null || setupActive ? (
           <Setup
             onStart={() => setSetupActive(true)}
             onDone={(id) => {
@@ -88,7 +93,12 @@ export function App() {
         ) : null}
       </main>
 
-      <footer className="muted">{t('footer.disclaimer')}</footer>
+      <footer className="muted">
+        <p>{t('footer.disclaimer')}</p>
+        <a className="footer-link" href="#/datenschutz" aria-current={page === 'privacy' ? 'page' : undefined}>
+          {t('privacy.link')}
+        </a>
+      </footer>
       <PwaPrompt />
     </>
   );

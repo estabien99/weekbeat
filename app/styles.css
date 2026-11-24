@@ -177,6 +177,34 @@ footer {
   font-size: 0.8125rem;
 }
 
+footer p {
+  margin: 0;
+}
+
+/* Standalone link, so it gets the full 44 px target. */
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+}
+
+.privacy h3 {
+  margin-bottom: 4px;
+}
+
+.privacy .links {
+  margin: 4px 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.privacy .links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 .toast {
   position: fixed;
   left: 16px;
