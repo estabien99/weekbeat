@@ -432,6 +432,23 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.getByLabel(t.nav.person)).toHaveValue(/.+/);
       await expect(page.getByRole('heading', { name: t.setup.title })).toHaveCount(0);
     });
+
+    test(`privacy page before setup (${lang})`, async ({ page }, info) => {
+      await page.addInitScript((l) => localStorage.setItem('weekbeat.lang', l), lang);
+      await page.goto('/');
+      await expect(page.getByRole('heading', { name: t.setup.title })).toBeVisible();
+
+      await page.getByRole('link', { name: t.privacy.link }).click();
+      const heading = page.getByRole('heading', { name: t.privacy.title, level: 2 });
+      await expect(heading).toBeFocused();
+      await expect(page.getByRole('heading', { name: t.privacy.host.title })).toBeVisible();
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '0-privacy', info.project.name, lang);
+
+      await page.getByRole('link', { name: t.privacy.back }).click();
+      await expect(page.getByRole('heading', { name: t.setup.title })).toBeVisible();
+    });
   });
 }
 

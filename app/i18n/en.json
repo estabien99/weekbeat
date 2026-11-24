@@ -467,5 +467,34 @@
     "unplanned_other": "{{count}} of them were unplanned.",
     "notDone": "Planned but not done: {{list}}.",
     "hint": "Just a look back. Tomorrow simply continues with the next week."
+  },
+  "privacy": {
+    "title": "Privacy",
+    "intro": "Weekbeat has no server and no account. What you enter stays on this device.",
+    "device": {
+      "title": "What is stored on your device",
+      "text": "Household, people, times, places, memberships, plans, logged activities and the result of the health self-check (not your answers) are kept in this browser's storage (IndexedDB). Language and the selected person are kept in local storage. So that the app works offline, the browser stores its files on the device."
+    },
+    "none": {
+      "title": "No cookies, no tracking",
+      "text": "The app sets no cookies, has no analytics and no ads, and loads nothing from other servers. Links to other sites open only when you tap them."
+    },
+    "host": {
+      "title": "Hosting",
+      "text": "The app is served by GitHub Pages (GitHub, Inc.). When you open it, GitHub says it logs and stores your IP address for security purposes. Your planning data never reaches GitHub.",
+      "docs": "GitHub: data collection on GitHub Pages",
+      "statement": "GitHub Privacy Statement"
+    },
+    "control": {
+      "title": "You are in control",
+      "text": "Under Settings → Your data you can export everything as a file. The file contains health information; keep it safe. To delete everything, clear this site's data in your browser settings or remove the installed app."
+    },
+    "connectors": {
+      "title": "Connections to other services",
+      "text": "Planned connections (for example to calendars or training services) stay off until you switch them on and agree. This page will then say which data goes where."
+    },
+    "updated": "Last updated: 24 November 2026",
+    "back": "Back to the app",
+    "link": "Privacy"
   }
 }

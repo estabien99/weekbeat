@@ -467,5 +467,34 @@
     "unplanned_other": "{{count}} davon waren ungeplant.",
     "notDone": "Geplant, aber nicht gemacht: {{list}}.",
     "hint": "Nur zum Rückblick. Morgen geht es einfach mit der nächsten Woche weiter."
+  },
+  "privacy": {
+    "title": "Datenschutz",
+    "intro": "Weekbeat hat keinen Server und kein Konto. Was du eingibst, bleibt auf diesem Gerät.",
+    "device": {
+      "title": "Was auf deinem Gerät gespeichert wird",
+      "text": "Haushalt, Personen, Zeiten, Orte, Mitgliedschaften, Pläne, erfasste Aktivitäten und das Ergebnis des Gesundheits-Checks (nicht deine Antworten) liegen im Speicher dieses Browsers (IndexedDB). Sprache und gewählte Person liegen im lokalen Speicher. Damit die App offline läuft, speichert der Browser ihre Dateien auf dem Gerät."
+    },
+    "none": {
+      "title": "Keine Cookies, kein Tracking",
+      "text": "Die App setzt keine Cookies, hat keine Statistik und keine Werbung und lädt nichts von fremden Servern. Links zu anderen Seiten öffnen sich nur, wenn du sie antippst."
+    },
+    "host": {
+      "title": "Hosting",
+      "text": "Die App wird über GitHub Pages ausgeliefert (GitHub, Inc.). Wenn du sie aufrufst, protokolliert und speichert GitHub nach eigenen Angaben deine IP-Adresse aus Sicherheitsgründen. Deine Planungsdaten erreichen GitHub nicht.",
+      "docs": "GitHub: Datenerfassung bei GitHub Pages (Englisch)",
+      "statement": "GitHub-Datenschutzerklärung (Englisch)"
+    },
+    "control": {
+      "title": "Deine Kontrolle",
+      "text": "Unter Einstellungen → Deine Daten exportierst du alles als Datei. Die Datei enthält Gesundheitsangaben; bewahre sie sorgfältig auf. Löschen kannst du alles, indem du die Website-Daten dieser Seite in den Browser-Einstellungen löschst oder die installierte App entfernst."
+    },
+    "connectors": {
+      "title": "Verbindungen zu anderen Diensten",
+      "text": "Geplante Verbindungen (zum Beispiel zu Kalendern oder Trainingsdiensten) bleiben aus, bis du sie selbst einschaltest und zustimmst. Diese Seite nennt dann, welche Daten wohin gehen."
+    },
+    "updated": "Stand: 24. November 2026",
+    "back": "Zurück zur App",
+    "link": "Datenschutz"
   }
 }
