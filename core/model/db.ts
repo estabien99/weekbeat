@@ -150,6 +150,19 @@ export function parseExportFile(text: string): ExportFile {
   return data as ExportFile;
 }
 
+/** What an export file holds, for the import preview (counts only, no content). */
+export interface ExportSummary {
+  people: number;
+  planned: number;
+  logged: number;
+  places: number;
+}
+
+export function summarizeExport(file: ExportFile): ExportSummary {
+  const n = (table: (typeof EXPORT_TABLES)[number]) => file.tables[table]?.length ?? 0;
+  return { people: n('profiles'), planned: n('plannedSessions'), logged: n('loggedActivities'), places: n('places') };
+}
+
 /** File name for an export, e.g. weekbeat-2026-11-22.json (local date). */
 export function exportFileName(now: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0');

@@ -1,12 +1,15 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import {
   ImportError,
   exportAll,
   exportFileName,
   importAll,
   parseExportFile,
+  summarizeExport,
   type ExportFile,
+  type ExportSummary,
 } from '../../core/index.ts';
 import { db } from '../db.ts';
 import { localeOf } from '../format.ts';
@@ -18,6 +21,16 @@ function formatExportDate(iso: string, lang: string | undefined): string {
     : new Intl.DateTimeFormat(localeOf(lang), { dateStyle: 'medium', timeStyle: 'short' }).format(d);
 }
 
+function previewText(s: ExportSummary, t: TFunction): string {
+  const parts = [
+    t('data.preview.people', { count: s.people }),
+    t('data.preview.planned', { count: s.planned }),
+    t('data.preview.logged', { count: s.logged }),
+    t('data.preview.places', { count: s.places }),
+  ];
+  return t('data.preview.intro', { list: parts.join(' · ') });
+}
+
 type Status = { kind: 'ok' | 'error'; text: string } | null;
 
 /** Export all data to a JSON file and import it again (replaces everything, after confirmation). */
@@ -26,6 +39,16 @@ export function DataCard() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [pending, setPending] = useState<ExportFile | null>(null);
   const [status, setStatus] = useState<Status>(null);
+  const confirmHeading = useRef<HTMLParagraphElement>(null);
+  const isOpen = pending !== null;
+
+  // Focus moves into the confirmation when it opens; when it closes it goes back to the import control.
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (isOpen) confirmHeading.current?.focus();
+    else if (wasOpen.current) fileInput.current?.focus();
+    wasOpen.current = isOpen;
+  }, [isOpen]);
 
   const doExport = async () => {
     const file = await exportAll(db);
@@ -84,14 +107,26 @@ export function DataCard() {
         </label>
       </div>
       {pending && (
-        <div className="subcard" role="alertdialog" aria-labelledby="import-confirm">
-          <p id="import-confirm">
+        <div
+          className="subcard"
+          role="alertdialog"
+          aria-labelledby="import-confirm"
+          aria-describedby="import-confirm-text import-preview"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setPending(null);
+          }}
+        >
+          <p id="import-confirm" ref={confirmHeading} tabIndex={-1}>
             <strong>
               {t('data.confirmTitle', { date: formatExportDate(pending.exportedAt, i18n.resolvedLanguage) })}
-            </strong>{' '}
-            {t('data.confirmText')}
+            </strong>
           </p>
+          <p id="import-preview">{previewText(summarizeExport(pending), t)}</p>
+          <p id="import-confirm-text">{t('data.confirmText')}</p>
           <div className="actions">
+            <button type="button" className="ghost" onClick={() => void doExport()}>
+              {t('data.backupFirst')}
+            </button>
             <button type="button" className="danger" onClick={() => void confirmImport()}>
               {t('data.confirm')}
             </button>

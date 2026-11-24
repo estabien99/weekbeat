@@ -1,6 +1,15 @@
 import 'fake-indexeddb/auto';
 import { afterEach, describe, expect, it } from 'vitest';
-import { EXPORT_TABLES, ImportError, WeekbeatDB, exportAll, exportFileName, importAll, parseExportFile } from './db.ts';
+import {
+  EXPORT_TABLES,
+  ImportError,
+  WeekbeatDB,
+  exportAll,
+  exportFileName,
+  importAll,
+  parseExportFile,
+  summarizeExport,
+} from './db.ts';
 import { TABLE_SCHEMAS, validateRows } from './validate.ts';
 
 let db: WeekbeatDB;
@@ -166,5 +175,17 @@ describe('validateRows', () => {
   it('only knows its own tables', () => {
     expect(validateRows('constructor', [{}])).toBe('constructor: unknown table');
     expect(validateRows('__proto__', [{}])).toBe('__proto__: unknown table');
+  });
+});
+
+describe('summarizeExport', () => {
+  it('counts people, planned sessions, logs and places; missing tables count as 0', () => {
+    const file = {
+      format: 'weekbeat-export' as const,
+      version: 1,
+      exportedAt: '2026-11-22T10:00:00Z',
+      tables: { profiles: [{}, {}], plannedSessions: [{}, {}, {}], loggedActivities: [{}] },
+    };
+    expect(summarizeExport(file)).toEqual({ people: 2, planned: 3, logged: 1, places: 0 });
   });
 });
