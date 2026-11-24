@@ -283,6 +283,38 @@
     "lastReviewed": "2026-11-22"
   },
   {
+    "id": "acsm-strength-two-sessions",
+    "part": "principle",
+    "summary": {
+      "de": "Kraft nimmt zu mit mindestens 2 Krafteinheiten pro Woche (eher schwere Lasten, voller Bewegungsumfang, 2–3 Sätze).",
+      "en": "Strength improves with at least 2 strength sessions a week (heavier loads, full range of motion, 2–3 sets)."
+    },
+    "data": {},
+    "source": {
+      "title": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance training prescription for muscle function, hypertrophy, and physical performance in healthy adults: an overview of reviews. Med Sci Sports Exerc 2026;58(4):851–872. doi:10.1249/MSS.0000000000003897",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12965823/"
+    },
+    "quote": "However, voluntary strength was enhanced by lifting heavier loads (≥80% one-repetition maximum), through a complete range of motion, for 2–3 sets, at the beginning of training sessions, and ≥2 sessions/wk.",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-24"
+  },
+  {
+    "id": "acsm-bodyweight-counts",
+    "part": "principle",
+    "summary": {
+      "de": "Training mit dem eigenen Körpergewicht zählt als Krafttraining; die Art der Ausrüstung machte keinen beständigen Unterschied.",
+      "en": "Training with your own body weight counts as strength training; the type of equipment made no consistent difference."
+    },
+    "data": {},
+    "source": {
+      "title": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance training prescription for muscle function, hypertrophy, and physical performance in healthy adults: an overview of reviews. Med Sci Sports Exerc 2026;58(4):851–872. doi:10.1249/MSS.0000000000003897",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12965823/"
+    },
+    "quote": "Resistance training (RT), also known as strength or weight training, is a specialized method of physical conditioning in which muscles are exercised by contracting against external resistance, such as free weights, machines, resistance bands, water, or body weight […] Training to momentary muscle fatigue, equipment type, exercise complexity, set structure, time under tension, blood flow restriction, and periodization did not consistently impact training outcomes.",
+    "confidence": "medium",
+    "lastReviewed": "2026-11-24"
+  },
+  {
     "id": "screening-known-disease",
     "part": "screening",
     "summary": {

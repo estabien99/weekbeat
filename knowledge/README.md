@@ -23,15 +23,16 @@ Licensed under [CC BY 4.0](LICENSE) (the code is Apache-2.0), so others can reus
 
 ## Status (v1)
 
-| Part                           | Status                              | Source                                         |
-| ------------------------------ | ----------------------------------- | ---------------------------------------------- |
-| intensity                      | done                                | WHO 2020                                       |
-| weekly-targets                 | done (5–17, 18–64, 65+)             | WHO 2020                                       |
-| activity catalogue             | 20 activities                       | Compendium 2024 + platform docs                |
-| impact                         | cycling, swimming, jog              | systematic review (bone)                       |
-| complement (hobby → needs)     | bone, MTB overuse                   | systematic reviews, narrative review           |
-| load-recovery                  | deload, no-cap principle; gaps open | Delphi consensus, systematic review; ACSM open |
-| safety (self-check, red flags) | open (#4)                           | PAR-Q+                                         |
+| Part                            | Status                               | Source                                         |
+| ------------------------------- | ------------------------------------ | ---------------------------------------------- |
+| intensity                       | done                                 | WHO 2020                                       |
+| weekly-targets                  | done (5–17, 18–64, 65+)              | WHO 2020                                       |
+| activity catalogue              | 20 activities                        | Compendium 2024 + platform docs                |
+| impact                          | cycling, swimming, jog               | systematic review (bone)                       |
+| complement (hobby → needs)      | bone, MTB overuse                    | systematic reviews, narrative review           |
+| load-recovery                   | deload, no-cap principle; gaps open  | Delphi consensus, systematic review; ACSM open |
+| strength (frequency, equipment) | ≥2 sessions/week, body weight counts | ACSM 2026 position stand                       |
+| safety (self-check, red flags)  | done (#4), own wording               | ACSM screening (NHANES paper)                  |
 
 ## Changing rules
 
