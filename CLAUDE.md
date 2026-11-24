@@ -159,5 +159,7 @@ When the user agrees to continue in a new session, the current session sets it u
   `useLiveQuery` re-renders the shell at once and jumped past step 2 (22.11.2026).
 - The app passes every saved session and log to the planner; anything per week must filter to that week (anchors
   from other weeks counted toward the goal until 22.11.2026). Test planner changes with data outside the week.
+- In e2e, don't click a button whose label depends on data still loading (week view: "Woche planen" turns into
+  "Neu vorschlagen" once an auto-planning profile's empty week loads); assert the settled state (24.11.2026).
 - Headless Chromium shows `<input type="time">` in 12 h format whatever the context locale; real German devices
   show 24 h. Don't "fix" this in the app.

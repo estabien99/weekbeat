@@ -348,7 +348,8 @@ for (const lang of ['de', 'en'] as const) {
       // Next week: the Coach sessions go to Studio Nord, and the card says what to set in the Coach.
       await page.getByRole('link', { name: t.nav.week }).click();
       await page.getByRole('button', { name: t.plan.nextWeek }).click();
-      await page.getByRole('button', { name: t.plan.make }).click();
+      // Alex plans automatically, so the empty week shows its proposal by itself ("make" exists only while loading).
+      await expect(page.getByRole('button', { name: t.plan.remake })).toBeVisible();
       const coachCard = page.locator('.card.coach');
       await expect(coachCard).toContainText('Studio Nord');
       await expect(coachCard.locator('li')).toHaveCount(2);
