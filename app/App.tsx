@@ -5,18 +5,20 @@ import { getHousehold } from '../core/index.ts';
 import { db } from './db.ts';
 import { PwaPrompt } from './PwaPrompt.tsx';
 import { Places } from './pages/Places.tsx';
+import { Imprint } from './pages/Imprint.tsx';
 import { Privacy } from './pages/Privacy.tsx';
 import { Settings } from './pages/Settings.tsx';
 import { Setup } from './pages/Setup.tsx';
 import { WeekView } from './pages/WeekView.tsx';
 import { useActiveProfile } from './useActiveProfile.ts';
 
-type Page = 'week' | 'places' | 'settings' | 'privacy';
+type Page = 'week' | 'places' | 'settings' | 'privacy' | 'imprint';
 
 function pageFromHash(): Page {
   if (location.hash === '#/einstellungen') return 'settings';
   if (location.hash === '#/orte') return 'places';
   if (location.hash === '#/datenschutz') return 'privacy';
+  if (location.hash === '#/impressum') return 'imprint';
   return 'week';
 }
 
@@ -76,6 +78,8 @@ export function App() {
         {page === 'privacy' ? (
           // Readable before setup too: people should see it before they enter anything.
           <Privacy />
+        ) : page === 'imprint' ? (
+          <Imprint />
         ) : !ready ? null : household === null || setupActive ? (
           <Setup
             onStart={() => setSetupActive(true)}
@@ -97,6 +101,9 @@ export function App() {
         <p>{t('footer.disclaimer')}</p>
         <a className="footer-link" href="#/datenschutz" aria-current={page === 'privacy' ? 'page' : undefined}>
           {t('privacy.link')}
+        </a>
+        <a className="footer-link" href="#/impressum" aria-current={page === 'imprint' ? 'page' : undefined}>
+          {t('imprint.link')}
         </a>
       </footer>
       <PwaPrompt />

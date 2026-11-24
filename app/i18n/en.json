@@ -471,9 +471,13 @@
   "privacy": {
     "title": "Privacy",
     "intro": "Weekbeat has no server and no account. What you enter stays on this device.",
+    "controller": {
+      "title": "Who is responsible",
+      "text": "The controller for this website under the GDPR is:"
+    },
     "device": {
       "title": "What is stored on your device",
-      "text": "Household, people, times, places, memberships, plans, logged activities and the result of the health self-check (not your answers) are kept in this browser's storage (IndexedDB). Language and the selected person are kept in local storage. So that the app works offline, the browser stores its files on the device."
+      "text": "Household, people, times, places, memberships, plans, logged activities and the result of the health self-check (not your answers) are kept in this browser's storage (IndexedDB). Language and the selected person are kept in local storage. So that the app works offline, the browser stores its files on the device. This storage is needed for the app to work for you, so it does not ask for separate consent."
     },
     "none": {
       "title": "No cookies, no tracking",
@@ -489,6 +493,10 @@
       "title": "You are in control",
       "text": "Under Settings → Your data you can export everything as a file. The file contains health information; keep it safe. To delete everything, clear this site's data in your browser settings or remove the installed app."
     },
+    "rights": {
+      "title": "Your rights",
+      "text": "You have the right of access, rectification, erasure, restriction of processing, data portability and objection, and the right to lodge a complaint with a data protection supervisory authority. Your planning data is only on your device; we can neither see nor delete it. For GitHub's logs, contact GitHub (see the GitHub Privacy Statement). Questions go to the e-mail address above."
+    },
     "connectors": {
       "title": "Connections to other services",
       "text": "Planned connections (for example to calendars or training services) stay off until you switch them on and agree. This page will then say which data goes where."
@@ -496,5 +504,17 @@
     "updated": "Last updated: 24 November 2026",
     "back": "Back to the app",
     "link": "Privacy"
+  },
+  "imprint": {
+    "title": "Legal notice",
+    "link": "Legal notice",
+    "provider": "Provider",
+    "contact": "Contact",
+    "email": "E-mail:",
+    "about": {
+      "title": "About Weekbeat",
+      "text": "Weekbeat is a private, non-commercial open-source project. There are no ads, no payments and no accounts. The app is for fitness and wellness and is not a medical device."
+    },
+    "basis": "Information under § 18(1) of the German Interstate Media Treaty (Medienstaatsvertrag, MStV)."
   }
 }
