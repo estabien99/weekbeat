@@ -450,6 +450,27 @@ for (const lang of ['de', 'en'] as const) {
       await page.getByRole('link', { name: t.privacy.back }).click();
       await expect(page.getByRole('heading', { name: t.setup.title })).toBeVisible();
     });
+
+    test(`imprint page before setup (${lang})`, async ({ page }, info) => {
+      await page.addInitScript((l) => localStorage.setItem('weekbeat.lang', l), lang);
+      await page.goto('/');
+      await expect(page.getByRole('heading', { name: t.setup.title })).toBeVisible();
+
+      await page.getByRole('link', { name: t.imprint.link }).click();
+      const heading = page.getByRole('heading', { name: t.imprint.title, level: 2 });
+      await expect(heading).toBeFocused();
+      await expect(page.getByRole('heading', { name: t.imprint.provider })).toBeVisible();
+      await expect(page.locator('address')).toContainText('München');
+      await expectAccessible(page);
+      await expectNoHorizontalScroll(page);
+      await shot(page, '0-imprint', info.project.name, lang);
+
+      // The privacy page names the controller and links back to the imprint.
+      await page.goto('/#/datenschutz');
+      await expect(page.getByRole('heading', { name: t.privacy.controller.title })).toBeVisible();
+      await page.getByRole('main').getByRole('link', { name: t.imprint.title }).click();
+      await expect(page.getByRole('heading', { name: t.imprint.title, level: 2 })).toBeFocused();
+    });
   });
 }
 

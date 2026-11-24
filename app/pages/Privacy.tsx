@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { OPERATOR } from '../legal.ts';
 
 /** Primary source for what the host logs (docs "What is GitHub Pages?", section "Data collection"). */
 const GITHUB_PAGES_DATA =
   'https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection';
 const GITHUB_PRIVACY = 'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement';
 
-const SECTIONS = ['device', 'none', 'host', 'control', 'connectors'] as const;
+const SECTIONS = ['controller', 'device', 'none', 'host', 'control', 'rights', 'connectors'] as const;
 
 export function Privacy() {
   const { t } = useTranslation();
@@ -25,6 +26,13 @@ export function Privacy() {
         <section key={s} aria-labelledby={`privacy-${s}`}>
           <h3 id={`privacy-${s}`}>{t(`privacy.${s}.title`)}</h3>
           <p>{t(`privacy.${s}.text`)}</p>
+          {s === 'controller' && (
+            <p>
+              {OPERATOR.name}, {OPERATOR.street}, {OPERATOR.city}
+              <br />
+              <a href={`mailto:${OPERATOR.email}`}>{OPERATOR.email}</a> · <a href="#/impressum">{t('imprint.title')}</a>
+            </p>
+          )}
           {s === 'host' && (
             <ul className="links">
               <li>

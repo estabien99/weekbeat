@@ -471,9 +471,13 @@
   "privacy": {
     "title": "Datenschutz",
     "intro": "Weekbeat hat keinen Server und kein Konto. Was du eingibst, bleibt auf diesem Gerät.",
+    "controller": {
+      "title": "Verantwortlich",
+      "text": "Verantwortlich für diese Website im Sinne der DSGVO ist:"
+    },
     "device": {
       "title": "Was auf deinem Gerät gespeichert wird",
-      "text": "Haushalt, Personen, Zeiten, Orte, Mitgliedschaften, Pläne, erfasste Aktivitäten und das Ergebnis des Gesundheits-Checks (nicht deine Antworten) liegen im Speicher dieses Browsers (IndexedDB). Sprache und gewählte Person liegen im lokalen Speicher. Damit die App offline läuft, speichert der Browser ihre Dateien auf dem Gerät."
+      "text": "Haushalt, Personen, Zeiten, Orte, Mitgliedschaften, Pläne, erfasste Aktivitäten und das Ergebnis des Gesundheits-Checks (nicht deine Antworten) liegen im Speicher dieses Browsers (IndexedDB). Sprache und gewählte Person liegen im lokalen Speicher. Damit die App offline läuft, speichert der Browser ihre Dateien auf dem Gerät. Diese Speicherung ist nötig, damit die App für dich funktioniert; deshalb fragt sie nicht extra um Zustimmung."
     },
     "none": {
       "title": "Keine Cookies, kein Tracking",
@@ -489,6 +493,10 @@
       "title": "Deine Kontrolle",
       "text": "Unter Einstellungen → Deine Daten exportierst du alles als Datei. Die Datei enthält Gesundheitsangaben; bewahre sie sorgfältig auf. Löschen kannst du alles, indem du die Website-Daten dieser Seite in den Browser-Einstellungen löschst oder die installierte App entfernst."
     },
+    "rights": {
+      "title": "Deine Rechte",
+      "text": "Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren. Deine Planungsdaten liegen nur auf deinem Gerät; wir können sie weder einsehen noch löschen. Für die Protokolle von GitHub wende dich an GitHub (siehe GitHub-Datenschutzerklärung). Fragen beantworten wir unter der oben genannten E-Mail-Adresse."
+    },
     "connectors": {
       "title": "Verbindungen zu anderen Diensten",
       "text": "Geplante Verbindungen (zum Beispiel zu Kalendern oder Trainingsdiensten) bleiben aus, bis du sie selbst einschaltest und zustimmst. Diese Seite nennt dann, welche Daten wohin gehen."
@@ -496,5 +504,17 @@
     "updated": "Stand: 24. November 2026",
     "back": "Zurück zur App",
     "link": "Datenschutz"
+  },
+  "imprint": {
+    "title": "Impressum",
+    "link": "Impressum",
+    "provider": "Anbieter",
+    "contact": "Kontakt",
+    "email": "E-Mail:",
+    "about": {
+      "title": "Über Weekbeat",
+      "text": "Weekbeat ist ein privates, nicht kommerzielles Open-Source-Projekt. Es gibt keine Werbung, keine Bezahlfunktionen und kein Konto. Die App dient Fitness und Wohlbefinden und ist kein Medizinprodukt."
+    },
+    "basis": "Angaben gemäß § 18 Abs. 1 Medienstaatsvertrag (MStV)."
   }
 }
