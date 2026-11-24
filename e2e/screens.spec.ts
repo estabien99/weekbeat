@@ -243,6 +243,16 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.getByRole('alertdialog')).toContainText(t.data.confirmText);
       await expectAccessible(page);
       await shot(page, '6-import', project, lang);
+      // Focus moves into the confirmation, which previews the file; Escape cancels and focus goes back
+      await expect(page.locator('#import-confirm')).toBeFocused();
+      await expect(page.locator('#import-preview')).toContainText(
+        t.data.preview.people_other.replace('{{count}}', '2'),
+      );
+      await page.keyboard.press('Escape');
+      await expect(page.getByRole('alertdialog')).toHaveCount(0);
+      await expect(page.getByLabel(t.data.import)).toBeFocused();
+      await page.getByLabel(t.data.import).setInputFiles(file);
+      await expect(page.getByRole('alertdialog')).toContainText(t.data.confirmText);
       await page.getByRole('button', { name: t.data.confirm }).click();
       await expect(page.getByRole('status').filter({ hasText: t.data.imported })).toBeVisible();
       await expect(page.locator('.people li')).toHaveCount(2);

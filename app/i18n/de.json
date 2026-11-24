@@ -157,6 +157,18 @@
       "not-weekbeat": "Das ist keine Weekbeat-Exportdatei.",
       "too-new": "Die Datei stammt aus einer neueren Weekbeat-Version. Bitte aktualisiere die App.",
       "bad-table": "Die Datei ist beschädigt oder unvollständig."
+    },
+    "backupFirst": "Erst aktuelle Daten sichern",
+    "preview": {
+      "intro": "In der Datei: {{list}}.",
+      "people_one": "{{count}} Person",
+      "people_other": "{{count}} Personen",
+      "planned_one": "{{count}} geplante Einheit",
+      "planned_other": "{{count}} geplante Einheiten",
+      "logged_one": "{{count}} erfasste Aktivität",
+      "logged_other": "{{count}} erfasste Aktivitäten",
+      "places_one": "{{count}} Ort",
+      "places_other": "{{count}} Orte"
     }
   },
   "interview": {

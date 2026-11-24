@@ -157,6 +157,18 @@
       "not-weekbeat": "This is not a Weekbeat export file.",
       "too-new": "The file comes from a newer Weekbeat version. Please update the app.",
       "bad-table": "The file is damaged or incomplete."
+    },
+    "backupFirst": "Back up current data first",
+    "preview": {
+      "intro": "In the file: {{list}}.",
+      "people_one": "{{count}} person",
+      "people_other": "{{count}} people",
+      "planned_one": "{{count}} planned session",
+      "planned_other": "{{count}} planned sessions",
+      "logged_one": "{{count}} logged activity",
+      "logged_other": "{{count}} logged activities",
+      "places_one": "{{count}} place",
+      "places_other": "{{count}} places"
     }
   },
   "interview": {

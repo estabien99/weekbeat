@@ -5,6 +5,8 @@ export {
   WeekbeatDB,
   ImportError,
   exportAll,
+  summarizeExport,
+  type ExportSummary,
   exportFileName,
   importAll,
   parseExportFile,
