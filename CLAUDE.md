@@ -81,7 +81,14 @@ next starts. No dates yet.
 - **Providers:** names only descriptively ("works with Wellpass"), no logos, no copied studio/partner data in the
   repo. Freeletics has no API: steer the Coach (days, place, settings checklist), don't scrape it.
 - **Not a medical device:** fitness and wellness only; no diagnosis, no therapy plans. Health self-check before
-  start, red flags pause the plan. Health-data consent before the first sync (GDPR Art. 9).
+  start, red flags pause the plan. Health-data consent before the first sync (GDPR Art. 9). Under MDR 2017/745 what
+  we _say_ the app is for decides (MDCG 2019-11 rev. 1, 3.1: "wellness or fitness apps, do not qualify as MDSW");
+  the intended purpose is on the imprint page and in the README. So, in UI, README and store texts and in features:
+  - no claims that the app prevents, detects, treats or alleviates a disease or injury;
+  - no plans for pain, injuries or conditions (no rehab, no disease-specific programmes);
+  - no illness detection or disease-risk output from body data, and no ECG, blood pressure or glucose data;
+  - the self-check stays a fixed rule (any yes → talk to a doctor, the plan rests): no score, no likely condition.
+    A feature that needs any of these is a principle change: ask first.
 - **UI:** every string in both `de.json` and `en.json`; core HTML/CSS, accessible (labels, focus, 44 px targets,
   contrast); works from 320 px wide, no horizontal scroll. After UI changes run `npm run e2e` and look at
   `screenshots/` (phone 412 and tablet 1280, de and en) before telling the user it's done.
