@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
@@ -18,9 +18,27 @@ export function PwaPrompt() {
     return () => clearTimeout(id);
   }, [offlineReady, setOfflineReady]);
 
-  if (!needRefresh && !offlineReady) return null;
+  // WCAG 2.2 2.4.11: reserve the notice's height at the bottom so it never covers the focused control.
+  const ref = useRef<HTMLDivElement>(null);
+  const open = needRefresh || offlineReady;
+  useEffect(() => {
+    const el = ref.current;
+    if (!open || !el) return;
+    const root = document.documentElement;
+    const gap = 16; // the notice sits 16 px above the bottom edge
+    const update = () => root.style.setProperty('--toast-space', `${el.offsetHeight + 2 * gap}px`);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty('--toast-space');
+    };
+  }, [open]);
+
+  if (!open) return null;
   return (
-    <div className="toast" role="status">
+    <div className="toast" role="status" ref={ref}>
       <span>{needRefresh ? t('pwa.update') : t('pwa.offline')}</span>
       {needRefresh && (
         <button type="button" onClick={() => void updateServiceWorker(true)}>
