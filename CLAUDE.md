@@ -79,7 +79,10 @@ next starts. No dates yet.
 - **Sources:** for fitness rules, provider capabilities and legal points prefer primary sources (guidelines,
   position stands, the provider's own docs/help pages). Cite the URL, say how sure you are, flag disagreements.
 - **Providers:** names only descriptively ("works with Wellpass"), no logos, no copied studio/partner data in the
-  repo. Freeletics has no API: steer the Coach (days, place, settings checklist), don't scrape it.
+  repo. Freeletics has no API: steer the Coach (days, place, settings checklist), don't scrape it. Checked 25.11.2026
+  (#11): no logos, colours, screenshots or look-alike UI of any provider (Garmin and Wellpass terms reserve their
+  marks); never copy Freeletics workouts, exercises or plans (Freeletics T&C § 14); Garmin data needs a
+  "Garmin [device model]" attribution (Garmin API Brand Guidelines, see the concept doc, 0.2).
 - **Not a medical device:** fitness and wellness only; no diagnosis, no therapy plans. Health self-check before
   start, red flags pause the plan. Health-data consent before the first sync (GDPR Art. 9). Under MDR 2017/745 what
   we _say_ the app is for decides (MDCG 2019-11 rev. 1, 3.1: "wellness or fitness apps, do not qualify as MDSW");
