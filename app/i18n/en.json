@@ -40,7 +40,7 @@
     "close": "Close"
   },
   "footer": {
-    "disclaimer": "Fitness and wellness, not medical advice. Your data stays on this device."
+    "disclaimer": "Fitness and wellness, not a medical device and not medical advice. Your data stays on this device."
   },
   "common": {
     "next": "Next",
@@ -403,7 +403,7 @@
     "answerAll": "Please answer every question with yes or no.",
     "privacy": "These questions are a short selection in our own words, not a full questionnaire. The official PAR-Q+ goes further:",
     "parq": "PAR-Q+ (eparmedx.com)",
-    "disclaimer": "Weekbeat is for fitness and wellness. It does not replace medical advice, diagnosis or treatment.",
+    "disclaimer": "Weekbeat is for fitness and wellness. It is not a medical device and does not replace medical advice, diagnosis or treatment.",
     "submit": "Finish the check",
     "flaggedTitle": "Please check with a doctor first",
     "flagged": "At least one answer was yes. Please talk to a doctor before you train, {{name}}. This is not a diagnosis: these questions only show when talking to a doctor before you start is recommended.",

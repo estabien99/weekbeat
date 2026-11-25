@@ -40,7 +40,7 @@
     "close": "Schließen"
   },
   "footer": {
-    "disclaimer": "Fitness und Wohlbefinden, keine medizinische Beratung. Deine Daten bleiben auf diesem Gerät."
+    "disclaimer": "Fitness und Wohlbefinden, kein Medizinprodukt und keine medizinische Beratung. Deine Daten bleiben auf diesem Gerät."
   },
   "common": {
     "next": "Weiter",
@@ -403,7 +403,7 @@
     "answerAll": "Bitte beantworte jede Frage mit Ja oder Nein.",
     "privacy": "Die Fragen sind eine kurze Auswahl in eigenen Worten, kein vollständiger Fragebogen. Ausführlicher ist der offizielle PAR-Q+:",
     "parq": "PAR-Q+ (englisch, eparmedx.com)",
-    "disclaimer": "Weekbeat ist für Fitness und Wohlbefinden gedacht und ersetzt keine medizinische Beratung, Diagnose oder Behandlung.",
+    "disclaimer": "Weekbeat ist für Fitness und Wohlbefinden gedacht, ist kein Medizinprodukt und ersetzt keine medizinische Beratung, Diagnose oder Behandlung.",
     "submit": "Check abschließen",
     "flaggedTitle": "Bitte erst ärztlich abklären",
     "flagged": "Mindestens eine Antwort war Ja. Bitte sprich mit einer Ärztin oder einem Arzt, bevor du trainierst, {{name}}. Das ist keine Diagnose: Diese Fragen zeigen nur, wann eine Rücksprache vor dem Start empfohlen wird.",
