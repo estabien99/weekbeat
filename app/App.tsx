@@ -38,6 +38,20 @@ export function App() {
   }, []);
 
   const ready = household !== undefined && profiles !== undefined;
+  const inSetup = ready && (household === null || setupActive);
+
+  // WCAG 2.2 2.4.2 Page Titled: each view names itself in the browser tab and for screen readers.
+  useEffect(() => {
+    const name: Record<Page, string> = {
+      week: t('nav.week'),
+      places: t('nav.places'),
+      settings: t('nav.settings'),
+      privacy: t('privacy.title'),
+      imprint: t('imprint.title'),
+    };
+    document.title =
+      inSetup && page !== 'privacy' && page !== 'imprint' ? t('setup.title') : t('app.pageTitle', { page: name[page] });
+  }, [t, page, inSetup]);
 
   return (
     <>

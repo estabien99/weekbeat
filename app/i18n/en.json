@@ -1,7 +1,8 @@
 {
   "app": {
     "name": "Weekbeat",
-    "tagline": "Your week for movement and wellness"
+    "tagline": "Your week for movement and wellness",
+    "pageTitle": "{{page}} – Weekbeat"
   },
   "week": {
     "title": "Week {{week}}",

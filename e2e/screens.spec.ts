@@ -31,6 +31,9 @@ async function shot(page: Page, name: string, project: string, lang: Lang) {
   await page.screenshot({ path: `screenshots/${project}-${lang}-${name}.png`, fullPage: true });
 }
 
+/** WCAG 2.2 2.4.2 Page Titled: each view names itself in the tab. */
+const title = (page: string) => `${page} – Weekbeat`;
+
 const sunday = { de: 'Sonntag', en: 'Sunday' } as const;
 
 /** Answers every self-check question; `yesAt` answers that question (0-based) with yes. */
@@ -62,6 +65,7 @@ for (const lang of ['de', 'en'] as const) {
 
       // Step 1: household and first person
       await expect(page.getByRole('heading', { name: t.setup.title })).toBeVisible();
+      await expect(page).toHaveTitle(t.setup.title);
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
       await shot(page, '1-setup', project, lang);
@@ -198,6 +202,7 @@ for (const lang of ['de', 'en'] as const) {
 
       // Settings: add a second person, switch to them
       await page.getByRole('link', { name: t.nav.settings }).click();
+      await expect(page).toHaveTitle(title(t.nav.settings));
       await page.getByRole('button', { name: t.settings.addPerson }).click();
       await page.getByLabel(t.profile.name).fill('Sam');
       await page.getByLabel(t.profile.sessionMin).fill('0');
@@ -225,6 +230,7 @@ for (const lang of ['de', 'en'] as const) {
 
       // Two people now: the household view lists everyone's sessions, read-only.
       await page.getByRole('link', { name: t.nav.week }).click();
+      await expect(page).toHaveTitle(title(t.nav.week));
       await expect(page.locator('.day')).toHaveCount(7);
       await page.getByRole('button', { name: t.household.all }).click();
       await expect(page.getByRole('list', { name: t.household.title })).toBeVisible();
@@ -265,6 +271,7 @@ for (const lang of ['de', 'en'] as const) {
 
       // Places: Sam gets a Plus 1 linked to Alex's Wellpass, then a partner place covered by both
       await page.getByRole('link', { name: t.nav.places }).click();
+      await expect(page).toHaveTitle(title(t.nav.places));
       await expect(page.getByRole('heading', { name: t.places.title, level: 2 })).toBeVisible();
       await expect(page.locator('.people li')).toHaveCount(1);
       await page.getByRole('button', { name: t.membership.add }).click();
@@ -442,6 +449,7 @@ for (const lang of ['de', 'en'] as const) {
       await page.getByRole('link', { name: t.privacy.link }).click();
       const heading = page.getByRole('heading', { name: t.privacy.title, level: 2 });
       await expect(heading).toBeFocused();
+      await expect(page).toHaveTitle(title(t.privacy.title));
       await expect(page.getByRole('heading', { name: t.privacy.host.title })).toBeVisible();
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
@@ -459,6 +467,7 @@ for (const lang of ['de', 'en'] as const) {
       await page.getByRole('link', { name: t.imprint.link }).click();
       const heading = page.getByRole('heading', { name: t.imprint.title, level: 2 });
       await expect(heading).toBeFocused();
+      await expect(page).toHaveTitle(title(t.imprint.title));
       await expect(page.getByRole('heading', { name: t.imprint.provider })).toBeVisible();
       await expect(page.getByRole('heading', { name: t.imprint.purpose.title })).toBeVisible();
       await expect(page.locator('address')).toContainText('München');
