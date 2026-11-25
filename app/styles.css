@@ -647,6 +647,10 @@ a.button:hover {
   display: grid;
   gap: 4px;
 }
+/* --muted on --accent-soft is only 3.8:1 in dark mode (WCAG 1.4.3 needs 4.5:1 for small text). */
+.facts .muted {
+  color: var(--text);
+}
 .facts a {
   color: var(--text);
   display: inline-block;
