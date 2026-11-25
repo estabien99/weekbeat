@@ -9,7 +9,16 @@ own (hobbies, training apps, memberships, calendar) into a realistic week and ke
 gamification. Local-first, no account.
 
 > Status: v0.0 – project skeleton. The planner, knowledge base and game module come in v0.1.
-> Fitness and wellness only, not medical advice.
+
+## Zweckbestimmung / Intended purpose
+
+Weekbeat plant Bewegung und Erholung für deine Woche, für Fitness und Wohlbefinden. Die App ist nicht dafür gedacht,
+Krankheiten oder Verletzungen zu erkennen, ihnen vorzubeugen, sie zu überwachen, zu behandeln oder zu lindern, und sie
+ist kein Medizinprodukt. Der Gesundheits-Check vor dem Start stellt keine Diagnose.
+
+_Weekbeat plans exercise and recovery for your week, for fitness and wellbeing. It is not intended to detect, prevent,
+monitor, treat or alleviate diseases or injuries, and it is not a medical device. The health self-check before the
+start makes no diagnosis._
 
 ## Principles
 

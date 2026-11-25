@@ -513,7 +513,11 @@
     "email": "E-Mail:",
     "about": {
       "title": "Über Weekbeat",
-      "text": "Weekbeat ist ein privates, nicht kommerzielles Open-Source-Projekt. Es gibt keine Werbung, keine Bezahlfunktionen und kein Konto. Die App dient Fitness und Wohlbefinden und ist kein Medizinprodukt."
+      "text": "Weekbeat ist ein privates, nicht kommerzielles Open-Source-Projekt. Es gibt keine Werbung, keine Bezahlfunktionen und kein Konto."
+    },
+    "purpose": {
+      "title": "Zweckbestimmung",
+      "text": "Weekbeat plant Bewegung und Erholung für deine Woche, für Fitness und Wohlbefinden. Die App ist nicht dafür gedacht, Krankheiten oder Verletzungen zu erkennen, ihnen vorzubeugen, sie zu überwachen, zu behandeln oder zu lindern, und sie ist kein Medizinprodukt. Der Gesundheits-Check vor dem Start stellt keine Diagnose: Bei jedem Ja empfiehlt er, vor dem Training ärztlich abzuklären, und lässt den Plan bis dahin ruhen."
     },
     "basis": "Angaben gemäß § 18 Abs. 1 Medienstaatsvertrag (MStV)."
   }

@@ -38,6 +38,11 @@ export function Imprint() {
         <h3 id="imprint-about">{t('imprint.about.title')}</h3>
         <p>{t('imprint.about.text')}</p>
       </section>
+      {/* MDR 2017/745: the manufacturer's stated intended purpose decides qualification (MDCG 2019-11 rev. 1, 3.1). */}
+      <section aria-labelledby="imprint-purpose">
+        <h3 id="imprint-purpose">{t('imprint.purpose.title')}</h3>
+        <p>{t('imprint.purpose.text')}</p>
+      </section>
       <p className="muted small">{t('imprint.basis')}</p>
       <a className="button" href="#/">
         {t('privacy.back')}

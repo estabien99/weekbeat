@@ -513,7 +513,11 @@
     "email": "E-mail:",
     "about": {
       "title": "About Weekbeat",
-      "text": "Weekbeat is a private, non-commercial open-source project. There are no ads, no payments and no accounts. The app is for fitness and wellness and is not a medical device."
+      "text": "Weekbeat is a private, non-commercial open-source project. There are no ads, no payments and no accounts."
+    },
+    "purpose": {
+      "title": "Intended purpose",
+      "text": "Weekbeat plans exercise and recovery for your week, for fitness and wellbeing. It is not intended to detect, prevent, monitor, treat or alleviate diseases or injuries, and it is not a medical device. The health self-check before the start makes no diagnosis: for every yes it recommends talking to a doctor before you train and rests the plan until then."
     },
     "basis": "Information under § 18(1) of the German Interstate Media Treaty (Medienstaatsvertrag, MStV)."
   }

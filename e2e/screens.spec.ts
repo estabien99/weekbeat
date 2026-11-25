@@ -460,6 +460,7 @@ for (const lang of ['de', 'en'] as const) {
       const heading = page.getByRole('heading', { name: t.imprint.title, level: 2 });
       await expect(heading).toBeFocused();
       await expect(page.getByRole('heading', { name: t.imprint.provider })).toBeVisible();
+      await expect(page.getByRole('heading', { name: t.imprint.purpose.title })).toBeVisible();
       await expect(page.locator('address')).toContainText('München');
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
