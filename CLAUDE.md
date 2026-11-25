@@ -94,7 +94,7 @@ next starts. No dates yet.
     A feature that needs any of these is a principle change: ask first.
 - **UI:** every string in both `de.json` and `en.json`; core HTML/CSS, accessible (labels, focus, 44 px targets,
   contrast); works from 320 px wide, no horizontal scroll. After UI changes run `npm run e2e` and look at
-  `screenshots/` (phone 412 and tablet 1280, de and en) before telling the user it's done.
+  `screenshots/` (phone 412 and tablet 1280, de and en; plus `narrow-dark`: 320 px in dark mode for reflow and dark contrast) before telling the user it's done.
 - **Facts about the household** (people, memberships, hobbies, devices, places) come from the user. Don't infer
   them; the concept doc lists what's known (Wellpass work account + Plus 1, Freeletics Coach, Garmin, MTB,
   Google Calendar, Home Assistant).
