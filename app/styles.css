@@ -39,8 +39,14 @@
   box-sizing: border-box;
 }
 
+/* WCAG 2.2 2.4.11 Focus Not Obscured: while the fixed notice is open (PwaPrompt sets --toast-space to its
+   height), focus scrolling keeps controls above it and the page can scroll its last content free. */
+html {
+  scroll-padding-bottom: var(--toast-space, 0px);
+}
 body {
   margin: 0;
+  padding-bottom: var(--toast-space, 0px);
   background: var(--bg);
   color: var(--text);
 }
