@@ -11,12 +11,8 @@ export function PwaPrompt() {
     updateServiceWorker,
   } = useRegisterSW();
 
-  // "Works offline" is information only: hide it after a moment. Updates wait for the user.
-  useEffect(() => {
-    if (!offlineReady) return;
-    const id = setTimeout(() => setOfflineReady(false), 6000);
-    return () => clearTimeout(id);
-  }, [offlineReady, setOfflineReady]);
+  // Both notices stay until the person closes them: nothing else in the app says it works offline, so a
+  // timer would take that information away (WCAG 2.2 2.2.1 Timing Adjustable). Updates wait for the user.
 
   // WCAG 2.2 2.4.11: reserve the notice's height at the bottom so it never covers the focused control.
   const ref = useRef<HTMLDivElement>(null);
