@@ -29,7 +29,7 @@ for (const lang of ['de', 'en'] as const) {
   test(`notice never hides the focused control (${lang})`, async ({ page }) => {
     await page.addInitScript((l) => localStorage.setItem('weekbeat.lang', l), lang);
     await page.goto('/');
-    // The "works offline" notice shows on the first visit and closes itself after 6 s.
+    // The "works offline" notice shows on the first visit and stays until closed.
     await expect(page.locator('.toast')).toBeVisible();
     const hidden: string[] = [];
     for (let i = 0; i < 30 && (await page.locator('.toast').isVisible()); i++) {

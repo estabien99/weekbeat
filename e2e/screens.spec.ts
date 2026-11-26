@@ -40,7 +40,7 @@ async function expectNoHorizontalScroll(page: Page) {
 }
 
 async function shot(page: Page, name: string, project: string, lang: Lang) {
-  // The transient "works offline" notice hides content in full-page shots; it closes by itself after 6 s.
+  // The "works offline" notice hides content in full-page shots; it stays until closed.
   const close = page.locator('.toast').getByRole('button', { name: T[lang].pwa.close });
   if (await close.isVisible()) await close.click();
   await page.screenshot({ path: `screenshots/${project}-${lang}-${name}.png`, fullPage: true });
