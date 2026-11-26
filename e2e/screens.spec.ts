@@ -46,6 +46,10 @@ async function shot(page: Page, name: string, project: string, lang: Lang) {
   await page.screenshot({ path: `screenshots/${project}-${lang}-${name}.png`, fullPage: true });
 }
 
+/** The page's own status line (the offline notice is a status too). */
+const weekStatus = (page: Page) => page.locator('section[aria-labelledby="week-title"] > [role="status"]');
+const placesStatus = (page: Page) => page.locator('section[aria-labelledby="places-title"] > [role="status"]');
+
 /** WCAG 2.2 2.4.2 Page Titled: each view names itself in the tab. */
 const title = (page: string) => `${page} – Weekbeat`;
 
@@ -198,6 +202,8 @@ for (const lang of ['de', 'en'] as const) {
       // Moving a session offers alternatives (keyboard and screen-reader friendly, no drag and drop)
       await page.locator('.session.accepted').first().getByRole('button', { name: t.plan.move }).click();
       await expect(page.getByRole('heading', { name: t.plan.replanTitle })).toBeFocused();
+      // WCAG 4.1.3: a new form clears the last confirmation, so it isn't read again or left on screen.
+      await expect(weekStatus(page)).toBeEmpty();
       await expectAccessible(page);
       await shot(page, '4b-replan', project, lang);
       const letGo = lang === 'de' ? 'Diesmal auslassen – kein Problem.' : 'Let it go this time – no problem.';
@@ -208,6 +214,7 @@ for (const lang of ['de', 'en'] as const) {
       // Log something unplanned: it shows up in the week's counts and the form closes with a confirmation.
       await page.getByRole('button', { name: t.manualLog.open }).click();
       await expect(page.getByRole('heading', { name: t.manualLog.title.replace('{{name}}', 'Alex') })).toBeFocused();
+      await expect(weekStatus(page)).toBeEmpty();
       await page.getByLabel(t.manualLog.duration).fill('0');
       await page.getByRole('button', { name: t.manualLog.save }).click();
       await expect(page.getByRole('alert')).toHaveText(t.errors.sessionMin);
@@ -309,6 +316,7 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.locator('.people li').nth(1)).toContainText('Wellpass Plus 1 (Sam)');
 
       await page.getByRole('button', { name: t.places.add }).click();
+      await expect(placesStatus(page)).toBeEmpty();
       await page.getByLabel(t.places.name, { exact: true }).fill('Studio Nord');
       // Ticking the main membership also ticks its Plus 1 (explicit coverage, can be unticked).
       await page.getByRole('checkbox', { name: 'Wellpass (Alex)' }).check();

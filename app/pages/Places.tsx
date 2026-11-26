@@ -111,6 +111,11 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
     }
     return parts.map((x) => ` · ${x}`).join('');
   };
+  // Opening a form clears the last confirmation, so it isn't read again or left next to the new form (WCAG 4.1.3).
+  const open = (next: NonNullable<Editing>) => {
+    setStatus('');
+    setEditing(next);
+  };
   const done = (text: string) => {
     setEditing(null);
     setStatus(text);
@@ -165,17 +170,13 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
                     />
                   ) : (
                     <div className="actions">
-                      <button
-                        type="button"
-                        className="ghost"
-                        onClick={() => setEditing({ kind: 'membership', id: m.id })}
-                      >
+                      <button type="button" className="ghost" onClick={() => open({ kind: 'membership', id: m.id })}>
                         {t('common.editNamed', { name: label })}
                       </button>
                       <button
                         type="button"
                         className="ghost"
-                        onClick={() => setEditing({ kind: 'confirm-membership', id: m.id })}
+                        onClick={() => open({ kind: 'confirm-membership', id: m.id })}
                       >
                         {t('common.removeNamed', { name: label })}
                       </button>
@@ -198,7 +199,7 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
             onSaved={() => done(t('common.saved'))}
           />
         ) : (
-          <button type="button" onClick={() => setEditing({ kind: 'membership' })}>
+          <button type="button" onClick={() => open({ kind: 'membership' })}>
             {t('membership.add')}
           </button>
         )}
@@ -228,7 +229,7 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
                 ) : (
                   <div className="actions">
                     {editing?.kind !== 'checkin' || editing.id !== p.id ? (
-                      <button type="button" onClick={() => setEditing({ kind: 'checkin', id: p.id })}>
+                      <button type="button" onClick={() => open({ kind: 'checkin', id: p.id })}>
                         {t('checkIn.open', { name: p.name })}
                       </button>
                     ) : null}
@@ -238,14 +239,10 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
                         <span className="sr-only"> {t('common.newTab')}</span>
                       </a>
                     )}
-                    <button type="button" className="ghost" onClick={() => setEditing({ kind: 'place', id: p.id })}>
+                    <button type="button" className="ghost" onClick={() => open({ kind: 'place', id: p.id })}>
                       {t('common.editNamed', { name: p.name })}
                     </button>
-                    <button
-                      type="button"
-                      className="ghost"
-                      onClick={() => setEditing({ kind: 'confirm-place', id: p.id })}
-                    >
+                    <button type="button" className="ghost" onClick={() => open({ kind: 'confirm-place', id: p.id })}>
                       {t('common.removeNamed', { name: p.name })}
                     </button>
                   </div>
@@ -265,7 +262,7 @@ export function Places({ profiles, activeId }: { profiles: Profile[]; activeId: 
             onSaved={() => done(t('common.saved'))}
           />
         ) : (
-          <button type="button" onClick={() => setEditing({ kind: 'place' })}>
+          <button type="button" onClick={() => open({ kind: 'place' })}>
             {t('places.add')}
           </button>
         )}
