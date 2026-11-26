@@ -146,7 +146,18 @@ export function WeekView({ profile }: { profile: Profile }) {
     setMessage(t('plan.accepted', { count: list.length }));
   };
   const dismiss = (id: string) => setDismissed(new Set([...dismissed, id]));
+  // A confirmation belongs to the action before; a new form or week clears it, so a screen reader doesn't read
+  // it again and it doesn't stay on screen next to the new form (WCAG 4.1.3).
+  const openLog = () => {
+    setMessage('');
+    setLogging(true);
+  };
+  const switchWeek = (o: 0 | 1) => {
+    setMessage('');
+    setOffset(o);
+  };
   const openReplan = async (session: PlannedSession, reason: Replanning['reason']) => {
+    setMessage('');
     const offers = replan(await loadPlanInput(weekStart, nowIso), { sessionId: session.id, notBefore: nowIso });
     setReplanning({ session, reason, offers });
   };
@@ -167,7 +178,7 @@ export function WeekView({ profile }: { profile: Profile }) {
       <div className="plan-bar">
         <div role="group" aria-label={t('plan.weekSwitch')} className="segmented">
           {([0, 1] as const).map((o) => (
-            <button key={o} type="button" aria-pressed={offset === o} onClick={() => setOffset(o)}>
+            <button key={o} type="button" aria-pressed={offset === o} onClick={() => switchWeek(o)}>
               {t(o === 0 ? 'plan.thisWeek' : 'plan.nextWeek')}
             </button>
           ))}
@@ -194,7 +205,7 @@ export function WeekView({ profile }: { profile: Profile }) {
           </div>
         )}
         {!logging && (
-          <button type="button" className="ghost" onClick={() => setLogging(true)}>
+          <button type="button" className="ghost" onClick={openLog}>
             {t('manualLog.open')}
           </button>
         )}
