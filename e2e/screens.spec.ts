@@ -19,6 +19,21 @@ async function expectAccessible(page: Page) {
   );
 }
 
+/**
+ * WCAG 2.2 1.4.4 Resize Text: at 200 % text (all sizes are rem, as with Android's font-size setting) no
+ * label may run out of its box; long German compounds ("Körpergewichtstraining") have to break.
+ */
+async function expectTextFitsAt200(page: Page) {
+  await page.evaluate(() => (document.documentElement.style.fontSize = '200%'));
+  const spill = await page.evaluate(() =>
+    [...document.querySelectorAll<HTMLElement>('label, button, a, legend, h2, h3, h4, p, li')]
+      .filter((e) => e.offsetParent && !e.closest('.sr-only') && e.scrollWidth > e.clientWidth + 1)
+      .map((e) => e.innerText.slice(0, 40)),
+  );
+  await page.evaluate(() => (document.documentElement.style.fontSize = ''));
+  expect(spill).toEqual([]);
+}
+
 async function expectNoHorizontalScroll(page: Page) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);
@@ -111,6 +126,7 @@ for (const lang of ['de', 'en'] as const) {
       await page.getByRole('checkbox', { name: 'Yoga', exact: true }).check();
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
+      await expectTextFitsAt200(page);
       await shot(page, '3-interview', project, lang);
       await page.getByRole('button', { name: t.common.next, exact: true }).click();
       await expect(page.getByRole('heading', { name: t.interview.length.title })).toBeFocused();
@@ -141,6 +157,7 @@ for (const lang of ['de', 'en'] as const) {
       await expect(page.getByRole('alert')).toHaveText(t.errors.programmePlaces);
       await expectAccessible(page);
       await expectNoHorizontalScroll(page);
+      await expectTextFitsAt200(page);
       await shot(page, '3c-coach', project, lang);
       await page.getByRole('radio', { name: t.coach.no }).check();
       await page.getByRole('button', { name: t.common.next, exact: true }).click();
