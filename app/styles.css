@@ -450,6 +450,13 @@ button.danger {
   border-radius: 8px;
   cursor: pointer;
 }
+/* WCAG 2.2 1.4.4 Resize Text: at 200 % text long German compounds ("Körpergewichtstraining") must break
+   inside the box instead of running into the next choice. */
+.choice > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
 .choice:has(input:checked) {
   border-color: var(--accent);
   background: var(--accent-soft);
