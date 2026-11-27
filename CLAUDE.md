@@ -173,3 +173,5 @@ When the user agrees to continue in a new session, the current session sets it u
   "Neu vorschlagen" once an auto-planning profile's empty week loads); assert the settled state (24.11.2026).
 - Headless Chromium shows `<input type="time">` in 12 h format whatever the context locale; real German devices
   show 24 h. Don't "fix" this in the app.
+- Before proposing a planner behaviour, check what `planWeek` already does: "no increases after a pause" was proposed
+  although the planner never plans above the person's own goal (27.11.2026).
